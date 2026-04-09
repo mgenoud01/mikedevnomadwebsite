@@ -1,0 +1,42 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  NODE_VERSION: '20'
+
+stages:
+  - stage: CI
+    displayName: 'Build & Type Check'
+    jobs:
+      - job: Build
+        displayName: 'Install, type check & build'
+        steps:
+          - task: NodeTool@0
+            displayName: 'Setup Node.js $(NODE_VERSION)'
+            inputs:
+              versionSpec: '$(NODE_VERSION)'
+
+          - script: npm ci --legacy-peer-deps
+            displayName: 'Install dependencies'
+
+          - script: npx tsc --noEmit
+            displayName: 'TypeScript type check'
+
+          - script: npm run build
+            displayName: 'Build Next.js app'
+            env:
+              ADMIN_PASSWORD: $(ADMIN_PASSWORD)
+              ADMIN_SECRET: $(ADMIN_SECRET)
+              CLOUDINARY_UPLOAD_PRESET: $(CLOUDINARY_UPLOAD_PRESET)
+
+          - task: PublishBuildArtifacts@1
+            displayName: 'Publish build artifacts'
+            inputs:
+              PathtoPublish: '.next'
+              ArtifactName: 'nextjs-build'
+            condition: succeeded()
