@@ -61,26 +61,6 @@ This triggers:
 - **Azure DevOps** → CI (type check + build + artifact)
 - **Vercel** → automatic redeployment (if connected)
 
-## Workflow: prepare content locally then go live
-
-1. Start local dev server:
-   ```bash
-   npm run dev
-   ```
-2. Fill in your content via the admin panel at `localhost:3000/admin`
-   - Trips, articles, gallery, PRO profile...
-3. Commit everything including `data/*.json`:
-   ```bash
-   git add -A
-   git commit -m "content: add voyages and articles"
-   git push origin main && git push azure main
-   ```
-4. On Vercel → import the project → your content is already there, site is live.
-
-> After that, every time you update content locally: push → Vercel redeploys automatically (~1 min).
-
-> **Note:** On Vercel the filesystem is read-only. Changes made via the admin panel on the live site won't persist after redeployment. Always edit locally, then push.
-
 ## Project structure
 
 ```
