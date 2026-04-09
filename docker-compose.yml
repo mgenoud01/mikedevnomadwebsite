@@ -1,0 +1,18 @@
+services:
+  app:
+    build:
+      context: .
+      args:
+        ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+        ADMIN_SECRET: ${ADMIN_SECRET}
+        CLOUDINARY_UPLOAD_PRESET: ${CLOUDINARY_UPLOAD_PRESET}
+    ports:
+      - "3000:3000"
+    environment:
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - ADMIN_SECRET=${ADMIN_SECRET}
+      - CLOUDINARY_UPLOAD_PRESET=${CLOUDINARY_UPLOAD_PRESET}
+    volumes:
+      # Persists data (voyages, articles, galerie, pro) across rebuilds
+      - ./data:/app/data
+    restart: unless-stopped
