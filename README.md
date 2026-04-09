@@ -1,102 +1,113 @@
 # MikeDevNomad
 
-Portfolio & univers nomade de Mike — développeur, passionné de cybersécurité et grand voyageur.
+Portfolio & travel universe of Mike — developer, cybersecurity enthusiast, and digital nomad.
 
 ## Stack
 
 - **Next.js 14** (App Router)
 - **TypeScript**
-- **Tailwind CSS** (design system custom PRO + NOMADE)
-- **Keystatic CMS** (gestion blog & photos sans code)
+- **Cloudinary** (image hosting, organized by trip folder)
+- **JSON file storage** (`data/*.json`) — persisted via Docker volume
+- **Cookie-based auth** — admin panel protected
 
-## Structure
+## Local development
+
+```bash
+# Install dependencies
+npm install
+
+# Start dev server (localhost:3000)
+npm run dev
+
+# Type check
+npx tsc --noEmit
+
+# Production build
+npm run build
+```
+
+Create a `.env.local` file at the root:
+
+```env
+ADMIN_PASSWORD=your_password_here
+ADMIN_SECRET=a_random_secret_string
+CLOUDINARY_UPLOAD_PRESET=mikedevnomad
+```
+
+## Push to GitHub + Azure DevOps after every change
+
+> Both platforms must be kept in sync. Always push to both.
+
+```bash
+# 1. Stage your changes
+git add -A
+
+# 2. Commit
+git commit -m "feat: describe your change"
+
+# 3. Push to BOTH platforms
+git push origin main && git push azure main
+```
+
+Push to one only if needed:
+
+```bash
+git push origin main   # GitHub only
+git push azure main    # Azure DevOps only
+```
+
+This triggers:
+- **GitHub Actions** → CI (type check + build)
+- **Azure DevOps** → CI (type check + build + artifact)
+- **Vercel** → automatic redeployment (if connected)
+
+## Project structure
 
 ```
 app/
-├── (marketing)/          # Landing page split PRO / NOMADE
-├── pro/
-│   ├── layout.tsx        # Nav sombre, terminal style
-│   ├── page.tsx          # Hub univers pro
-│   ├── portfolio/        # Projets
-│   ├── cv/               # Curriculum vitae
-│   ├── tactical-app/     # Projet phare
-│   ├── cybersecurite/    # CTF, write-ups, outils
-│   └── contact/          # Formulaire de contact
-├── nomade/
-│   ├── layout.tsx        # Nav claire, colorée
-│   ├── page.tsx          # Hub univers nomade
-│   ├── voyages/          # Récits de voyage
-│   ├── galerie/          # Photos
-│   └── blog/             # Articles
-├── keystatic/[[...params]]/  # Admin UI CMS
-└── api/keystatic/[...params]/  # API CMS
+├── pro/              # PRO universe (dark navy, developer portfolio)
+│   ├── portfolio/    # Projects
+│   ├── cv/           # Resume & experiences
+│   ├── cybersecurite/# CTF, write-ups
+│   └── contact/      # Contact form
+├── nomade/           # NOMADE universe (travel blog)
+│   ├── voyages/      # Trip pages with gallery
+│   ├── galerie/      # Photo gallery with albums
+│   └── blog/         # Articles
+├── admin/            # Admin panel (password protected)
+│   ├── voyages/
+│   ├── blog/
+│   ├── galerie/
+│   └── pro/          # Projects, resume, CTF, profile
+└── api/admin/        # REST API for admin CRUD
 
-content/
-├── blog/       # Fichiers MDX gérés par Keystatic
-└── photos/     # Métadonnées photos gérées par Keystatic
-
-public/
-└── images/
-    ├── blog/    # Images uploadées via CMS
-    └── galerie/ # Photos uploadées via CMS
-```
-
-## Commandes
-
-```bash
-# Installer les dépendances
-npm install
-
-# Lancer en développement (localhost:3000)
-npm run dev
-
-# Build de production
-npm run build
-
-# Lancer en production
-npm start
-
-# Vérification TypeScript
-npx tsc --noEmit
-
-# Linter
-npm run lint
-```
-
-## CMS Keystatic
-
-Pour gérer le blog et les photos **sans toucher au code** :
-
-1. Lancer `npm run dev`
-2. Aller sur [http://localhost:3000/keystatic](http://localhost:3000/keystatic)
-3. Créer / éditer des articles ou des photos via l'interface graphique
-
-Les fichiers sont sauvegardés localement dans `content/`. Pour la production, configurer Keystatic avec GitHub storage.
-
-## Déploiement
-
-```bash
-# Vercel (recommandé)
-npx vercel deploy
-
-# Build Docker
-docker build -t mikedevnomad .
-docker run -p 3000:3000 mikedevnomad
+data/                 # JSON storage (persisted via Docker volume)
+├── voyages.json
+├── articles.json
+├── galerie.json
+├── projects.json
+├── experiences.json
+├── ctf.json
+└── proProfile.json
 ```
 
 ## Pages
 
 | Route | Description |
 |-------|-------------|
-| `/` | Landing page — split PRO / NOMADE |
-| `/pro` | Hub univers pro |
-| `/pro/portfolio` | Projets |
-| `/pro/cv` | Curriculum vitae |
-| `/pro/tactical-app` | TacticalApp |
-| `/pro/cybersecurite` | Cybersécurité & CTF |
-| `/pro/contact` | Formulaire de contact |
-| `/nomade` | Hub univers nomade |
-| `/nomade/voyages` | Récits de voyage |
-| `/nomade/galerie` | Galerie photos |
+| `/` | Landing — PRO / NOMADE split |
+| `/pro` | PRO hub |
+| `/pro/portfolio` | Projects |
+| `/pro/cv` | Resume |
+| `/pro/cybersecurite` | Cybersecurity & CTF |
+| `/pro/contact` | Contact |
+| `/nomade` | NOMADE hub |
+| `/nomade/voyages` | Trip list |
+| `/nomade/voyages/[slug]` | Trip detail + gallery |
+| `/nomade/galerie` | Photo gallery by album |
 | `/nomade/blog` | Blog |
-| `/keystatic` | Admin CMS (dev uniquement) |
+| `/admin` | Admin panel |
+
+## Deployment
+
+See [DEVOPS.md](./DEVOPS.md) for full deployment guide (Vercel, VPS+Docker, CI/CD setup).
