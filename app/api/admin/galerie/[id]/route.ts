@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAuthenticated } from "@/lib/auth";
-import { getPhotoById, updatePhoto, deletePhoto } from "@/lib/galerie";
+import { updatePhoto, deletePhoto } from "@/lib/galerie";
 
 export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
   if (!isAuthenticated()) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });

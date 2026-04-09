@@ -3,7 +3,6 @@
 import { Experience } from "@/lib/experience";
 import { ProProfile } from "@/lib/proProfile";
 
-const DIFF_STYLE: Record<string, string> = { Easy: "#00ff99", Medium: "#f59e0b", Hard: "#f97316", Insane: "#ef4444" };
 
 export default function CVClient({ experiences, profile }: { experiences: Experience[]; profile: ProProfile }) {
   const work = experiences.filter((e) => e.type === "work").sort((a, b) => b.dateDebut.localeCompare(a.dateDebut));
