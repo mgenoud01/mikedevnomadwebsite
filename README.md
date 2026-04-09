@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MikeDevNomad
 
-## Getting Started
+Portfolio & univers nomade de Mike — développeur, passionné de cybersécurité et grand voyageur.
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Next.js 14** (App Router)
+- **TypeScript**
+- **Tailwind CSS** (design system custom PRO + NOMADE)
+- **Keystatic CMS** (gestion blog & photos sans code)
+
+## Structure
+
+```
+app/
+├── (marketing)/          # Landing page split PRO / NOMADE
+├── pro/
+│   ├── layout.tsx        # Nav sombre, terminal style
+│   ├── page.tsx          # Hub univers pro
+│   ├── portfolio/        # Projets
+│   ├── cv/               # Curriculum vitae
+│   ├── tactical-app/     # Projet phare
+│   ├── cybersecurite/    # CTF, write-ups, outils
+│   └── contact/          # Formulaire de contact
+├── nomade/
+│   ├── layout.tsx        # Nav claire, colorée
+│   ├── page.tsx          # Hub univers nomade
+│   ├── voyages/          # Récits de voyage
+│   ├── galerie/          # Photos
+│   └── blog/             # Articles
+├── keystatic/[[...params]]/  # Admin UI CMS
+└── api/keystatic/[...params]/  # API CMS
+
+content/
+├── blog/       # Fichiers MDX gérés par Keystatic
+└── photos/     # Métadonnées photos gérées par Keystatic
+
+public/
+└── images/
+    ├── blog/    # Images uploadées via CMS
+    └── galerie/ # Photos uploadées via CMS
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Commandes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Installer les dépendances
+npm install
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Lancer en développement (localhost:3000)
+npm run dev
 
-## Learn More
+# Build de production
+npm run build
 
-To learn more about Next.js, take a look at the following resources:
+# Lancer en production
+npm start
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Vérification TypeScript
+npx tsc --noEmit
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Linter
+npm run lint
+```
 
-## Deploy on Vercel
+## CMS Keystatic
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Pour gérer le blog et les photos **sans toucher au code** :
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Lancer `npm run dev`
+2. Aller sur [http://localhost:3000/keystatic](http://localhost:3000/keystatic)
+3. Créer / éditer des articles ou des photos via l'interface graphique
+
+Les fichiers sont sauvegardés localement dans `content/`. Pour la production, configurer Keystatic avec GitHub storage.
+
+## Déploiement
+
+```bash
+# Vercel (recommandé)
+npx vercel deploy
+
+# Build Docker
+docker build -t mikedevnomad .
+docker run -p 3000:3000 mikedevnomad
+```
+
+## Pages
+
+| Route | Description |
+|-------|-------------|
+| `/` | Landing page — split PRO / NOMADE |
+| `/pro` | Hub univers pro |
+| `/pro/portfolio` | Projets |
+| `/pro/cv` | Curriculum vitae |
+| `/pro/tactical-app` | TacticalApp |
+| `/pro/cybersecurite` | Cybersécurité & CTF |
+| `/pro/contact` | Formulaire de contact |
+| `/nomade` | Hub univers nomade |
+| `/nomade/voyages` | Récits de voyage |
+| `/nomade/galerie` | Galerie photos |
+| `/nomade/blog` | Blog |
+| `/keystatic` | Admin CMS (dev uniquement) |

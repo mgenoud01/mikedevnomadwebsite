@@ -1,0 +1,11 @@
+{
+  "bio": "Full-stack developer with a strong focus on cybersecurity. I build robust, secure and well-architected products.",
+  "disponible": true,
+  "yearsExp": 5,
+  "projectsShipped": 12,
+  "ctfPodiums": 3,
+  "email": "",
+  "github": "",
+  "linkedin": "",
+  "skills": ["TypeScript", "Next.js", "Rust", "Node.js", "PostgreSQL", "Docker", "AWS", "Security+"]
+}
