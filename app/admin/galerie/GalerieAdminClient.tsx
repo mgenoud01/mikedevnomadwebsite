@@ -47,12 +47,13 @@ export default function GalerieAdminClient({ photos: initial, voyages }: { photo
         })
       );
 
-      // Étape 2 : 1 seule écriture blob pour toutes les photos (batch)
+      // Étape 2 : 1 seule écriture blob — on envoie aussi les photos déjà en place
+      // pour éviter tout risque de read-stale côté serveur
       const saveRes = await fetch("/api/admin/galerie/batch", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          photos: uploadResults.map(({ file, url }) => ({
+          newPhotos: uploadResults.map(({ file, url }) => ({
             url,
             titre: file.name.replace(/\.[^/.]+$/, ""),
             lieu: "",
@@ -61,6 +62,7 @@ export default function GalerieAdminClient({ photos: initial, voyages }: { photo
             miseEnAvant: false,
             voyageId: activeAlbum === "general" ? undefined : activeAlbum,
           })),
+          keepPhotos: photos, // toutes les photos actuelles du client
         }),
       });
 
@@ -69,17 +71,28 @@ export default function GalerieAdminClient({ photos: initial, voyages }: { photo
         alert(`Erreur sauvegarde : ${err.error || "Inconnue"}`);
         return;
       }
+
+      const created = await saveRes.json();
+      // Mise à jour immédiate de l'état client (sans attendre le rechargement)
+      setPhotos((prev) => [...created, ...prev]);
     } catch (err: any) {
-      alert(`Erreur : ${err.message}`);
+      alert(`Erreur upload : ${err.message}`);
       return;
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";
     }
 
-    // Étape 3 : recharge depuis le serveur → état client = blob réel
+    // Étape 3 : recharge depuis le serveur pour confirmer l'état réel du blob
     const freshRes = await fetch("/api/admin/galerie");
     if (freshRes.ok) setPhotos(await freshRes.json());
+  }
+
+  async function handleClearAll() {
+    if (!confirm("⚠️ Effacer TOUTES les photos ? Cette action est irréversible.")) return;
+    const res = await fetch("/api/admin/galerie/reset", { method: "POST" });
+    if (res.ok) setPhotos([]);
+    else alert("Erreur lors de la suppression");
   }
 
   function startEdit(p: Photo) {
@@ -122,9 +135,16 @@ export default function GalerieAdminClient({ photos: initial, voyages }: { photo
           <span style={{ color: "rgba(255,255,255,0.1)" }}>|</span>
           <span style={{ fontWeight: 700, fontSize: "15px" }}>📸 Galerie</span>
         </div>
-        <button onClick={() => fileRef.current?.click()} disabled={uploading} style={{ background: uploading ? "rgba(0,255,153,0.4)" : "#00ff99", color: "#0d1117", fontWeight: 700, fontSize: "13px", padding: "10px 20px", borderRadius: "10px", border: "none", cursor: uploading ? "not-allowed" : "pointer" }}>
-          {uploading ? "Upload en cours..." : `+ Ajouter dans « ${albumLabel} »`}
-        </button>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button onClick={() => fileRef.current?.click()} disabled={uploading} style={{ background: uploading ? "rgba(0,255,153,0.4)" : "#00ff99", color: "#0d1117", fontWeight: 700, fontSize: "13px", padding: "10px 20px", borderRadius: "10px", border: "none", cursor: uploading ? "not-allowed" : "pointer" }}>
+            {uploading ? "Upload en cours..." : `+ Ajouter dans « ${albumLabel} »`}
+          </button>
+          {photos.length > 0 && (
+            <button onClick={handleClearAll} style={{ background: "rgba(255,60,60,0.1)", color: "#ff6b6b", border: "1px solid rgba(255,60,60,0.2)", fontWeight: 600, fontSize: "12px", padding: "10px 16px", borderRadius: "10px", cursor: "pointer" }}>
+              🗑️ Tout effacer
+            </button>
+          )}
+        </div>
         <input ref={fileRef} type="file" accept="image/*" multiple onChange={handleUpload} style={{ display: "none" }} />
       </header>
 

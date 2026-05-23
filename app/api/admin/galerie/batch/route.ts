@@ -1,20 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
-import { getAllPhotos } from "@/lib/galerie";
 import { writeData } from "@/lib/storage";
 import type { Photo } from "@/lib/galerie";
 
 /**
  * POST /api/admin/galerie/batch
- * Sauvegarde plusieurs photos en une seule opération (1 lecture + 1 écriture blob).
- * Évite les race conditions des uploads individuels séquentiels.
+ *
+ * Le client envoie :
+ *   - newPhotos    : les nouvelles photos à ajouter (URLs Cloudinary)
+ *   - keepPhotos   : les photos déjà en place (état React du client)
+ *
+ * On fait 0 lecture du blob — on écrit directement [newPhotos + keepPhotos].
+ * Évite la race condition "read stale → overwrite real data".
  */
 export async function POST(req: NextRequest) {
   if (!isAuthenticated()) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
   try {
-    const { photos: newPhotosData } = await req.json() as {
-      photos: Array<{
+    const body = await req.json() as {
+      newPhotos: Array<{
         url: string;
         titre: string;
         lieu?: string;
@@ -23,18 +27,17 @@ export async function POST(req: NextRequest) {
         miseEnAvant?: boolean;
         voyageId?: string;
       }>;
+      keepPhotos: Photo[];
     };
 
-    if (!Array.isArray(newPhotosData) || newPhotosData.length === 0) {
+    if (!Array.isArray(body.newPhotos) || body.newPhotos.length === 0) {
       return NextResponse.json({ error: "Aucune photo fournie" }, { status: 400 });
     }
 
-    // 1 seule lecture du blob
-    const existing = await getAllPhotos();
+    const keepPhotos: Photo[] = Array.isArray(body.keepPhotos) ? body.keepPhotos : [];
 
-    // Créer toutes les nouvelles photos avec des IDs uniques
     const now = Date.now();
-    const created: Photo[] = newPhotosData.map((data, i) => ({
+    const created: Photo[] = body.newPhotos.map((data, i) => ({
       url: data.url,
       titre: data.titre || "",
       lieu: data.lieu || "",
@@ -46,8 +49,8 @@ export async function POST(req: NextRequest) {
       createdAt: new Date().toISOString(),
     }));
 
-    // 1 seule écriture du blob avec toutes les photos
-    await writeData("galerie", "galerie.json", [...created, ...existing]);
+    // Écriture directe — 0 lecture du blob, 0 risque d'écraser des données
+    await writeData("galerie", "galerie.json", [...created, ...keepPhotos]);
 
     revalidatePath("/nomade/galerie");
     return NextResponse.json(created, { status: 201 });
