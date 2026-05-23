@@ -153,15 +153,26 @@ export default function VoyageForm({ voyage }: { voyage?: Voyage }) {
   async function handleSave() {
     if (!form.titre || !form.pays) return alert("Titre et pays obligatoires");
     setSaving(true);
-    const url = isEdit ? `/api/admin/voyages/${voyage!.id}` : "/api/admin/voyages";
-    const method = isEdit ? "PUT" : "POST";
-    await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-    router.push("/admin/dashboard");
-    router.refresh();
+    try {
+      const url = isEdit ? `/api/admin/voyages/${voyage!.id}` : "/api/admin/voyages";
+      const method = isEdit ? "PUT" : "POST";
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        alert(`Erreur ${res.status} : ${data.error || "Impossible de sauvegarder"}`);
+        return;
+      }
+      router.push("/admin/dashboard");
+      router.refresh();
+    } catch {
+      alert("Erreur réseau — impossible de joindre le serveur");
+    } finally {
+      setSaving(false);
+    }
   }
 
   const inputFocus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
