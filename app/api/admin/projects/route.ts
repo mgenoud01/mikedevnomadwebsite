@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
 import { getAllProjects, createProject } from "@/lib/projects";
 
@@ -27,6 +28,8 @@ export async function POST(req: NextRequest) {
       featured: data.featured || false,
       status: data.status || "done",
     });
+    revalidatePath("/pro");
+    revalidatePath("/pro/portfolio");
     return NextResponse.json(project, { status: 201 });
   } catch (err) {
     console.error("[POST /api/admin/projects]", err);

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
 import { updateExperience, deleteExperience } from "@/lib/experience";
 
@@ -11,6 +12,8 @@ export async function PUT(
     const data = await req.json();
     const experience = await updateExperience(params.id, data);
     if (!experience) return NextResponse.json({ error: "Introuvable" }, { status: 404 });
+    revalidatePath("/pro");
+    revalidatePath("/pro/cv");
     return NextResponse.json(experience);
   } catch (err) {
     console.error("[PUT /api/admin/experiences/:id]", err);
@@ -27,6 +30,8 @@ export async function DELETE(
   try {
     const ok = await deleteExperience(params.id);
     if (!ok) return NextResponse.json({ error: "Introuvable" }, { status: 404 });
+    revalidatePath("/pro");
+    revalidatePath("/pro/cv");
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("[DELETE /api/admin/experiences/:id]", err);

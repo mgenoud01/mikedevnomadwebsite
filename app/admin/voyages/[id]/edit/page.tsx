@@ -3,6 +3,8 @@ import { isAuthenticated } from "@/lib/auth";
 import { getVoyageById } from "@/lib/voyages";
 import VoyageForm from "../../VoyageForm";
 
+export const dynamic = "force-dynamic";
+
 export default async function EditVoyagePage({
   params,
 }: {

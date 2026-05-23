@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
 import { getAllPhotos, createPhoto } from "@/lib/galerie";
 
@@ -26,6 +27,7 @@ export async function POST(req: NextRequest) {
       miseEnAvant: data.miseEnAvant || false,
       voyageId: data.voyageId,
     });
+    revalidatePath("/nomade/galerie");
     return NextResponse.json(photo, { status: 201 });
   } catch (err) {
     console.error("[POST /api/admin/galerie]", err);

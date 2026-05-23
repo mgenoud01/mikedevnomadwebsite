@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
 import { updatePhoto, deletePhoto } from "@/lib/galerie";
 
@@ -11,6 +12,7 @@ export async function PUT(
     const data = await req.json();
     const p = await updatePhoto(params.id, data);
     if (!p) return NextResponse.json({ error: "Introuvable" }, { status: 404 });
+    revalidatePath("/nomade/galerie");
     return NextResponse.json(p);
   } catch (err) {
     console.error("[PUT /api/admin/galerie/:id]", err);
@@ -27,6 +29,7 @@ export async function DELETE(
   try {
     const ok = await deletePhoto(params.id);
     if (!ok) return NextResponse.json({ error: "Introuvable" }, { status: 404 });
+    revalidatePath("/nomade/galerie");
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("[DELETE /api/admin/galerie/:id]", err);

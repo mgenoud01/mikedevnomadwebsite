@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
 import { getAllCTF, createCTF } from "@/lib/ctf";
 
@@ -27,6 +28,8 @@ export async function POST(req: NextRequest) {
       writeup: data.writeup || "",
       tags: data.tags || [],
     });
+    revalidatePath("/pro");
+    revalidatePath("/pro/cybersecurite");
     return NextResponse.json(entry, { status: 201 });
   } catch (err) {
     console.error("[POST /api/admin/ctf]", err);

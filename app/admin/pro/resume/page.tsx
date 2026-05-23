@@ -3,6 +3,8 @@ import { isAuthenticated } from "@/lib/auth";
 import { getAllExperiences } from "@/lib/experience";
 import ResumeAdminClient from "./ResumeAdminClient";
 
+export const dynamic = "force-dynamic";
+
 export default async function ResumeAdminPage() {
   if (!isAuthenticated()) redirect("/admin/login");
   const experiences = await getAllExperiences();

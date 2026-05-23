@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
 import { getAllExperiences, createExperience } from "@/lib/experience";
 
@@ -28,6 +29,8 @@ export async function POST(req: NextRequest) {
       actuel: data.actuel || false,
       type: data.type || "work",
     });
+    revalidatePath("/pro");
+    revalidatePath("/pro/cv");
     return NextResponse.json(experience, { status: 201 });
   } catch (err) {
     console.error("[POST /api/admin/experiences]", err);

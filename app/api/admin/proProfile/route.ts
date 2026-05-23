@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
 import { getProProfile, saveProProfile } from "@/lib/proProfile";
 
@@ -28,6 +29,11 @@ export async function PUT(req: NextRequest) {
       linkedin: data.linkedin || "",
       skills: data.skills || [],
     });
+    // Le profil pro impacte toutes les pages de la section /pro
+    revalidatePath("/pro");
+    revalidatePath("/pro/cv");
+    revalidatePath("/pro/portfolio");
+    revalidatePath("/pro/cybersecurite");
     return NextResponse.json(profile);
   } catch (err) {
     console.error("[PUT /api/admin/proProfile]", err);

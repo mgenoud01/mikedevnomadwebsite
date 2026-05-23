@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
 import { updateCTF, deleteCTF } from "@/lib/ctf";
 
@@ -11,6 +12,8 @@ export async function PUT(
     const data = await req.json();
     const entry = await updateCTF(params.id, data);
     if (!entry) return NextResponse.json({ error: "Introuvable" }, { status: 404 });
+    revalidatePath("/pro");
+    revalidatePath("/pro/cybersecurite");
     return NextResponse.json(entry);
   } catch (err) {
     console.error("[PUT /api/admin/ctf/:id]", err);
@@ -27,6 +30,8 @@ export async function DELETE(
   try {
     const ok = await deleteCTF(params.id);
     if (!ok) return NextResponse.json({ error: "Introuvable" }, { status: 404 });
+    revalidatePath("/pro");
+    revalidatePath("/pro/cybersecurite");
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("[DELETE /api/admin/ctf/:id]", err);

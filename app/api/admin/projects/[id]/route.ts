@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
 import { getProjectById, updateProject, deleteProject } from "@/lib/projects";
 
@@ -27,6 +28,8 @@ export async function PUT(
     const data = await req.json();
     const project = await updateProject(params.id, data);
     if (!project) return NextResponse.json({ error: "Introuvable" }, { status: 404 });
+    revalidatePath("/pro");
+    revalidatePath("/pro/portfolio");
     return NextResponse.json(project);
   } catch (err) {
     console.error("[PUT /api/admin/projects/:id]", err);
@@ -43,6 +46,8 @@ export async function DELETE(
   try {
     const ok = await deleteProject(params.id);
     if (!ok) return NextResponse.json({ error: "Introuvable" }, { status: 404 });
+    revalidatePath("/pro");
+    revalidatePath("/pro/portfolio");
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("[DELETE /api/admin/projects/:id]", err);

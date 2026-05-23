@@ -4,6 +4,8 @@ import { getAllPhotos } from "@/lib/galerie";
 import { getAllVoyages } from "@/lib/voyages";
 import GalerieAdminClient from "./GalerieAdminClient";
 
+export const dynamic = "force-dynamic";
+
 export default async function GalerieAdminPage() {
   if (!isAuthenticated()) redirect("/admin/login");
   const photos = await getAllPhotos();

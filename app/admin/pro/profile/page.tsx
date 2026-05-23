@@ -3,6 +3,8 @@ import { isAuthenticated } from "@/lib/auth";
 import { getProProfile } from "@/lib/proProfile";
 import ProfileAdminClient from "./ProfileAdminClient";
 
+export const dynamic = "force-dynamic";
+
 export default async function ProfileAdminPage() {
   if (!isAuthenticated()) redirect("/admin/login");
   const profile = await getProProfile();

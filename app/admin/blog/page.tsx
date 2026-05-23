@@ -3,6 +3,8 @@ import { isAuthenticated } from "@/lib/auth";
 import { getAllArticles } from "@/lib/articles";
 import BlogAdminClient from "./BlogAdminClient";
 
+export const dynamic = "force-dynamic";
+
 export default async function BlogAdminPage() {
   if (!isAuthenticated()) redirect("/admin/login");
   const articles = await getAllArticles();
