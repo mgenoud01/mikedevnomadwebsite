@@ -54,8 +54,9 @@ async function readFromBlob<T>(
   if (blobs.length === 0) return { found: false, data: defaultValue };
 
   // Les blobs privés requièrent Authorization: Bearer <token>
-  // (même approche que le SDK @vercel/blob/get() en interne)
-  const res = await fetch(blobs[0].url, {
+  // + cache-bust sur l'URL pour contourner le CDN Vercel entre les writes
+  const fetchUrl = `${blobs[0].url}?t=${Date.now()}`;
+  const res = await fetch(fetchUrl, {
     cache: "no-store",
     headers: {
       Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}`,
