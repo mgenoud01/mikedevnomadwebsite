@@ -6,8 +6,11 @@ import ReactMarkdown from "react-markdown";
 import { Voyage } from "@/lib/voyages";
 import { Photo } from "@/lib/galerie";
 
+const GALLERY_PAGE_SIZE = 12;
+
 export default function VoyageDetailClient({ voyage, galleryPhotos }: { voyage: Voyage; galleryPhotos: Photo[] }) {
   const [lightbox, setLightbox] = useState<{ url: string; titre?: string; lieu?: string } | null>(null);
+  const [galleryLimit, setGalleryLimit] = useState(GALLERY_PAGE_SIZE);
   const dateDebut = voyage.dateDebut ? new Date(voyage.dateDebut).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }) : null;
   const dateFin = voyage.dateFin ? new Date(voyage.dateFin).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }) : null;
 
@@ -172,13 +175,21 @@ export default function VoyageDetailClient({ voyage, galleryPhotos }: { voyage: 
 
         {/* ── Galerie ─────────────────────────────────── */}
         {(voyage.galerie.length > 0 || galleryPhotos.length > 0) && (() => {
-          // Merge: gallery photos first (with metadata), then voyage.galerie URLs not already included
           const galleryUrls = new Set(galleryPhotos.map((p) => p.url));
           const extraUrls = voyage.galerie.filter((u) => !galleryUrls.has(u));
+          const allPhotos = [
+            ...galleryPhotos.map((p) => ({ id: p.id, url: p.url, titre: p.titre, lieu: p.lieu })),
+            ...extraUrls.map((url, i) => ({ id: `extra_${i}`, url, titre: "", lieu: "" })),
+          ];
+          const total = allPhotos.length;
+          const visible = allPhotos.slice(0, galleryLimit);
+          const hasMore = galleryLimit < total;
+
           return (
-            <Section title={`🖼️ Gallery (${galleryPhotos.length + extraUrls.length})`}>
+            <Section title={`🖼️ Gallery (${total})`}>
+              {/* Grille masonry 3 colonnes */}
               <div style={{ columns: "3 180px", columnGap: "10px" }}>
-                {galleryPhotos.map((p) => (
+                {visible.map((p) => (
                   <div key={p.id} onClick={() => setLightbox({ url: p.url, titre: p.titre, lieu: p.lieu })}
                     style={{ breakInside: "avoid", marginBottom: "10px", borderRadius: "10px", overflow: "hidden", cursor: "pointer", position: "relative" }}>
                     <img src={p.url} alt={p.titre} style={{ width: "100%", display: "block", transition: "transform 0.3s" }}
@@ -195,16 +206,30 @@ export default function VoyageDetailClient({ voyage, galleryPhotos }: { voyage: 
                     )}
                   </div>
                 ))}
-                {extraUrls.map((url, i) => (
-                  <div key={`extra_${i}`} onClick={() => setLightbox({ url })}
-                    style={{ breakInside: "avoid", marginBottom: "10px", borderRadius: "10px", overflow: "hidden", cursor: "pointer" }}>
-                    <img src={url} alt="" style={{ width: "100%", display: "block", transition: "transform 0.3s" }}
-                      onMouseEnter={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1.04)"; }}
-                      onMouseLeave={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1)"; }}
-                    />
-                  </div>
-                ))}
               </div>
+
+              {/* Bouton "Voir plus" / résumé */}
+              {hasMore ? (
+                <div style={{ textAlign: "center", marginTop: "20px" }}>
+                  <button
+                    onClick={() => setGalleryLimit((l) => l + GALLERY_PAGE_SIZE)}
+                    style={{
+                      background: "#fff", border: "1.5px solid rgba(0,0,0,0.1)",
+                      color: "#1c1917", fontWeight: 600, fontSize: "13px",
+                      padding: "12px 28px", borderRadius: "10px", cursor: "pointer",
+                      transition: "border-color 0.2s",
+                    }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = "#0d9488"; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(0,0,0,0.1)"; }}
+                  >
+                    Voir plus · {total - galleryLimit} photo{total - galleryLimit > 1 ? "s" : ""} restante{total - galleryLimit > 1 ? "s" : ""}
+                  </button>
+                </div>
+              ) : total > GALLERY_PAGE_SIZE ? (
+                <p style={{ textAlign: "center", color: "rgba(28,25,23,0.35)", fontSize: "12px", marginTop: "16px" }}>
+                  Toutes les {total} photos affichées
+                </p>
+              ) : null}
             </Section>
           );
         })()}
