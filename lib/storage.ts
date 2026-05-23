@@ -91,11 +91,11 @@ export async function readData<T>(
 
     if (result.status === "found") return result.data;
 
-    // Blob existe mais lecture échouée → retourner la valeur par défaut,
-    // NE PAS réécrire le blob (ça écraserait les données réelles !)
+    // Blob existe mais lecture échouée → afficher le JSON en fallback (lecture seule)
+    // NE PAS réécrire le blob — on ne veut pas écraser les vraies données
     if (result.status === "error") {
-      console.error(`[storage] readData(${blobKey}): blob read failed, returning default`);
-      return result.data;
+      console.error(`[storage] readData(${blobKey}): blob read failed, using JSON fallback (read-only)`);
+      return readFromJsonFile(jsonFileName, defaultValue);
     }
 
     // Blob inexistant → 1er déploiement : migrer depuis le JSON bundlé
