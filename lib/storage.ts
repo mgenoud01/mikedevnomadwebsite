@@ -1,63 +1,21 @@
 /**
  * Couche de stockage hybride :
- *  - Production (Vercel) : Vercel KV (Redis) via les env vars KV_REST_API_URL / KV_REST_API_TOKEN
+ *  - Production (Vercel) : Vercel Blob (fichiers JSON dans le cloud)
  *  - Local (npm run dev)  : fichiers JSON dans data/
  *
  * Lors du 1er appel en production, les données sont migrées automatiquement
- * depuis les fichiers JSON présents dans le build vers KV.
+ * depuis les fichiers JSON du build vers Blob.
  */
 
 import fs from "fs";
 import path from "path";
 
-const USE_KV = !!(
-  process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN
-);
+const USE_BLOB = !!process.env.BLOB_READ_WRITE_TOKEN;
+const BLOB_PREFIX = "mikedevnomad/data";
 
-type KVClient = {
-  get: <T>(key: string) => Promise<T | null>;
-  set: (key: string, value: unknown) => Promise<unknown>;
-};
+// ─── Helpers JSON locaux ─────────────────────────────────────────────────────
 
-let _kv: KVClient | null = null;
-
-async function getKV(): Promise<KVClient | null> {
-  if (!USE_KV) return null;
-  if (_kv) return _kv;
-  const mod = await import("@vercel/kv");
-  _kv = mod.kv as KVClient;
-  return _kv;
-}
-
-/** Lit une collection. En prod : KV (avec migration auto depuis JSON au 1er appel). En local : JSON. */
-export async function readData<T>(
-  kvKey: string,
-  jsonFileName: string,
-  defaultValue: T
-): Promise<T> {
-  const kv = await getKV();
-
-  if (kv) {
-    const cached = await kv.get<T>(kvKey);
-    if (cached !== null && cached !== undefined) return cached;
-
-    // 1er appel : migrer depuis le JSON bundlé (lecture seule OK sur Vercel)
-    const filePath = path.join(process.cwd(), "data", jsonFileName);
-    if (fs.existsSync(filePath)) {
-      try {
-        const fileData = JSON.parse(
-          fs.readFileSync(filePath, "utf-8")
-        ) as T;
-        await kv.set(kvKey, fileData);
-        return fileData;
-      } catch {
-        return defaultValue;
-      }
-    }
-    return defaultValue;
-  }
-
-  // Local dev : fichiers JSON
+function readFromJsonFile<T>(jsonFileName: string, defaultValue: T): T {
   const filePath = path.join(process.cwd(), "data", jsonFileName);
   if (!fs.existsSync(filePath)) return defaultValue;
   try {
@@ -67,20 +25,82 @@ export async function readData<T>(
   }
 }
 
-/** Écrit une collection. En prod : KV. En local : JSON. */
+function writeToJsonFile<T>(jsonFileName: string, value: T): void {
+  const filePath = path.join(process.cwd(), "data", jsonFileName);
+  fs.writeFileSync(filePath, JSON.stringify(value, null, 2));
+}
+
+// ─── Helpers Blob ─────────────────────────────────────────────────────────────
+
+async function writeToBlob<T>(blobKey: string, value: T): Promise<void> {
+  const { put } = await import("@vercel/blob");
+  await put(`${BLOB_PREFIX}/${blobKey}.json`, JSON.stringify(value, null, 2), {
+    access: "public",
+    contentType: "application/json",
+    addRandomSuffix: false,
+  });
+}
+
+async function readFromBlob<T>(
+  blobKey: string,
+  defaultValue: T
+): Promise<{ found: boolean; data: T }> {
+  const { list } = await import("@vercel/blob");
+  const { blobs } = await list({
+    prefix: `${BLOB_PREFIX}/${blobKey}.json`,
+    limit: 1,
+  });
+
+  if (blobs.length === 0) return { found: false, data: defaultValue };
+
+  // Cache-bust pour toujours avoir la version fraîche
+  const url = `${blobs[0].url}?t=${Date.now()}`;
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) return { found: false, data: defaultValue };
+
+  const data = (await res.json()) as T;
+  return { found: true, data };
+}
+
+// ─── API publique ─────────────────────────────────────────────────────────────
+
+/** Lit une collection. En prod : Blob (avec migration auto depuis JSON au 1er appel). En local : JSON. */
+export async function readData<T>(
+  blobKey: string,
+  jsonFileName: string,
+  defaultValue: T
+): Promise<T> {
+  if (!USE_BLOB) return readFromJsonFile(jsonFileName, defaultValue);
+
+  try {
+    const { found, data } = await readFromBlob<T>(blobKey, defaultValue);
+    if (found) return data;
+
+    // 1er appel : migrer depuis le JSON bundlé (lecture seule OK sur Vercel)
+    const fileData = readFromJsonFile<T>(jsonFileName, defaultValue);
+    await writeToBlob(blobKey, fileData);
+    return fileData;
+  } catch (err) {
+    console.error(`[storage] readData(${blobKey}) error:`, err);
+    return readFromJsonFile(jsonFileName, defaultValue);
+  }
+}
+
+/** Écrit une collection. En prod : Blob. En local : JSON. */
 export async function writeData<T>(
-  kvKey: string,
+  blobKey: string,
   jsonFileName: string,
   value: T
 ): Promise<void> {
-  const kv = await getKV();
-
-  if (kv) {
-    await kv.set(kvKey, value);
+  if (!USE_BLOB) {
+    writeToJsonFile(jsonFileName, value);
     return;
   }
 
-  // Local dev : JSON
-  const filePath = path.join(process.cwd(), "data", jsonFileName);
-  fs.writeFileSync(filePath, JSON.stringify(value, null, 2));
+  try {
+    await writeToBlob(blobKey, value);
+  } catch (err) {
+    console.error(`[storage] writeData(${blobKey}) error:`, err);
+    throw err; // Remonte l'erreur pour que l'API route la catchée
+  }
 }
