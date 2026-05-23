@@ -38,6 +38,7 @@ async function writeToBlob<T>(blobKey: string, value: T): Promise<void> {
     access: "public",
     contentType: "application/json",
     addRandomSuffix: false,
+    allowOverwrite: true,
   });
 }
 
