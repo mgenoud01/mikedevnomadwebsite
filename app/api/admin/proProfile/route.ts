@@ -8,7 +8,8 @@ export async function GET() {
     return NextResponse.json(await getProProfile());
   } catch (err) {
     console.error("[GET /api/admin/proProfile]", err);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
 
@@ -30,6 +31,7 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json(profile);
   } catch (err) {
     console.error("[PUT /api/admin/proProfile]", err);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

@@ -14,7 +14,8 @@ export async function PUT(
     return NextResponse.json(p);
   } catch (err) {
     console.error("[PUT /api/admin/galerie/:id]", err);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
 
@@ -29,6 +30,7 @@ export async function DELETE(
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("[DELETE /api/admin/galerie/:id]", err);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

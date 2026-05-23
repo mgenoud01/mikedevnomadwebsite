@@ -9,6 +9,7 @@
 
 import fs from "fs";
 import path from "path";
+import { put, list } from "@vercel/blob";
 
 const USE_BLOB = !!process.env.BLOB_READ_WRITE_TOKEN;
 const BLOB_PREFIX = "mikedevnomad/data";
@@ -33,7 +34,6 @@ function writeToJsonFile<T>(jsonFileName: string, value: T): void {
 // ─── Helpers Blob ─────────────────────────────────────────────────────────────
 
 async function writeToBlob<T>(blobKey: string, value: T): Promise<void> {
-  const { put } = await import("@vercel/blob");
   await put(`${BLOB_PREFIX}/${blobKey}.json`, JSON.stringify(value, null, 2), {
     access: "public",
     contentType: "application/json",
@@ -46,7 +46,6 @@ async function readFromBlob<T>(
   blobKey: string,
   defaultValue: T
 ): Promise<{ found: boolean; data: T }> {
-  const { list } = await import("@vercel/blob");
   const { blobs } = await list({
     prefix: `${BLOB_PREFIX}/${blobKey}.json`,
     limit: 1,
@@ -98,10 +97,10 @@ export async function writeData<T>(
     return;
   }
 
-  try {
-    await writeToBlob(blobKey, value);
-  } catch (err) {
-    console.error(`[storage] writeData(${blobKey}) error:`, err);
-    throw err; // Remonte l'erreur pour que l'API route la catchée
+  // Lève une erreur explicite si le token est absent au runtime
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    throw new Error("BLOB_READ_WRITE_TOKEN manquant — vérifiez les variables d'environnement Vercel");
   }
+
+  await writeToBlob(blobKey, value);
 }

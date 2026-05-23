@@ -8,7 +8,8 @@ export async function GET() {
     return NextResponse.json(await getAllPhotos());
   } catch (err) {
     console.error("[GET /api/admin/galerie]", err);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
 
@@ -28,6 +29,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(photo, { status: 201 });
   } catch (err) {
     console.error("[POST /api/admin/galerie]", err);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

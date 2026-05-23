@@ -8,7 +8,8 @@ export async function GET() {
     return NextResponse.json(await getAllVoyages());
   } catch (err) {
     console.error("[GET /api/admin/voyages]", err);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
 
@@ -37,6 +38,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(voyage, { status: 201 });
   } catch (err) {
     console.error("[POST /api/admin/voyages]", err);
-    return NextResponse.json({ error: "Erreur serveur — impossible de sauvegarder" }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }

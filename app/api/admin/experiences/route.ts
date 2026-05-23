@@ -8,7 +8,8 @@ export async function GET() {
     return NextResponse.json(await getAllExperiences());
   } catch (err) {
     console.error("[GET /api/admin/experiences]", err);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
 
@@ -30,6 +31,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(experience, { status: 201 });
   } catch (err) {
     console.error("[POST /api/admin/experiences]", err);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    const msg = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
