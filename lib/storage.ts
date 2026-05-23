@@ -35,7 +35,7 @@ function writeToJsonFile<T>(jsonFileName: string, value: T): void {
 
 async function writeToBlob<T>(blobKey: string, value: T): Promise<void> {
   await put(`${BLOB_PREFIX}/${blobKey}.json`, JSON.stringify(value, null, 2), {
-    access: "public",
+    access: "private",         // ← store privé Vercel : "private" obligatoire
     contentType: "application/json",
     addRandomSuffix: false,
     allowOverwrite: true,
@@ -53,9 +53,11 @@ async function readFromBlob<T>(
 
   if (blobs.length === 0) return { found: false, data: defaultValue };
 
-  // Cache-bust pour toujours avoir la version fraîche
-  const url = `${blobs[0].url}?t=${Date.now()}`;
-  const res = await fetch(url, { cache: "no-store" });
+  // Pour les blobs privés, utiliser downloadUrl (URL signée avec token) plutôt que url
+  const blob = blobs[0] as typeof blobs[0] & { downloadUrl?: string };
+  const fetchUrl = blob.downloadUrl ?? blob.url;
+
+  const res = await fetch(fetchUrl, { cache: "no-store" });
   if (!res.ok) return { found: false, data: defaultValue };
 
   const data = (await res.json()) as T;
@@ -97,7 +99,6 @@ export async function writeData<T>(
     return;
   }
 
-  // Lève une erreur explicite si le token est absent au runtime
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
     throw new Error("BLOB_READ_WRITE_TOKEN manquant — vérifiez les variables d'environnement Vercel");
   }
