@@ -1,7 +1,4 @@
-import fs from "fs";
-import path from "path";
-
-const DATA_FILE = path.join(process.cwd(), "data", "voyages.json");
+import { readData, writeData } from "./storage";
 
 export interface Resto {
   id: string;
@@ -43,22 +40,23 @@ export interface Voyage {
   updatedAt: string;
 }
 
-export function getAllVoyages(): Voyage[] {
-  if (!fs.existsSync(DATA_FILE)) return [];
-  const raw = fs.readFileSync(DATA_FILE, "utf-8");
-  return JSON.parse(raw);
+export async function getAllVoyages(): Promise<Voyage[]> {
+  return readData<Voyage[]>("voyages", "voyages.json", []);
 }
 
-export function getVoyageById(id: string): Voyage | null {
-  return getAllVoyages().find((v) => v.id === id) || null;
+export async function getVoyageById(id: string): Promise<Voyage | null> {
+  const voyages = await getAllVoyages();
+  return voyages.find((v) => v.id === id) || null;
 }
 
-export function saveVoyages(voyages: Voyage[]): void {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(voyages, null, 2));
+export async function saveVoyages(voyages: Voyage[]): Promise<void> {
+  await writeData("voyages", "voyages.json", voyages);
 }
 
-export function createVoyage(data: Omit<Voyage, "id" | "createdAt" | "updatedAt">): Voyage {
-  const voyages = getAllVoyages();
+export async function createVoyage(
+  data: Omit<Voyage, "id" | "createdAt" | "updatedAt">
+): Promise<Voyage> {
+  const voyages = await getAllVoyages();
   const voyage: Voyage = {
     ...data,
     id: `voyage_${Date.now()}`,
@@ -66,24 +64,31 @@ export function createVoyage(data: Omit<Voyage, "id" | "createdAt" | "updatedAt"
     updatedAt: new Date().toISOString(),
   };
   voyages.unshift(voyage);
-  saveVoyages(voyages);
+  await saveVoyages(voyages);
   return voyage;
 }
 
-export function updateVoyage(id: string, data: Partial<Voyage>): Voyage | null {
-  const voyages = getAllVoyages();
+export async function updateVoyage(
+  id: string,
+  data: Partial<Voyage>
+): Promise<Voyage | null> {
+  const voyages = await getAllVoyages();
   const idx = voyages.findIndex((v) => v.id === id);
   if (idx === -1) return null;
-  voyages[idx] = { ...voyages[idx], ...data, updatedAt: new Date().toISOString() };
-  saveVoyages(voyages);
+  voyages[idx] = {
+    ...voyages[idx],
+    ...data,
+    updatedAt: new Date().toISOString(),
+  };
+  await saveVoyages(voyages);
   return voyages[idx];
 }
 
-export function deleteVoyage(id: string): boolean {
-  const voyages = getAllVoyages();
+export async function deleteVoyage(id: string): Promise<boolean> {
+  const voyages = await getAllVoyages();
   const filtered = voyages.filter((v) => v.id !== id);
   if (filtered.length === voyages.length) return false;
-  saveVoyages(filtered);
+  await saveVoyages(filtered);
   return true;
 }
 
@@ -91,7 +96,7 @@ export function slugify(text: string): string {
   return text
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[̀-ͯ]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 }

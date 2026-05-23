@@ -1,7 +1,4 @@
-import fs from "fs";
-import path from "path";
-
-const DATA_FILE = path.join(process.cwd(), "data", "ctf.json");
+import { readData, writeData } from "./storage";
 
 export interface CTFEntry {
   id: string;
@@ -17,18 +14,18 @@ export interface CTFEntry {
   updatedAt: string;
 }
 
-export function getAllCTF(): CTFEntry[] {
-  if (!fs.existsSync(DATA_FILE)) return [];
-  const raw = fs.readFileSync(DATA_FILE, "utf-8");
-  return JSON.parse(raw);
+export async function getAllCTF(): Promise<CTFEntry[]> {
+  return readData<CTFEntry[]>("ctf", "ctf.json", []);
 }
 
-export function saveCTF(entries: CTFEntry[]): void {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(entries, null, 2));
+export async function saveCTF(entries: CTFEntry[]): Promise<void> {
+  await writeData("ctf", "ctf.json", entries);
 }
 
-export function createCTF(data: Omit<CTFEntry, "id" | "createdAt" | "updatedAt">): CTFEntry {
-  const entries = getAllCTF();
+export async function createCTF(
+  data: Omit<CTFEntry, "id" | "createdAt" | "updatedAt">
+): Promise<CTFEntry> {
+  const entries = await getAllCTF();
   const entry: CTFEntry = {
     ...data,
     id: `ctf_${Date.now()}`,
@@ -36,23 +33,30 @@ export function createCTF(data: Omit<CTFEntry, "id" | "createdAt" | "updatedAt">
     updatedAt: new Date().toISOString(),
   };
   entries.unshift(entry);
-  saveCTF(entries);
+  await saveCTF(entries);
   return entry;
 }
 
-export function updateCTF(id: string, data: Partial<CTFEntry>): CTFEntry | null {
-  const entries = getAllCTF();
+export async function updateCTF(
+  id: string,
+  data: Partial<CTFEntry>
+): Promise<CTFEntry | null> {
+  const entries = await getAllCTF();
   const idx = entries.findIndex((e) => e.id === id);
   if (idx === -1) return null;
-  entries[idx] = { ...entries[idx], ...data, updatedAt: new Date().toISOString() };
-  saveCTF(entries);
+  entries[idx] = {
+    ...entries[idx],
+    ...data,
+    updatedAt: new Date().toISOString(),
+  };
+  await saveCTF(entries);
   return entries[idx];
 }
 
-export function deleteCTF(id: string): boolean {
-  const entries = getAllCTF();
+export async function deleteCTF(id: string): Promise<boolean> {
+  const entries = await getAllCTF();
   const filtered = entries.filter((e) => e.id !== id);
   if (filtered.length === entries.length) return false;
-  saveCTF(filtered);
+  await saveCTF(filtered);
   return true;
 }

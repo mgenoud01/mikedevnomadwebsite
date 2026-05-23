@@ -3,8 +3,8 @@ import { isAuthenticated } from "@/lib/auth";
 import { getAllArticles } from "@/lib/articles";
 import BlogAdminClient from "./BlogAdminClient";
 
-export default function BlogAdminPage() {
+export default async function BlogAdminPage() {
   if (!isAuthenticated()) redirect("/admin/login");
-  const articles = getAllArticles();
+  const articles = await getAllArticles();
   return <BlogAdminClient articles={articles} />;
 }

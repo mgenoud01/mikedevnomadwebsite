@@ -3,8 +3,8 @@ import { isAuthenticated } from "@/lib/auth";
 import { getAllCTF } from "@/lib/ctf";
 import SecurityAdminClient from "./SecurityAdminClient";
 
-export default function SecurityAdminPage() {
+export default async function SecurityAdminPage() {
   if (!isAuthenticated()) redirect("/admin/login");
-  const ctfEntries = getAllCTF();
+  const ctfEntries = await getAllCTF();
   return <SecurityAdminClient ctfEntries={ctfEntries} />;
 }

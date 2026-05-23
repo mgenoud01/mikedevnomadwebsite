@@ -1,7 +1,4 @@
-import fs from "fs";
-import path from "path";
-
-const DATA_FILE = path.join(process.cwd(), "data", "experiences.json");
+import { readData, writeData } from "./storage";
 
 export interface Experience {
   id: string;
@@ -18,18 +15,18 @@ export interface Experience {
   updatedAt: string;
 }
 
-export function getAllExperiences(): Experience[] {
-  if (!fs.existsSync(DATA_FILE)) return [];
-  const raw = fs.readFileSync(DATA_FILE, "utf-8");
-  return JSON.parse(raw);
+export async function getAllExperiences(): Promise<Experience[]> {
+  return readData<Experience[]>("experiences", "experiences.json", []);
 }
 
-export function saveExperiences(experiences: Experience[]): void {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(experiences, null, 2));
+export async function saveExperiences(experiences: Experience[]): Promise<void> {
+  await writeData("experiences", "experiences.json", experiences);
 }
 
-export function createExperience(data: Omit<Experience, "id" | "createdAt" | "updatedAt">): Experience {
-  const experiences = getAllExperiences();
+export async function createExperience(
+  data: Omit<Experience, "id" | "createdAt" | "updatedAt">
+): Promise<Experience> {
+  const experiences = await getAllExperiences();
   const experience: Experience = {
     ...data,
     id: `exp_${Date.now()}`,
@@ -37,23 +34,30 @@ export function createExperience(data: Omit<Experience, "id" | "createdAt" | "up
     updatedAt: new Date().toISOString(),
   };
   experiences.unshift(experience);
-  saveExperiences(experiences);
+  await saveExperiences(experiences);
   return experience;
 }
 
-export function updateExperience(id: string, data: Partial<Experience>): Experience | null {
-  const experiences = getAllExperiences();
+export async function updateExperience(
+  id: string,
+  data: Partial<Experience>
+): Promise<Experience | null> {
+  const experiences = await getAllExperiences();
   const idx = experiences.findIndex((e) => e.id === id);
   if (idx === -1) return null;
-  experiences[idx] = { ...experiences[idx], ...data, updatedAt: new Date().toISOString() };
-  saveExperiences(experiences);
+  experiences[idx] = {
+    ...experiences[idx],
+    ...data,
+    updatedAt: new Date().toISOString(),
+  };
+  await saveExperiences(experiences);
   return experiences[idx];
 }
 
-export function deleteExperience(id: string): boolean {
-  const experiences = getAllExperiences();
+export async function deleteExperience(id: string): Promise<boolean> {
+  const experiences = await getAllExperiences();
   const filtered = experiences.filter((e) => e.id !== id);
   if (filtered.length === experiences.length) return false;
-  saveExperiences(filtered);
+  await saveExperiences(filtered);
   return true;
 }

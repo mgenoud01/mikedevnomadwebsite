@@ -4,15 +4,19 @@ import { getAllVoyages, createVoyage, slugify } from "@/lib/voyages";
 
 export async function GET() {
   if (!isAuthenticated()) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
-  return NextResponse.json(getAllVoyages());
+  try {
+    return NextResponse.json(await getAllVoyages());
+  } catch (err) {
+    console.error("[GET /api/admin/voyages]", err);
+    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest) {
   if (!isAuthenticated()) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
-
   try {
     const data = await req.json();
-    const voyage = createVoyage({
+    const voyage = await createVoyage({
       titre: data.titre || "",
       slug: slugify(data.titre || ""),
       pays: data.pays || "",
@@ -33,9 +37,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(voyage, { status: 201 });
   } catch (err) {
     console.error("[POST /api/admin/voyages]", err);
-    return NextResponse.json(
-      { error: "Erreur serveur — impossible de sauvegarder (filesystem read-only sur Vercel ?)" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Erreur serveur — impossible de sauvegarder" }, { status: 500 });
   }
 }

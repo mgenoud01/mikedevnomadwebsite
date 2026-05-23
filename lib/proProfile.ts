@@ -1,7 +1,4 @@
-import fs from "fs";
-import path from "path";
-
-const DATA_FILE = path.join(process.cwd(), "data", "proProfile.json");
+import { readData, writeData } from "./storage";
 
 export interface ProProfile {
   bio: string;
@@ -27,13 +24,11 @@ const DEFAULT_PROFILE: ProProfile = {
   skills: ["TypeScript", "Next.js", "Rust", "Node.js", "PostgreSQL", "Docker", "AWS", "Security+"],
 };
 
-export function getProProfile(): ProProfile {
-  if (!fs.existsSync(DATA_FILE)) return DEFAULT_PROFILE;
-  const raw = fs.readFileSync(DATA_FILE, "utf-8");
-  return JSON.parse(raw);
+export async function getProProfile(): Promise<ProProfile> {
+  return readData<ProProfile>("proProfile", "proProfile.json", DEFAULT_PROFILE);
 }
 
-export function saveProProfile(data: ProProfile): ProProfile {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+export async function saveProProfile(data: ProProfile): Promise<ProProfile> {
+  await writeData("proProfile", "proProfile.json", data);
   return data;
 }

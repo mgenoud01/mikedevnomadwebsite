@@ -3,7 +3,7 @@ import ProHomeClient from "./ProHomeClient";
 
 export const dynamic = "force-dynamic";
 
-export default function ProHomePage() {
-  const profile = getProProfile();
+export default async function ProHomePage() {
+  const profile = await getProProfile();
   return <ProHomeClient profile={profile} />;
 }

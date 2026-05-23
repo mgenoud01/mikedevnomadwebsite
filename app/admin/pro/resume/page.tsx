@@ -3,8 +3,8 @@ import { isAuthenticated } from "@/lib/auth";
 import { getAllExperiences } from "@/lib/experience";
 import ResumeAdminClient from "./ResumeAdminClient";
 
-export default function ResumeAdminPage() {
+export default async function ResumeAdminPage() {
   if (!isAuthenticated()) redirect("/admin/login");
-  const experiences = getAllExperiences();
+  const experiences = await getAllExperiences();
   return <ResumeAdminClient experiences={experiences} />;
 }

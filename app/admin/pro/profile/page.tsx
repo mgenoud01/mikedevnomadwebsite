@@ -3,8 +3,8 @@ import { isAuthenticated } from "@/lib/auth";
 import { getProProfile } from "@/lib/proProfile";
 import ProfileAdminClient from "./ProfileAdminClient";
 
-export default function ProfileAdminPage() {
+export default async function ProfileAdminPage() {
   if (!isAuthenticated()) redirect("/admin/login");
-  const profile = getProProfile();
+  const profile = await getProProfile();
   return <ProfileAdminClient profile={profile} />;
 }

@@ -3,7 +3,7 @@ import SecurityClient from "./SecurityClient";
 
 export const dynamic = "force-dynamic";
 
-export default function CybersecuritePage() {
-  const entries = getAllCTF();
+export default async function CybersecuritePage() {
+  const entries = await getAllCTF();
   return <SecurityClient entries={entries} />;
 }

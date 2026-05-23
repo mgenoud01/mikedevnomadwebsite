@@ -3,8 +3,8 @@ import { isAuthenticated } from "@/lib/auth";
 import { getAllProjects } from "@/lib/projects";
 import ProjectsAdminClient from "./ProjectsAdminClient";
 
-export default function ProjectsAdminPage() {
+export default async function ProjectsAdminPage() {
   if (!isAuthenticated()) redirect("/admin/login");
-  const projects = getAllProjects();
+  const projects = await getAllProjects();
   return <ProjectsAdminClient projects={projects} />;
 }

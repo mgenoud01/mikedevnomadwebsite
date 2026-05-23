@@ -4,8 +4,8 @@ import CVClient from "./CVClient";
 
 export const dynamic = "force-dynamic";
 
-export default function CVPage() {
-  const experiences = getAllExperiences();
-  const profile = getProProfile();
+export default async function CVPage() {
+  const experiences = await getAllExperiences();
+  const profile = await getProProfile();
   return <CVClient experiences={experiences} profile={profile} />;
 }

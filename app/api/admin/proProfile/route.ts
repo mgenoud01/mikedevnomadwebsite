@@ -4,22 +4,32 @@ import { getProProfile, saveProProfile } from "@/lib/proProfile";
 
 export async function GET() {
   if (!isAuthenticated()) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
-  return NextResponse.json(getProProfile());
+  try {
+    return NextResponse.json(await getProProfile());
+  } catch (err) {
+    console.error("[GET /api/admin/proProfile]", err);
+    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+  }
 }
 
 export async function PUT(req: NextRequest) {
   if (!isAuthenticated()) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
-  const data = await req.json();
-  const profile = saveProProfile({
-    bio: data.bio || "",
-    disponible: data.disponible ?? true,
-    yearsExp: data.yearsExp || 0,
-    projectsShipped: data.projectsShipped || 0,
-    ctfPodiums: data.ctfPodiums || 0,
-    email: data.email || "",
-    github: data.github || "",
-    linkedin: data.linkedin || "",
-    skills: data.skills || [],
-  });
-  return NextResponse.json(profile);
+  try {
+    const data = await req.json();
+    const profile = await saveProProfile({
+      bio: data.bio || "",
+      disponible: data.disponible ?? true,
+      yearsExp: data.yearsExp || 0,
+      projectsShipped: data.projectsShipped || 0,
+      ctfPodiums: data.ctfPodiums || 0,
+      email: data.email || "",
+      github: data.github || "",
+      linkedin: data.linkedin || "",
+      skills: data.skills || [],
+    });
+    return NextResponse.json(profile);
+  } catch (err) {
+    console.error("[PUT /api/admin/proProfile]", err);
+    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+  }
 }

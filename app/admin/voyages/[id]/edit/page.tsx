@@ -3,9 +3,13 @@ import { isAuthenticated } from "@/lib/auth";
 import { getVoyageById } from "@/lib/voyages";
 import VoyageForm from "../../VoyageForm";
 
-export default function EditVoyagePage({ params }: { params: { id: string } }) {
+export default async function EditVoyagePage({
+  params,
+}: {
+  params: { id: string };
+}) {
   if (!isAuthenticated()) redirect("/admin/login");
-  const voyage = getVoyageById(params.id);
+  const voyage = await getVoyageById(params.id);
   if (!voyage) notFound();
   return <VoyageForm voyage={voyage} />;
 }
