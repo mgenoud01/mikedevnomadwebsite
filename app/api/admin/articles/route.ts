@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
 import { getAllArticles, createArticle, slugify } from "@/lib/articles";
 
@@ -28,6 +29,7 @@ export async function POST(req: NextRequest) {
       tags: data.tags || [],
       publie: data.publie ?? true,
     });
+    revalidatePath("/nomade/blog");
     return NextResponse.json(article, { status: 201 });
   } catch (err) {
     console.error("[POST /api/admin/articles]", err);

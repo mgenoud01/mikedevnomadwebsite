@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
 import { getAllVoyages, createVoyage, slugify } from "@/lib/voyages";
 
@@ -35,6 +36,8 @@ export async function POST(req: NextRequest) {
       contenu: data.contenu || "",
       miseEnAvant: data.miseEnAvant || false,
     });
+    revalidatePath("/nomade");
+    revalidatePath("/nomade/voyages");
     return NextResponse.json(voyage, { status: 201 });
   } catch (err) {
     console.error("[POST /api/admin/voyages]", err);

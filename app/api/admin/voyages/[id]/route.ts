@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
 import { getVoyageById, updateVoyage, deleteVoyage } from "@/lib/voyages";
 
@@ -27,6 +28,9 @@ export async function PUT(
     const data = await req.json();
     const voyage = await updateVoyage(params.id, data);
     if (!voyage) return NextResponse.json({ error: "Introuvable" }, { status: 404 });
+    revalidatePath("/nomade");
+    revalidatePath("/nomade/voyages");
+    revalidatePath(`/nomade/voyages/${voyage.slug}`);
     return NextResponse.json(voyage);
   } catch (err) {
     console.error("[PUT /api/admin/voyages/:id]", err);
@@ -43,6 +47,8 @@ export async function DELETE(
   try {
     const ok = await deleteVoyage(params.id);
     if (!ok) return NextResponse.json({ error: "Introuvable" }, { status: 404 });
+    revalidatePath("/nomade");
+    revalidatePath("/nomade/voyages");
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("[DELETE /api/admin/voyages/:id]", err);

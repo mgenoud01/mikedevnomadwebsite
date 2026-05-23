@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
 import { getArticleById, updateArticle, deleteArticle } from "@/lib/articles";
 
@@ -27,6 +28,8 @@ export async function PUT(
     const data = await req.json();
     const a = await updateArticle(params.id, data);
     if (!a) return NextResponse.json({ error: "Introuvable" }, { status: 404 });
+    revalidatePath("/nomade/blog");
+    revalidatePath(`/nomade/blog/${a.slug}`);
     return NextResponse.json(a);
   } catch (err) {
     console.error("[PUT /api/admin/articles/:id]", err);
@@ -43,6 +46,7 @@ export async function DELETE(
   try {
     const ok = await deleteArticle(params.id);
     if (!ok) return NextResponse.json({ error: "Introuvable" }, { status: 404 });
+    revalidatePath("/nomade/blog");
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("[DELETE /api/admin/articles/:id]", err);

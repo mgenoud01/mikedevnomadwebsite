@@ -35,7 +35,7 @@ function writeToJsonFile<T>(jsonFileName: string, value: T): void {
 
 async function writeToBlob<T>(blobKey: string, value: T): Promise<void> {
   await put(`${BLOB_PREFIX}/${blobKey}.json`, JSON.stringify(value, null, 2), {
-    access: "private",         // ← store privé Vercel : "private" obligatoire
+    access: "private",         // store privé Vercel → "private" obligatoire
     contentType: "application/json",
     addRandomSuffix: false,
     allowOverwrite: true,
@@ -53,12 +53,19 @@ async function readFromBlob<T>(
 
   if (blobs.length === 0) return { found: false, data: defaultValue };
 
-  // Pour les blobs privés, utiliser downloadUrl (URL signée avec token) plutôt que url
-  const blob = blobs[0] as typeof blobs[0] & { downloadUrl?: string };
-  const fetchUrl = blob.downloadUrl ?? blob.url;
+  // Les blobs privés requièrent Authorization: Bearer <token>
+  // (même approche que le SDK @vercel/blob/get() en interne)
+  const res = await fetch(blobs[0].url, {
+    cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}`,
+    },
+  });
 
-  const res = await fetch(fetchUrl, { cache: "no-store" });
-  if (!res.ok) return { found: false, data: defaultValue };
+  if (!res.ok) {
+    console.error(`[storage] readFromBlob fetch error: ${res.status} ${res.statusText}`);
+    return { found: false, data: defaultValue };
+  }
 
   const data = (await res.json()) as T;
   return { found: true, data };
