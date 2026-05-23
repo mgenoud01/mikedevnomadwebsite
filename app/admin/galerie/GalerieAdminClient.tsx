@@ -33,54 +33,53 @@ export default function GalerieAdminClient({ photos: initial, voyages }: { photo
     setUploading(true);
     const folder = getCloudinaryFolder();
 
-    // Upload séquentiellement — chaque save attend le précédent pour éviter
-    // les écritures concurrentes sur le blob (race condition read-modify-write)
-    for (const file of files) {
-      try {
-        const fd = new FormData();
-        fd.append("file", file);
-        fd.append("folder", folder);
-        const uploadRes = await fetch("/api/admin/upload", { method: "POST", body: fd });
-        const uploadData = await uploadRes.json();
-        if (!uploadRes.ok || !uploadData.url) {
-          console.error("Upload Cloudinary échoué:", uploadData.error);
-          continue;
-        }
+    try {
+      // Étape 1 : upload toutes les photos vers Cloudinary en parallèle
+      const uploadResults = await Promise.all(
+        files.map(async (file) => {
+          const fd = new FormData();
+          fd.append("file", file);
+          fd.append("folder", folder);
+          const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+          const data = await res.json();
+          if (!res.ok || !data.url) throw new Error(data.error || "Upload Cloudinary échoué");
+          return { file, url: data.url as string };
+        })
+      );
 
-        const saveRes = await fetch("/api/admin/galerie", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            url: uploadData.url,
+      // Étape 2 : 1 seule écriture blob pour toutes les photos (batch)
+      const saveRes = await fetch("/api/admin/galerie/batch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          photos: uploadResults.map(({ file, url }) => ({
+            url,
             titre: file.name.replace(/\.[^/.]+$/, ""),
             lieu: "",
             pays: currentVoyage?.pays || "",
             description: "",
             miseEnAvant: false,
             voyageId: activeAlbum === "general" ? undefined : activeAlbum,
-          }),
-        });
-        if (!saveRes.ok) {
-          const err = await saveRes.json().catch(() => ({}));
-          console.error("Sauvegarde échouée:", err.error);
-          continue;
-        }
-        const photo = await saveRes.json();
-        setPhotos((p) => [photo, ...p]);
-      } catch (err) {
-        console.error("Erreur upload:", err);
+          })),
+        }),
+      });
+
+      if (!saveRes.ok) {
+        const err = await saveRes.json().catch(() => ({}));
+        alert(`Erreur sauvegarde : ${err.error || "Inconnue"}`);
+        return;
       }
+    } catch (err: any) {
+      alert(`Erreur : ${err.message}`);
+      return;
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
     }
 
-    setUploading(false);
-    if (fileRef.current) fileRef.current.value = "";
-
-    // Recharge depuis le serveur pour s'assurer que l'état client = blob réel
+    // Étape 3 : recharge depuis le serveur → état client = blob réel
     const freshRes = await fetch("/api/admin/galerie");
-    if (freshRes.ok) {
-      const freshPhotos = await freshRes.json();
-      setPhotos(freshPhotos);
-    }
+    if (freshRes.ok) setPhotos(await freshRes.json());
   }
 
   function startEdit(p: Photo) {

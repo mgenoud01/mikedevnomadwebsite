@@ -2,9 +2,6 @@
  * Couche de stockage hybride :
  *  - Production (Vercel) : Vercel Blob (fichiers JSON dans le cloud)
  *  - Local (npm run dev)  : fichiers JSON dans data/
- *
- * Lors du 1er appel en production, les données sont migrées automatiquement
- * depuis les fichiers JSON du build vers Blob.
  */
 
 import fs from "fs";
@@ -35,46 +32,53 @@ function writeToJsonFile<T>(jsonFileName: string, value: T): void {
 
 async function writeToBlob<T>(blobKey: string, value: T): Promise<void> {
   await put(`${BLOB_PREFIX}/${blobKey}.json`, JSON.stringify(value, null, 2), {
-    access: "private",         // store privé Vercel → "private" obligatoire
+    access: "private",
     contentType: "application/json",
     addRandomSuffix: false,
     allowOverwrite: true,
   });
 }
 
+type BlobReadResult<T> =
+  | { status: "found"; data: T }
+  | { status: "notfound"; data: T }   // blob n'existe pas encore → migration OK
+  | { status: "error"; data: T };      // blob existe mais lecture échouée → NE PAS migrer
+
 async function readFromBlob<T>(
   blobKey: string,
   defaultValue: T
-): Promise<{ found: boolean; data: T }> {
+): Promise<BlobReadResult<T>> {
   const { blobs } = await list({
     prefix: `${BLOB_PREFIX}/${blobKey}.json`,
     limit: 1,
   });
 
-  if (blobs.length === 0) return { found: false, data: defaultValue };
+  // Blob inexistant → migration depuis JSON autorisée
+  if (blobs.length === 0) return { status: "notfound", data: defaultValue };
 
-  // Les blobs privés requièrent Authorization: Bearer <token>
-  // + cache-bust sur l'URL pour contourner le CDN Vercel entre les writes
+  // Blob existe → on lit avec auth + cache-bust
   const fetchUrl = `${blobs[0].url}?t=${Date.now()}`;
   const res = await fetch(fetchUrl, {
     cache: "no-store",
-    headers: {
-      Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}`,
-    },
+    headers: { Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}` },
   });
 
   if (!res.ok) {
-    console.error(`[storage] readFromBlob fetch error: ${res.status} ${res.statusText}`);
-    return { found: false, data: defaultValue };
+    console.error(`[storage] readFromBlob(${blobKey}) HTTP ${res.status} — blob exists, skipping migration`);
+    return { status: "error", data: defaultValue };
   }
 
-  const data = (await res.json()) as T;
-  return { found: true, data };
+  try {
+    const data = (await res.json()) as T;
+    return { status: "found", data };
+  } catch {
+    console.error(`[storage] readFromBlob(${blobKey}) JSON parse error`);
+    return { status: "error", data: defaultValue };
+  }
 }
 
 // ─── API publique ─────────────────────────────────────────────────────────────
 
-/** Lit une collection. En prod : Blob (avec migration auto depuis JSON au 1er appel). En local : JSON. */
 export async function readData<T>(
   blobKey: string,
   jsonFileName: string,
@@ -83,20 +87,27 @@ export async function readData<T>(
   if (!USE_BLOB) return readFromJsonFile(jsonFileName, defaultValue);
 
   try {
-    const { found, data } = await readFromBlob<T>(blobKey, defaultValue);
-    if (found) return data;
+    const result = await readFromBlob<T>(blobKey, defaultValue);
 
-    // 1er appel : migrer depuis le JSON bundlé (lecture seule OK sur Vercel)
+    if (result.status === "found") return result.data;
+
+    // Blob existe mais lecture échouée → retourner la valeur par défaut,
+    // NE PAS réécrire le blob (ça écraserait les données réelles !)
+    if (result.status === "error") {
+      console.error(`[storage] readData(${blobKey}): blob read failed, returning default`);
+      return result.data;
+    }
+
+    // Blob inexistant → 1er déploiement : migrer depuis le JSON bundlé
     const fileData = readFromJsonFile<T>(jsonFileName, defaultValue);
     await writeToBlob(blobKey, fileData);
     return fileData;
   } catch (err) {
-    console.error(`[storage] readData(${blobKey}) error:`, err);
-    return readFromJsonFile(jsonFileName, defaultValue);
+    console.error(`[storage] readData(${blobKey}) unexpected error:`, err);
+    return defaultValue;
   }
 }
 
-/** Écrit une collection. En prod : Blob. En local : JSON. */
 export async function writeData<T>(
   blobKey: string,
   jsonFileName: string,
