@@ -52,6 +52,8 @@ export default function VoyageForm({ voyage }: { voyage?: Voyage }) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [uploadingCover, setUploadingCover] = useState(false);
+  const [uploadingGalerie, setUploadingGalerie] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const [form, setForm] = useState({
     titre: voyage?.titre || "",
@@ -90,7 +92,9 @@ export default function VoyageForm({ voyage }: { voyage?: Voyage }) {
     fd.append("file", file);
     fd.append("folder", voyageFolder());
     const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || `Erreur ${res.status}`);
+    if (!data.url) throw new Error("URL manquante dans la réponse Cloudinary");
     return data.url;
   }
 
@@ -98,15 +102,30 @@ export default function VoyageForm({ voyage }: { voyage?: Voyage }) {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploadingCover(true);
-    const url = await uploadFile(file);
-    set("photoCouverture", url);
-    setUploadingCover(false);
+    setErrorMsg(null);
+    try {
+      const url = await uploadFile(file);
+      set("photoCouverture", url);
+    } catch (err: any) {
+      setErrorMsg(`Upload couverture échoué : ${err.message}`);
+    } finally {
+      setUploadingCover(false);
+    }
   }
 
   async function handleGalerieUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files || []);
-    const urls = await Promise.all(files.map(uploadFile));
-    set("galerie", [...form.galerie, ...urls]);
+    if (!files.length) return;
+    setUploadingGalerie(true);
+    setErrorMsg(null);
+    try {
+      const urls = await Promise.all(files.map(uploadFile));
+      set("galerie", [...form.galerie, ...urls]);
+    } catch (err: any) {
+      setErrorMsg(`Upload galerie échoué : ${err.message}`);
+    } finally {
+      setUploadingGalerie(false);
+    }
   }
 
   function addHashtag() {
@@ -225,6 +244,18 @@ export default function VoyageForm({ voyage }: { voyage?: Voyage }) {
           {saving ? "Sauvegarde..." : isEdit ? "💾 Sauvegarder" : "✅ Publier"}
         </button>
       </header>
+
+      {/* ── Bannière d'erreur ── */}
+      {errorMsg && (
+        <div style={{
+          background: "rgba(255,60,60,0.12)", border: "1px solid rgba(255,60,60,0.3)",
+          color: "#ff6b6b", padding: "14px 24px", fontSize: "13px",
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+        }}>
+          <span>⚠️ {errorMsg}</span>
+          <button onClick={() => setErrorMsg(null)} style={{ background: "none", border: "none", color: "#ff6b6b", cursor: "pointer", fontSize: "16px" }}>✕</button>
+        </div>
+      )}
 
       <main style={{ maxWidth: "820px", margin: "0 auto", padding: "48px 40px" }}>
 
@@ -442,10 +473,10 @@ export default function VoyageForm({ voyage }: { voyage?: Voyage }) {
         <div style={CARD}>
           <div style={{ ...SECTION_TITLE, justifyContent: "space-between" }}>
             <span>🖼️ Galerie photos</span>
-            <button onClick={() => galerieRef.current?.click()} style={{
+            <button onClick={() => galerieRef.current?.click()} disabled={uploadingGalerie} style={{
               background: "rgba(0,255,153,0.1)", color: "#00ff99", border: "1px solid rgba(0,255,153,0.2)",
-              padding: "7px 16px", borderRadius: "8px", cursor: "pointer", fontSize: "12px", fontWeight: 600,
-            }}>+ Ajouter des photos</button>
+              padding: "7px 16px", borderRadius: "8px", cursor: uploadingGalerie ? "not-allowed" : "pointer", fontSize: "12px", fontWeight: 600,
+            }}>{uploadingGalerie ? "Upload en cours..." : "+ Ajouter des photos"}</button>
           </div>
           <input ref={galerieRef} type="file" accept="image/*" multiple onChange={handleGalerieUpload} style={{ display: "none" }} />
           {form.galerie.length > 0 ? (
