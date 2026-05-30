@@ -9,7 +9,7 @@ const sections = [
   { href: "/nomade/blog", label: "Blog", desc: "Thoughts on nomadic life", icon: "✍️", accent: "#f97316" },
 ];
 
-export default function NomadeHomeClient({ voyages }: { voyages: Voyage[] }) {
+export default function NomadeHomeClient({ voyages, tiktok = "", instagram = "" }: { voyages: Voyage[]; tiktok?: string; instagram?: string }) {
   // Pays uniques depuis les vrais voyages
   const pays = Array.from(new Set(voyages.map((v) => v.pays))).slice(0, 8);
   const featured = voyages.filter((v) => v.miseEnAvant).slice(0, 3);
@@ -55,10 +55,53 @@ export default function NomadeHomeClient({ voyages }: { voyages: Voyage[] }) {
             <span className="text-gradient-nomade">World Traveler.</span>
           </h1>
 
-          <p style={{ color: "rgba(28,25,23,0.45)", fontSize: "17px", lineHeight: 1.8, maxWidth: "480px", marginBottom: "48px" }}>
+          <p style={{ color: "rgba(28,25,23,0.45)", fontSize: "17px", lineHeight: 1.8, maxWidth: "480px", marginBottom: "32px" }}>
             I code from Tokyo cafés, Lisbon hostels
             and Thailand beaches. Welcome to my nomad life.
           </p>
+
+          {/* Réseaux sociaux */}
+          {(tiktok || instagram) && (
+            <div style={{ display: "flex", gap: "12px", marginBottom: "40px" }}>
+              {tiktok && (
+                <a href={tiktok} target="_blank" rel="noopener noreferrer" style={{
+                  display: "flex", alignItems: "center", gap: "8px",
+                  padding: "10px 18px", borderRadius: "100px",
+                  border: "1px solid rgba(0,0,0,0.1)", background: "#fff",
+                  textDecoration: "none", transition: "transform 0.15s, box-shadow 0.15s",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                }}
+                  onMouseEnter={(e) => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = "translateY(-2px)"; el.style.boxShadow = "0 6px 20px rgba(0,0,0,0.12)"; }}
+                  onMouseLeave={(e) => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = "translateY(0)"; el.style.boxShadow = "0 2px 8px rgba(0,0,0,0.06)"; }}
+                >
+                  {/* Icône TikTok SVG */}
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z" fill="#000000"/>
+                  </svg>
+                  <span style={{ fontWeight: 700, fontSize: "13px", color: "#000" }}>TikTok</span>
+                </a>
+              )}
+              {instagram && (
+                <a href={instagram} target="_blank" rel="noopener noreferrer" style={{
+                  display: "flex", alignItems: "center", gap: "8px",
+                  padding: "10px 18px", borderRadius: "100px",
+                  border: "1px solid rgba(0,0,0,0.1)",
+                  background: "linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)",
+                  textDecoration: "none", transition: "transform 0.15s, box-shadow 0.15s",
+                  boxShadow: "0 2px 8px rgba(220,39,67,0.25)",
+                }}
+                  onMouseEnter={(e) => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = "translateY(-2px)"; el.style.boxShadow = "0 6px 20px rgba(220,39,67,0.35)"; }}
+                  onMouseLeave={(e) => { const el = e.currentTarget as HTMLAnchorElement; el.style.transform = "translateY(0)"; el.style.boxShadow = "0 2px 8px rgba(220,39,67,0.25)"; }}
+                >
+                  {/* Icône Instagram SVG */}
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" fill="white"/>
+                  </svg>
+                  <span style={{ fontWeight: 700, fontSize: "13px", color: "#fff" }}>Instagram</span>
+                </a>
+              )}
+            </div>
+          )}
 
           {/* Pays visités */}
           {pays.length > 0 && (

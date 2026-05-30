@@ -27,13 +27,15 @@ export async function PUT(req: NextRequest) {
       email: data.email || "",
       github: data.github || "",
       linkedin: data.linkedin || "",
+      tiktok: data.tiktok || "",
+      instagram: data.instagram || "",
       skills: data.skills || [],
     });
-    // Le profil pro impacte toutes les pages de la section /pro
     revalidatePath("/pro");
     revalidatePath("/pro/cv");
     revalidatePath("/pro/portfolio");
     revalidatePath("/pro/cybersecurite");
+    revalidatePath("/nomade");
     return NextResponse.json(profile);
   } catch (err) {
     console.error("[PUT /api/admin/proProfile]", err);

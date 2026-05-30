@@ -246,6 +246,18 @@ export default function ProfileAdminClient({ profile: initialProfile }: { profil
                   onChange={(e) => setForm((f) => ({ ...f, linkedin: e.target.value }))}
                   style={INPUT_STYLE} placeholder="https://linkedin.com/in/username" />
               </div>
+              <div>
+                <label style={LABEL_STYLE}>🎵 TikTok</label>
+                <input value={(form as any).tiktok || ""}
+                  onChange={(e) => setForm((f) => ({ ...f, tiktok: e.target.value } as any))}
+                  style={INPUT_STYLE} placeholder="https://tiktok.com/@username" />
+              </div>
+              <div>
+                <label style={LABEL_STYLE}>📸 Instagram</label>
+                <input value={(form as any).instagram || ""}
+                  onChange={(e) => setForm((f) => ({ ...f, instagram: e.target.value } as any))}
+                  style={INPUT_STYLE} placeholder="https://instagram.com/username" />
+              </div>
             </div>
           </div>
 

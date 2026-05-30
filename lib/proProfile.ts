@@ -9,6 +9,8 @@ export interface ProProfile {
   email: string;
   github: string;
   linkedin: string;
+  tiktok: string;
+  instagram: string;
   skills: string[];
 }
 
@@ -21,6 +23,8 @@ const DEFAULT_PROFILE: ProProfile = {
   email: "",
   github: "",
   linkedin: "",
+  tiktok: "",
+  instagram: "",
   skills: ["TypeScript", "Next.js", "Rust", "Node.js", "PostgreSQL", "Docker", "AWS", "Security+"],
 };
 
