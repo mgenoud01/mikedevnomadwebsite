@@ -115,8 +115,8 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
               {/* Close */}
               <button onClick={closeModal} style={{ position: "absolute", top: "16px", right: "16px", zIndex: 10, background: "rgba(255,255,255,0.08)", border: "none", color: "rgba(255,255,255,0.6)", width: "36px", height: "36px", borderRadius: "50%", cursor: "pointer", fontSize: "16px" }}>✕</button>
 
-              {/* Vidéo ou image carousel */}
-              {embedUrl ? (
+              {/* ── Vidéo en haut si dispo ── */}
+              {embedUrl && (
                 <div style={{ position: "relative", paddingTop: "56.25%", borderRadius: "20px 20px 0 0", overflow: "hidden" }}>
                   <iframe
                     src={embedUrl}
@@ -125,31 +125,36 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
                     style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: "none" }}
                   />
                 </div>
-              ) : allImages.length > 0 ? (
-                <div style={{ position: "relative", borderRadius: "20px 20px 0 0", overflow: "hidden", background: "#000" }}>
+              )}
+
+              {/* ── Photo principale (cover) ── */}
+              {!embedUrl && allImages.length > 0 && (
+                <div style={{ borderRadius: "20px 20px 0 0", overflow: "hidden", background: "#000" }}>
                   <img
                     src={allImages[imgIndex]}
                     alt={selected.titre}
-                    style={{ width: "100%", height: "320px", objectFit: "cover", display: "block" }}
+                    style={{ width: "100%", height: "340px", objectFit: "cover", display: "block", transition: "opacity 0.2s" }}
                   />
-                  {allImages.length > 1 && (
-                    <>
-                      <button onClick={() => setImgIndex((i) => (i - 1 + allImages.length) % allImages.length)}
-                        style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.6)", border: "none", color: "#fff", width: "36px", height: "36px", borderRadius: "50%", cursor: "pointer", fontSize: "16px" }}>‹</button>
-                      <button onClick={() => setImgIndex((i) => (i + 1) % allImages.length)}
-                        style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.6)", border: "none", color: "#fff", width: "36px", height: "36px", borderRadius: "50%", cursor: "pointer", fontSize: "16px" }}>›</button>
-                      {/* Thumbnails */}
-                      <div style={{ position: "absolute", bottom: "12px", left: "50%", transform: "translateX(-50%)", display: "flex", gap: "6px" }}>
-                        {allImages.map((_, i) => (
-                          <button key={i} onClick={() => setImgIndex(i)}
-                            style={{ width: "8px", height: "8px", borderRadius: "50%", border: "none", cursor: "pointer", background: i === imgIndex ? "#fff" : "rgba(255,255,255,0.35)", padding: 0 }} />
-                        ))}
-                      </div>
-                    </>
-                  )}
                 </div>
-              ) : (
-                <div style={{ height: "120px", background: "rgba(255,255,255,0.03)", borderRadius: "20px 20px 0 0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px" }}>💻</div>
+              )}
+
+              {/* ── Strip de miniatures (autres photos) ── */}
+              {allImages.length > 1 && (
+                <div style={{ display: "flex", gap: "6px", padding: "10px 12px", background: "rgba(0,0,0,0.3)", overflowX: "auto" }}>
+                  {allImages.map((url, i) => (
+                    <button key={i} onClick={() => setImgIndex(i)} style={{
+                      flexShrink: 0, padding: 0, border: `2px solid ${i === imgIndex ? "#00ff99" : "transparent"}`,
+                      borderRadius: "7px", overflow: "hidden", cursor: "pointer", background: "none", transition: "border-color 0.15s",
+                    }}>
+                      <img src={url} alt="" style={{ width: "72px", height: "52px", objectFit: "cover", display: "block", opacity: i === imgIndex ? 1 : 0.55, transition: "opacity 0.15s" }} />
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* ── Placeholder si aucune image ni vidéo ── */}
+              {!embedUrl && allImages.length === 0 && (
+                <div style={{ height: "100px", background: "rgba(255,255,255,0.03)", borderRadius: "20px 20px 0 0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "36px" }}>💻</div>
               )}
 
               {/* Contenu */}
