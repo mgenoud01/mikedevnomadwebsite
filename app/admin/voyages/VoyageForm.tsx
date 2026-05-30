@@ -3,8 +3,8 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { Voyage, Resto, Endroit } from "@/lib/voyages";
+import { uploadToCloudinary } from "@/lib/uploadToCloudinary";
 
 const INPUT = {
   width: "100%",
@@ -88,14 +88,7 @@ export default function VoyageForm({ voyage }: { voyage?: Voyage }) {
   }
 
   async function uploadFile(file: File): Promise<string> {
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("folder", voyageFolder());
-    const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(data.error || `Erreur ${res.status}`);
-    if (!data.url) throw new Error("URL manquante dans la réponse Cloudinary");
-    return data.url;
+    return uploadToCloudinary(file, voyageFolder());
   }
 
   async function handleCoverUpload(e: React.ChangeEvent<HTMLInputElement>) {

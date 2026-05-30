@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { Photo } from "@/lib/galerie";
+import { uploadToCloudinary } from "@/lib/uploadToCloudinary";
 
 type VoyageMini = { id: string; titre: string; slug: string; emoji: string; pays: string };
 
@@ -34,17 +35,12 @@ export default function GalerieAdminClient({ photos: initial, voyages }: { photo
     const folder = getCloudinaryFolder();
 
     try {
-      // Étape 1 : upload toutes les photos vers Cloudinary en parallèle
+      // Étape 1 : upload toutes les photos directement vers Cloudinary (bypass Vercel 4.5MB limit)
       const uploadResults = await Promise.all(
-        files.map(async (file) => {
-          const fd = new FormData();
-          fd.append("file", file);
-          fd.append("folder", folder);
-          const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-          const data = await res.json();
-          if (!res.ok || !data.url) throw new Error(data.error || "Upload Cloudinary échoué");
-          return { file, url: data.url as string };
-        })
+        files.map(async (file) => ({
+          file,
+          url: await uploadToCloudinary(file, folder),
+        }))
       );
 
       // Étape 2 : 1 seule écriture blob — on envoie aussi les photos déjà en place

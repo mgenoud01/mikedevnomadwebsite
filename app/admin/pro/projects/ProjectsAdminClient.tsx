@@ -3,6 +3,7 @@
 import { useState, useRef, KeyboardEvent } from "react";
 import Link from "next/link";
 import { Project } from "@/lib/projects";
+import { uploadToCloudinary } from "@/lib/uploadToCloudinary";
 
 const INPUT_STYLE = {
   background: "rgba(255,255,255,0.05)",
@@ -180,19 +181,10 @@ export default function ProjectsAdminClient({ projects: initialProjects }: { pro
     setUploading(true);
     setError("");
     try {
-      const urls: string[] = [];
-      for (const file of files) {
-        const fd = new FormData();
-        fd.append("file", file);
-        fd.append("folder", "mikedevnomad/pro");
-        const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-        const json = await res.json();
-        if (!res.ok) throw new Error(json.error || `Erreur ${res.status}`);
-        if (json.url) urls.push(json.url);
-      }
-      if (urls.length > 0) {
-        setForm((f) => ({ ...f, images: [...(f.images || []), ...urls] }));
-      }
+      const urls = await Promise.all(
+        files.map((file) => uploadToCloudinary(file, "mikedevnomad/pro"))
+      );
+      setForm((f) => ({ ...f, images: [...(f.images || []), ...urls] }));
     } catch (err: any) {
       setError(`Upload échoué : ${err.message}`);
     } finally {
