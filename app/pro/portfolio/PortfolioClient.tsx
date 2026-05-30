@@ -44,7 +44,7 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
   const rest = projects.filter((p) => !p.featured);
 
   return (
-    <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "72px 32px 96px", background: "#0b0f17", minHeight: "100vh" }}>
+    <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "72px 32px 96px" }}>
 
       {/* Header */}
       <div style={{ marginBottom: "56px" }}>
@@ -110,7 +110,7 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
           >
             <div
               onClick={(e) => e.stopPropagation()}
-              style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "20px", width: "100%", maxWidth: "780px", maxHeight: "90vh", overflow: "auto", position: "relative" }}
+              style={{ background: "#0e1c2f", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "20px", width: "100%", maxWidth: "780px", maxHeight: "90vh", overflow: "auto", position: "relative" }}
             >
               {/* Close */}
               <button onClick={closeModal} style={{ position: "absolute", top: "16px", right: "16px", zIndex: 10, background: "rgba(255,255,255,0.08)", border: "none", color: "rgba(255,255,255,0.6)", width: "36px", height: "36px", borderRadius: "50%", cursor: "pointer", fontSize: "16px" }}>✕</button>
@@ -179,7 +179,7 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
                 <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
                   {selected.lien && (
                     <a href={selected.lien} target="_blank" rel="noopener noreferrer"
-                      style={{ background: "#00ff99", color: "#0b0f17", fontWeight: 700, fontSize: "13px", padding: "10px 20px", borderRadius: "8px", textDecoration: "none" }}>
+                      style={{ background: "#00ff99", color: "#0e1c2f", fontWeight: 700, fontSize: "13px", padding: "10px 20px", borderRadius: "8px", textDecoration: "none" }}>
                       🌐 Live demo →
                     </a>
                   )}
