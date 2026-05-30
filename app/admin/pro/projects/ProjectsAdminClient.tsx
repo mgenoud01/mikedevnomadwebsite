@@ -44,6 +44,8 @@ const EMPTY_FORM = {
   lien: "",
   github: "",
   image: "",
+  images: [] as string[],
+  video: "",
   featured: false,
   status: "done" as Project["status"],
 };
@@ -156,6 +158,8 @@ export default function ProjectsAdminClient({ projects: initialProjects }: { pro
       lien: p.lien,
       github: p.github,
       image: p.image,
+      images: p.images || [],
+      video: p.video || "",
       featured: p.featured,
       status: p.status,
     });
@@ -170,21 +174,6 @@ export default function ProjectsAdminClient({ projects: initialProjects }: { pro
     setError("");
   }
 
-  async function handleUpload(file: File) {
-    setUploading(true);
-    try {
-      const fd = new FormData();
-      fd.append("file", file);
-      fd.append("folder", "mikedevnomad/pro");
-      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-      const json = await res.json();
-      if (json.url) {
-        setForm((f) => ({ ...f, image: json.url }));
-      }
-    } finally {
-      setUploading(false);
-    }
-  }
 
   async function handleSubmit() {
     if (!form.titre.trim()) { setError("Le titre est requis"); return; }
@@ -390,28 +379,60 @@ export default function ProjectsAdminClient({ projects: initialProjects }: { pro
                 </label>
               </div>
 
+              {/* Photos multiples */}
               <div style={{ gridColumn: "1 / -1" }}>
-                <label style={LABEL_STYLE}>Image</label>
-                <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                  <input value={form.image} onChange={(e) => setForm((f) => ({ ...f, image: e.target.value }))}
-                    style={{ ...INPUT_STYLE, flex: 1 }} placeholder="URL de l'image ou uploader..." />
+                <label style={LABEL_STYLE}>Photos du projet (plusieurs acceptées)</label>
+                <div style={{ display: "flex", gap: "10px", alignItems: "center", marginBottom: "12px" }}>
                   <button onClick={() => fileRef.current?.click()} disabled={uploading} style={{
-                    background: "rgba(255,255,255,0.08)",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    borderRadius: "10px",
-                    color: "#fff",
-                    padding: "11px 18px",
-                    cursor: "pointer",
-                    fontSize: "13px",
-                    whiteSpace: "nowrap",
+                    background: "rgba(0,255,153,0.08)", border: "1px solid rgba(0,255,153,0.2)",
+                    borderRadius: "10px", color: "#00ff99", padding: "11px 20px",
+                    cursor: uploading ? "not-allowed" : "pointer", fontSize: "13px", fontWeight: 600, whiteSpace: "nowrap",
                   }}>
-                    {uploading ? "Upload..." : "📤 Upload"}
+                    {uploading ? "Upload..." : "📤 Ajouter des photos"}
                   </button>
-                  <input ref={fileRef} type="file" accept="image/*" style={{ display: "none" }}
-                    onChange={(e) => { if (e.target.files?.[0]) handleUpload(e.target.files[0]); }} />
+                  <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: "none" }}
+                    onChange={async (e) => {
+                      const files = Array.from(e.target.files || []);
+                      if (!files.length) return;
+                      setUploading(true);
+                      const urls: string[] = [];
+                      for (const file of files) {
+                        const fd = new FormData();
+                        fd.append("file", file);
+                        fd.append("folder", "mikedevnomad/pro");
+                        const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+                        const json = await res.json();
+                        if (json.url) urls.push(json.url);
+                      }
+                      setForm((f) => ({ ...f, images: [...(f.images || []), ...urls] }));
+                      setUploading(false);
+                      if (fileRef.current) fileRef.current.value = "";
+                    }} />
+                  <span style={{ color: "rgba(255,255,255,0.2)", fontSize: "12px" }}>
+                    {(form.images || []).length} photo{(form.images || []).length !== 1 ? "s" : ""}
+                  </span>
                 </div>
-                {form.image && (
-                  <img src={form.image} alt="preview" style={{ marginTop: "10px", height: "100px", objectFit: "cover", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)" }} />
+                {(form.images || []).length > 0 && (
+                  <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                    {(form.images || []).map((url, i) => (
+                      <div key={i} style={{ position: "relative", borderRadius: "8px", overflow: "hidden" }}>
+                        <img src={url} alt="" style={{ width: "100px", height: "70px", objectFit: "cover", display: "block" }} />
+                        <button onClick={() => setForm((f) => ({ ...f, images: (f.images || []).filter((_, j) => j !== i) }))}
+                          style={{ position: "absolute", top: "4px", right: "4px", background: "rgba(0,0,0,0.7)", border: "none", color: "#fff", width: "20px", height: "20px", borderRadius: "50%", cursor: "pointer", fontSize: "10px", padding: 0 }}>✕</button>
+                        {i === 0 && <span style={{ position: "absolute", bottom: "4px", left: "4px", background: "rgba(0,0,0,0.7)", color: "#00ff99", fontSize: "9px", padding: "1px 5px", borderRadius: "4px" }}>Cover</span>}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Vidéo */}
+              <div style={{ gridColumn: "1 / -1" }}>
+                <label style={LABEL_STYLE}>Vidéo de présentation (YouTube ou Vimeo)</label>
+                <input value={form.video || ""} onChange={(e) => setForm((f) => ({ ...f, video: e.target.value }))}
+                  style={INPUT_STYLE} placeholder="https://www.youtube.com/watch?v=... ou https://vimeo.com/..." />
+                {form.video && (
+                  <p style={{ color: "rgba(0,255,153,0.5)", fontSize: "11px", marginTop: "6px" }}>✓ Vidéo détectée — sera affichée en haut du modal</p>
                 )}
               </div>
             </div>

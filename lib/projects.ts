@@ -7,7 +7,9 @@ export interface Project {
   stack: string[];
   lien: string;
   github: string;
-  image: string;
+  image: string;       // image de couverture (rétro-compatibilité)
+  images: string[];    // galerie multi-photos
+  video: string;       // URL YouTube / Vimeo pour embed
   featured: boolean;
   status: "done" | "in-progress" | "archived";
   createdAt: string;

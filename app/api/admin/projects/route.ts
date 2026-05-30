@@ -25,6 +25,8 @@ export async function POST(req: NextRequest) {
       lien: data.lien || "",
       github: data.github || "",
       image: data.image || "",
+      images: data.images || [],
+      video: data.video || "",
       featured: data.featured || false,
       status: data.status || "done",
     });

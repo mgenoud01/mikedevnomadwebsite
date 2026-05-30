@@ -1,27 +1,60 @@
 "use client";
 
+import { useState } from "react";
 import { Project } from "@/lib/projects";
 
-const STATUS_STYLE: Record<string, { color: string }> = {
-  "done":        { color: "#00ff99" },
-  "in-progress": { color: "#f59e0b" },
-  "archived":    { color: "#64748b" },
-};
-const STATUS_LABEL: Record<string, string> = {
-  "done": "Done", "in-progress": "In progress", "archived": "Archived",
+const STATUS_STYLE: Record<string, { color: string; bg: string; label: string }> = {
+  "done":        { color: "#00ff99", bg: "rgba(0,255,153,0.08)", label: "Done" },
+  "in-progress": { color: "#f59e0b", bg: "rgba(245,158,11,0.08)", label: "In progress" },
+  "archived":    { color: "#64748b", bg: "rgba(100,116,139,0.08)", label: "Archived" },
 };
 
+function getEmbedUrl(url: string): string | null {
+  if (!url) return null;
+  // YouTube
+  const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  if (yt) return `https://www.youtube.com/embed/${yt[1]}?rel=0&modestbranding=1`;
+  // Vimeo
+  const vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  if (vm) return `https://player.vimeo.com/video/${vm[1]}`;
+  return null;
+}
+
+function getCoverImage(p: Project): string | null {
+  if (p.images && p.images.length > 0) return p.images[0];
+  if (p.image) return p.image;
+  return null;
+}
+
 export default function PortfolioClient({ projects }: { projects: Project[] }) {
+  const [selected, setSelected] = useState<Project | null>(null);
+  const [imgIndex, setImgIndex] = useState(0);
+
+  function openProject(p: Project) {
+    setSelected(p);
+    setImgIndex(0);
+  }
+
+  function closeModal() {
+    setSelected(null);
+    setImgIndex(0);
+  }
+
+  const featured = projects.filter((p) => p.featured);
+  const rest = projects.filter((p) => !p.featured);
+
   return (
-    <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "72px 32px 96px" }}>
+    <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "72px 32px 96px", background: "#0b0f17", minHeight: "100vh" }}>
+
+      {/* Header */}
       <div style={{ marginBottom: "56px" }}>
-        <p style={{ fontFamily: "var(--font-mono)", color: "rgba(0,255,153,0.5)", fontSize: "12px", letterSpacing: "0.12em", marginBottom: "20px" }}>
+        <p style={{ fontFamily: "var(--font-mono)", color: "rgba(0,255,153,0.5)", fontSize: "12px", letterSpacing: "0.12em", marginBottom: "16px" }}>
           $ ls -la ./projects
         </p>
-        <h1 style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", fontWeight: 900, letterSpacing: "-0.04em", color: "#ffffff", lineHeight: 0.95, marginBottom: "16px" }}>
+        <h1 style={{ fontSize: "clamp(2.5rem,5vw,4rem)", fontWeight: 900, letterSpacing: "-0.04em", color: "#fff", lineHeight: 0.95, marginBottom: "14px" }}>
           Portfolio
         </h1>
-        <p style={{ color: "rgba(230,237,243,0.5)", fontSize: "15px", maxWidth: "400px", lineHeight: 1.7 }}>
+        <p style={{ color: "rgba(230,237,243,0.45)", fontSize: "15px", lineHeight: 1.7 }}>
           Personal projects, open-source work and ongoing builds.
         </p>
       </div>
@@ -32,55 +65,208 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
           <p style={{ color: "rgba(255,255,255,0.3)" }}>No projects yet — add them from the admin.</p>
         </div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-          {projects.map((p, i) => {
-            const ss = STATUS_STYLE[p.status] || { color: "#64748b" };
-            return (
-              <a key={p.id} href={p.lien || "#"} target={p.lien ? "_blank" : undefined} rel="noopener noreferrer" style={{
-                display: "block", padding: "28px", background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px",
-                textDecoration: "none", transition: "background 0.2s, border-color 0.2s, transform 0.15s",
-                overflow: "hidden", position: "relative",
-              }}
-                onMouseEnter={(e) => { const el = e.currentTarget as HTMLAnchorElement; el.style.background = "rgba(0,255,153,0.05)"; el.style.borderColor = "rgba(0,255,153,0.2)"; el.style.transform = "translateY(-2px)"; }}
-                onMouseLeave={(e) => { const el = e.currentTarget as HTMLAnchorElement; el.style.background = "rgba(255,255,255,0.03)"; el.style.borderColor = "rgba(255,255,255,0.08)"; el.style.transform = "translateY(0)"; }}
-              >
-                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "12px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "10px", color: "rgba(255,255,255,0.15)", letterSpacing: "0.12em" }}>
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    {p.image && <img src={p.image} alt={p.titre} style={{ width: "40px", height: "40px", borderRadius: "8px", objectFit: "cover" }} />}
-                    <h2 style={{ color: "#ffffff", fontWeight: 800, fontSize: "20px", letterSpacing: "-0.02em" }}>{p.titre}</h2>
-                    {p.featured && <span style={{ background: "rgba(245,158,11,0.1)", color: "#f59e0b", fontSize: "10px", padding: "2px 8px", borderRadius: "20px", fontWeight: 600 }}>★ Featured</span>}
-                  </div>
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", padding: "4px 10px", borderRadius: "4px", border: `1px solid ${ss.color}30`, color: ss.color, background: `${ss.color}0a`, flexShrink: 0, letterSpacing: "0.06em" }}>
-                    {STATUS_LABEL[p.status]}
+        <>
+          {/* Featured — grande grille */}
+          {featured.length > 0 && (
+            <div style={{ marginBottom: "48px" }}>
+              <p style={{ color: "rgba(0,255,153,0.4)", fontSize: "10px", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "20px", fontFamily: "var(--font-mono)" }}>
+                ★ Featured
+              </p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: "20px" }}>
+                {featured.map((p) => <ProjectCard key={p.id} project={p} onClick={() => openProject(p)} />)}
+              </div>
+            </div>
+          )}
+
+          {/* Reste */}
+          {rest.length > 0 && (
+            <div>
+              {featured.length > 0 && (
+                <p style={{ color: "rgba(255,255,255,0.2)", fontSize: "10px", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "20px", fontFamily: "var(--font-mono)" }}>
+                  All projects
+                </p>
+              )}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "16px" }}>
+                {rest.map((p) => <ProjectCard key={p.id} project={p} onClick={() => openProject(p)} />)}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* ── Modal projet ─────────────────────────────────────────────── */}
+      {selected && (() => {
+        const ss = STATUS_STYLE[selected.status] || STATUS_STYLE["done"];
+        const allImages = [
+          ...(selected.images || []),
+          ...(selected.image && !(selected.images || []).includes(selected.image) ? [selected.image] : []),
+        ];
+        const embedUrl = getEmbedUrl(selected.video || "");
+
+        return (
+          <div
+            onClick={closeModal}
+            style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px", backdropFilter: "blur(6px)" }}
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              style={{ background: "#111827", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "20px", width: "100%", maxWidth: "780px", maxHeight: "90vh", overflow: "auto", position: "relative" }}
+            >
+              {/* Close */}
+              <button onClick={closeModal} style={{ position: "absolute", top: "16px", right: "16px", zIndex: 10, background: "rgba(255,255,255,0.08)", border: "none", color: "rgba(255,255,255,0.6)", width: "36px", height: "36px", borderRadius: "50%", cursor: "pointer", fontSize: "16px" }}>✕</button>
+
+              {/* Vidéo ou image carousel */}
+              {embedUrl ? (
+                <div style={{ position: "relative", paddingTop: "56.25%", borderRadius: "20px 20px 0 0", overflow: "hidden" }}>
+                  <iframe
+                    src={embedUrl}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: "none" }}
+                  />
+                </div>
+              ) : allImages.length > 0 ? (
+                <div style={{ position: "relative", borderRadius: "20px 20px 0 0", overflow: "hidden", background: "#000" }}>
+                  <img
+                    src={allImages[imgIndex]}
+                    alt={selected.titre}
+                    style={{ width: "100%", height: "320px", objectFit: "cover", display: "block" }}
+                  />
+                  {allImages.length > 1 && (
+                    <>
+                      <button onClick={() => setImgIndex((i) => (i - 1 + allImages.length) % allImages.length)}
+                        style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.6)", border: "none", color: "#fff", width: "36px", height: "36px", borderRadius: "50%", cursor: "pointer", fontSize: "16px" }}>‹</button>
+                      <button onClick={() => setImgIndex((i) => (i + 1) % allImages.length)}
+                        style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "rgba(0,0,0,0.6)", border: "none", color: "#fff", width: "36px", height: "36px", borderRadius: "50%", cursor: "pointer", fontSize: "16px" }}>›</button>
+                      {/* Thumbnails */}
+                      <div style={{ position: "absolute", bottom: "12px", left: "50%", transform: "translateX(-50%)", display: "flex", gap: "6px" }}>
+                        {allImages.map((_, i) => (
+                          <button key={i} onClick={() => setImgIndex(i)}
+                            style={{ width: "8px", height: "8px", borderRadius: "50%", border: "none", cursor: "pointer", background: i === imgIndex ? "#fff" : "rgba(255,255,255,0.35)", padding: 0 }} />
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              ) : (
+                <div style={{ height: "120px", background: "rgba(255,255,255,0.03)", borderRadius: "20px 20px 0 0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "40px" }}>💻</div>
+              )}
+
+              {/* Contenu */}
+              <div style={{ padding: "28px 32px 32px" }}>
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "14px", gap: "12px" }}>
+                  <h2 style={{ color: "#fff", fontWeight: 800, fontSize: "24px", letterSpacing: "-0.02em" }}>{selected.titre}</h2>
+                  <span style={{ flexShrink: 0, fontFamily: "var(--font-mono)", fontSize: "11px", padding: "4px 10px", borderRadius: "6px", border: `1px solid ${ss.color}40`, color: ss.color, background: ss.bg }}>
+                    {ss.label}
                   </span>
                 </div>
 
-                <p style={{ color: "rgba(230,237,243,0.5)", fontSize: "14px", lineHeight: 1.75, marginBottom: "20px", maxWidth: "680px" }}>
-                  {p.description}
+                {/* Description complète */}
+                <p style={{ color: "rgba(230,237,243,0.6)", fontSize: "14px", lineHeight: 1.8, marginBottom: "24px", whiteSpace: "pre-wrap" }}>
+                  {selected.description}
                 </p>
 
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                    {p.stack.map((s) => (
-                      <span key={s} style={{ fontFamily: "var(--font-mono)", fontSize: "11px", padding: "3px 10px", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.4)", borderRadius: "4px", letterSpacing: "0.04em" }}>
-                        {s}
-                      </span>
+                {/* Stack */}
+                {selected.stack.length > 0 && (
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "24px" }}>
+                    {selected.stack.map((s) => (
+                      <span key={s} style={{ fontFamily: "var(--font-mono)", fontSize: "11px", padding: "4px 10px", border: "1px solid rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.45)", borderRadius: "4px" }}>{s}</span>
                     ))}
                   </div>
-                  <div style={{ display: "flex", gap: "12px", flexShrink: 0 }}>
-                    {p.github && <a href={p.github} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "rgba(255,255,255,0.3)", textDecoration: "none" }}>GitHub →</a>}
-                    {p.lien && <span style={{ color: "rgba(0,255,153,0.5)", fontSize: "13px", fontFamily: "var(--font-mono)" }}>view →</span>}
-                  </div>
+                )}
+
+                {/* Liens */}
+                <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                  {selected.lien && (
+                    <a href={selected.lien} target="_blank" rel="noopener noreferrer"
+                      style={{ background: "#00ff99", color: "#0b0f17", fontWeight: 700, fontSize: "13px", padding: "10px 20px", borderRadius: "8px", textDecoration: "none" }}>
+                      🌐 Live demo →
+                    </a>
+                  )}
+                  {selected.github && (
+                    <a href={selected.github} target="_blank" rel="noopener noreferrer"
+                      style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", fontWeight: 600, fontSize: "13px", padding: "10px 20px", borderRadius: "8px", textDecoration: "none", border: "1px solid rgba(255,255,255,0.1)" }}>
+                      GitHub →
+                    </a>
+                  )}
                 </div>
-              </a>
-            );
-          })}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+    </div>
+  );
+}
+
+function ProjectCard({ project, onClick }: { project: Project; onClick: () => void }) {
+  const ss = STATUS_STYLE[project.status] || STATUS_STYLE["done"];
+  const cover = getCoverImage(project);
+  const photoCount = (project.images || []).length + (project.image ? 1 : 0);
+  const hasVideo = !!project.video;
+
+  return (
+    <div
+      onClick={onClick}
+      style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "14px", overflow: "hidden", cursor: "pointer", transition: "transform 0.2s, border-color 0.2s, box-shadow 0.2s" }}
+      onMouseEnter={(e) => { const el = e.currentTarget as HTMLDivElement; el.style.transform = "translateY(-3px)"; el.style.borderColor = "rgba(0,255,153,0.2)"; el.style.boxShadow = "0 8px 32px rgba(0,0,0,0.4)"; }}
+      onMouseLeave={(e) => { const el = e.currentTarget as HTMLDivElement; el.style.transform = "translateY(0)"; el.style.borderColor = "rgba(255,255,255,0.08)"; el.style.boxShadow = "none"; }}
+    >
+      {/* Image / placeholder */}
+      <div style={{ height: "200px", background: "rgba(255,255,255,0.03)", position: "relative", overflow: "hidden" }}>
+        {cover ? (
+          <img src={cover} alt={project.titre} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s" }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1.04)"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1)"; }}
+          />
+        ) : (
+          <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "48px" }}>💻</div>
+        )}
+        {/* Badges overlay */}
+        <div style={{ position: "absolute", top: "12px", left: "12px", display: "flex", gap: "6px" }}>
+          {project.featured && (
+            <span style={{ background: "rgba(245,158,11,0.9)", color: "#000", fontSize: "9px", fontWeight: 700, padding: "3px 8px", borderRadius: "20px" }}>★ FEATURED</span>
+          )}
         </div>
-      )}
+        <div style={{ position: "absolute", top: "12px", right: "12px", display: "flex", gap: "6px" }}>
+          {hasVideo && <span style={{ background: "rgba(0,0,0,0.7)", color: "#fff", fontSize: "10px", padding: "3px 8px", borderRadius: "20px" }}>▶ Video</span>}
+          {photoCount > 1 && <span style={{ background: "rgba(0,0,0,0.7)", color: "#fff", fontSize: "10px", padding: "3px 8px", borderRadius: "20px" }}>🖼 {photoCount}</span>}
+        </div>
+        {/* Status bottom */}
+        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "linear-gradient(transparent, rgba(0,0,0,0.7))", padding: "24px 14px 10px" }}>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: "9px", padding: "2px 8px", borderRadius: "4px", border: `1px solid ${ss.color}50`, color: ss.color, background: ss.bg }}>
+            {ss.label}
+          </span>
+        </div>
+      </div>
+
+      {/* Contenu */}
+      <div style={{ padding: "18px 20px 20px" }}>
+        <h2 style={{ color: "#fff", fontWeight: 800, fontSize: "17px", letterSpacing: "-0.02em", marginBottom: "8px" }}>{project.titre}</h2>
+        <p style={{ color: "rgba(230,237,243,0.45)", fontSize: "13px", lineHeight: 1.65, marginBottom: "14px",
+          display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" } as any}>
+          {project.description}
+        </p>
+        {/* Stack */}
+        {project.stack.length > 0 && (
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginBottom: "14px" }}>
+            {project.stack.slice(0, 4).map((s) => (
+              <span key={s} style={{ fontFamily: "var(--font-mono)", fontSize: "10px", padding: "2px 8px", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.35)", borderRadius: "4px" }}>{s}</span>
+            ))}
+            {project.stack.length > 4 && <span style={{ color: "rgba(255,255,255,0.2)", fontSize: "10px", padding: "2px 6px" }}>+{project.stack.length - 4}</span>}
+          </div>
+        )}
+        {/* CTA */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <span style={{ color: "rgba(0,255,153,0.5)", fontSize: "12px", fontFamily: "var(--font-mono)" }}>
+            {hasVideo || photoCount > 0 ? "See project →" : "Read more →"}
+          </span>
+          <div style={{ display: "flex", gap: "10px" }}>
+            {project.github && <span style={{ color: "rgba(255,255,255,0.2)", fontSize: "11px" }}>GitHub</span>}
+            {project.lien && <span style={{ color: "rgba(0,255,153,0.4)", fontSize: "11px" }}>Live</span>}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
