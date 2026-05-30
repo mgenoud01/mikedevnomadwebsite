@@ -12,14 +12,20 @@ export default function ContactPage() {
     setStatus("sending");
     setErrorMsg("");
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY,
+          subject: `[Contact] Message de ${form.name}`,
+          from_name: form.name,
+          email: form.email,
+          message: form.message,
+        }),
       });
       const data = await res.json();
-      if (!res.ok) {
-        setErrorMsg(data.error || "Erreur lors de l'envoi");
+      if (!data.success) {
+        setErrorMsg(data.message || "Erreur lors de l'envoi");
         setStatus("error");
         return;
       }
