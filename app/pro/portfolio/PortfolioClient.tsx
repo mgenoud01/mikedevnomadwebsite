@@ -29,6 +29,7 @@ function getCoverImage(p: Project): string | null {
 export default function PortfolioClient({ projects }: { projects: Project[] }) {
   const [selected, setSelected] = useState<Project | null>(null);
   const [imgIndex, setImgIndex] = useState(0);
+  const [lightboxImg, setLightboxImg] = useState<string | null>(null);
 
   function openProject(p: Project) {
     setSelected(p);
@@ -38,6 +39,7 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
   function closeModal() {
     setSelected(null);
     setImgIndex(0);
+    setLightboxImg(null);
   }
 
   const featured = projects.filter((p) => p.featured);
@@ -127,18 +129,26 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
                 </div>
               )}
 
-              {/* ── Photo principale (cover) ── */}
+              {/* ── Photo principale cliquable ── */}
               {!embedUrl && allImages.length > 0 && (
-                <div style={{ borderRadius: "20px 20px 0 0", overflow: "hidden", background: "#000" }}>
+                <div
+                  onClick={() => setLightboxImg(allImages[imgIndex])}
+                  style={{ borderRadius: "20px 20px 0 0", overflow: "hidden", background: "#000", cursor: "zoom-in", position: "relative" }}
+                >
                   <img
                     src={allImages[imgIndex]}
                     alt={selected.titre}
-                    style={{ width: "100%", height: "340px", objectFit: "cover", display: "block", transition: "opacity 0.2s" }}
+                    style={{ width: "100%", height: "340px", objectFit: "cover", display: "block", transition: "transform 0.3s" }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1.02)"; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1)"; }}
                   />
+                  <div style={{ position: "absolute", bottom: "12px", right: "12px", background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.7)", fontSize: "11px", padding: "4px 10px", borderRadius: "6px", pointerEvents: "none" }}>
+                    🔍 Agrandir
+                  </div>
                 </div>
               )}
 
-              {/* ── Strip de miniatures (autres photos) ── */}
+              {/* ── Strip de miniatures ── */}
               {allImages.length > 1 && (
                 <div style={{ display: "flex", gap: "6px", padding: "10px 12px", background: "rgba(0,0,0,0.3)", overflowX: "auto" }}>
                   {allImages.map((url, i) => (
@@ -146,7 +156,10 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
                       flexShrink: 0, padding: 0, border: `2px solid ${i === imgIndex ? "#00ff99" : "transparent"}`,
                       borderRadius: "7px", overflow: "hidden", cursor: "pointer", background: "none", transition: "border-color 0.15s",
                     }}>
-                      <img src={url} alt="" style={{ width: "72px", height: "52px", objectFit: "cover", display: "block", opacity: i === imgIndex ? 1 : 0.55, transition: "opacity 0.15s" }} />
+                      <img src={url} alt="" style={{ width: "72px", height: "52px", objectFit: "cover", display: "block", opacity: i === imgIndex ? 1 : 0.55, transition: "opacity 0.15s" }}
+                        onMouseEnter={(e) => { (e.currentTarget as HTMLImageElement).style.opacity = "1"; }}
+                        onMouseLeave={(e) => { (e.currentTarget as HTMLImageElement).style.opacity = i === imgIndex ? "1" : "0.55"; }}
+                      />
                     </button>
                   ))}
                 </div>
@@ -197,6 +210,44 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
                 </div>
               </div>
             </div>
+
+            {/* ── Lightbox plein écran ── */}
+            {lightboxImg && (
+              <div
+                onClick={() => setLightboxImg(null)}
+                style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.96)", zIndex: 300, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", cursor: "zoom-out" }}
+              >
+                <button
+                  onClick={() => setLightboxImg(null)}
+                  style={{ position: "absolute", top: "20px", right: "20px", background: "rgba(255,255,255,0.1)", border: "none", color: "#fff", width: "40px", height: "40px", borderRadius: "50%", cursor: "pointer", fontSize: "18px", zIndex: 310 }}
+                >✕</button>
+                {/* Navigation gauche */}
+                {allImages.length > 1 && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); const ni = (imgIndex - 1 + allImages.length) % allImages.length; setImgIndex(ni); setLightboxImg(allImages[ni]); }}
+                    style={{ position: "absolute", left: "20px", background: "rgba(255,255,255,0.12)", border: "none", color: "#fff", width: "48px", height: "48px", borderRadius: "50%", cursor: "pointer", fontSize: "22px", zIndex: 310 }}
+                  >‹</button>
+                )}
+                <img
+                  src={lightboxImg}
+                  alt=""
+                  onClick={(e) => e.stopPropagation()}
+                  style={{ maxWidth: "100%", maxHeight: "90vh", objectFit: "contain", borderRadius: "8px", boxShadow: "0 24px 80px rgba(0,0,0,0.8)" }}
+                />
+                {/* Navigation droite */}
+                {allImages.length > 1 && (
+                  <button
+                    onClick={(e) => { e.stopPropagation(); const ni = (imgIndex + 1) % allImages.length; setImgIndex(ni); setLightboxImg(allImages[ni]); }}
+                    style={{ position: "absolute", right: "20px", background: "rgba(255,255,255,0.12)", border: "none", color: "#fff", width: "48px", height: "48px", borderRadius: "50%", cursor: "pointer", fontSize: "22px", zIndex: 310 }}
+                  >›</button>
+                )}
+                {allImages.length > 1 && (
+                  <p style={{ position: "absolute", bottom: "20px", left: "50%", transform: "translateX(-50%)", color: "rgba(255,255,255,0.4)", fontSize: "12px", fontFamily: "var(--font-mono)" }}>
+                    {imgIndex + 1} / {allImages.length}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         );
       })()}
