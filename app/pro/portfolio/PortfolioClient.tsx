@@ -133,16 +133,14 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
               {!embedUrl && allImages.length > 0 && (
                 <div
                   onClick={() => setLightboxImg(allImages[imgIndex])}
-                  style={{ borderRadius: "20px 20px 0 0", overflow: "hidden", background: "#000", cursor: "zoom-in", position: "relative" }}
+                  style={{ borderRadius: "20px 20px 0 0", background: "#0a0f1a", cursor: "zoom-in", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", minHeight: "200px", maxHeight: "440px", overflow: "hidden" }}
                 >
                   <img
                     src={allImages[imgIndex]}
                     alt={selected.titre}
-                    style={{ width: "100%", height: "340px", objectFit: "cover", display: "block", transition: "transform 0.3s" }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1.02)"; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1)"; }}
+                    style={{ maxWidth: "100%", maxHeight: "440px", width: "auto", height: "auto", display: "block", objectFit: "contain", transition: "opacity 0.2s" }}
                   />
-                  <div style={{ position: "absolute", bottom: "12px", right: "12px", background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.7)", fontSize: "11px", padding: "4px 10px", borderRadius: "6px", pointerEvents: "none" }}>
+                  <div style={{ position: "absolute", bottom: "10px", right: "12px", background: "rgba(0,0,0,0.6)", color: "rgba(255,255,255,0.6)", fontSize: "11px", padding: "4px 10px", borderRadius: "6px", pointerEvents: "none" }}>
                     🔍 Agrandir
                   </div>
                 </div>
