@@ -121,16 +121,18 @@ export default function ResumeAdminClient({ experiences: initialExperiences }: {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(form),
         });
-        const updated = await res.json();
-        setExperiences((es) => es.map((e) => (e.id === editingId ? updated : e)));
+        const json = await res.json();
+        if (!res.ok) { setError(json.error || "Erreur serveur"); return; }
+        setExperiences((es) => es.map((e) => (e.id === editingId ? json : e)));
       } else {
         const res = await fetch("/api/admin/experiences", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(form),
         });
-        const created = await res.json();
-        setExperiences((es) => [created, ...es]);
+        const json = await res.json();
+        if (!res.ok) { setError(json.error || "Erreur serveur"); return; }
+        setExperiences((es) => [json, ...es]);
       }
       cancelForm();
     } finally {

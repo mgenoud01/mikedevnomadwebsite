@@ -128,16 +128,18 @@ export default function SecurityAdminClient({ ctfEntries: initialEntries }: { ct
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(form),
         });
-        const updated = await res.json();
-        setEntries((es) => es.map((e) => (e.id === editingId ? updated : e)));
+        const json = await res.json();
+        if (!res.ok) { setError(json.error || "Erreur serveur"); return; }
+        setEntries((es) => es.map((e) => (e.id === editingId ? json : e)));
       } else {
         const res = await fetch("/api/admin/ctf", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(form),
         });
-        const created = await res.json();
-        setEntries((es) => [created, ...es]);
+        const json = await res.json();
+        if (!res.ok) { setError(json.error || "Erreur serveur"); return; }
+        setEntries((es) => [json, ...es]);
       }
       cancelForm();
     } finally {

@@ -197,16 +197,18 @@ export default function ProjectsAdminClient({ projects: initialProjects }: { pro
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(form),
         });
-        const updated = await res.json();
-        setProjects((ps) => ps.map((p) => (p.id === editingId ? updated : p)));
+        const json = await res.json();
+        if (!res.ok) { setError(json.error || "Erreur serveur"); return; }
+        setProjects((ps) => ps.map((p) => (p.id === editingId ? json : p)));
       } else {
         const res = await fetch("/api/admin/projects", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(form),
         });
-        const created = await res.json();
-        setProjects((ps) => [created, ...ps]);
+        const json = await res.json();
+        if (!res.ok) { setError(json.error || "Erreur serveur"); return; }
+        setProjects((ps) => [json, ...ps]);
       }
       cancelForm();
     } finally {

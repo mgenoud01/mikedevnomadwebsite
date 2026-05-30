@@ -2,7 +2,6 @@
 
 import { useState, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Article } from "@/lib/articles";
 
 const CATEGORIES = ["Nomadisme", "Voyage", "Développement", "Sécurité", "Lifestyle"];
@@ -55,16 +54,22 @@ export default function BlogAdminClient({ articles: initial }: { articles: Artic
   async function handleSave() {
     if (!form.titre) return alert("Titre obligatoire");
     setSaving(true);
-    if (editing) {
-      const res = await fetch(`/api/admin/articles/${editing.id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
-      const updated = await res.json();
-      setArticles((a) => a.map((x) => x.id === editing.id ? updated : x));
-    } else {
-      const res = await fetch("/api/admin/articles", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
-      const created = await res.json();
-      setArticles((a) => [created, ...a]);
+    try {
+      if (editing) {
+        const res = await fetch(`/api/admin/articles/${editing.id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
+        const json = await res.json();
+        if (!res.ok) { alert(json.error || "Erreur serveur"); return; }
+        setArticles((a) => a.map((x) => x.id === editing.id ? json : x));
+      } else {
+        const res = await fetch("/api/admin/articles", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
+        const json = await res.json();
+        if (!res.ok) { alert(json.error || "Erreur serveur"); return; }
+        setArticles((a) => [json, ...a]);
+      }
+      cancel();
+    } finally {
+      setSaving(false);
     }
-    setSaving(false); cancel();
   }
 
   async function handleDelete(id: string) {
