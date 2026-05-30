@@ -100,11 +100,12 @@ export default function DashboardClient({ voyages: initialVoyages }: { voyages: 
       <main style={{ maxWidth: "1100px", margin: "0 auto", padding: "48px 40px" }}>
 
         {/* ── Sections nav ── */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px", marginBottom: "40px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "12px", marginBottom: "40px" }}>
           {[
             { href: "/admin/dashboard", label: "✈️ Voyages", active: true },
             { href: "/admin/blog", label: "✍️ Blog" },
             { href: "/admin/galerie", label: "📸 Galerie" },
+            { href: "/admin/nomade", label: "📱 Réseaux" },
             { href: "/admin/pro/projects", label: "💻 PRO" },
           ].map((s) => (
             <Link key={s.href} href={s.href} style={{ textAlign: "center", padding: "14px", borderRadius: "10px", textDecoration: "none", fontWeight: 700, fontSize: "13px", background: s.active ? "rgba(0,255,153,0.1)" : "rgba(255,255,255,0.03)", border: `1px solid ${s.active ? "rgba(0,255,153,0.25)" : "rgba(255,255,255,0.07)"}`, color: s.active ? "#00ff99" : "rgba(255,255,255,0.4)", transition: "all 0.15s" }}>
