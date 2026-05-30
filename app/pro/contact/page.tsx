@@ -3,13 +3,31 @@
 import { useState } from "react";
 
 export default function ContactPage() {
-  const [status, setStatus] = useState<"idle" | "sent">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
   const [form, setForm] = useState({ name: "", email: "", message: "" });
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // TODO: wire to Resend or Postmark
-    setStatus("sent");
+    setStatus("sending");
+    setErrorMsg("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setErrorMsg(data.error || "Erreur lors de l'envoi");
+        setStatus("error");
+        return;
+      }
+      setStatus("sent");
+    } catch {
+      setErrorMsg("Erreur réseau — réessaie dans quelques instants");
+      setStatus("error");
+    }
   }
 
   const inputStyle: React.CSSProperties = {
@@ -177,11 +195,18 @@ export default function ContactPage() {
             />
           </div>
 
+          {status === "error" && (
+            <p style={{ color: "#ff6b6b", fontSize: "13px", background: "rgba(255,60,60,0.08)", border: "1px solid rgba(255,60,60,0.2)", padding: "10px 14px", borderRadius: "6px" }}>
+              ⚠️ {errorMsg}
+            </p>
+          )}
+
           <button
             type="submit"
+            disabled={status === "sending"}
             style={{
               padding: "14px 32px",
-              background: "#00ff99",
+              background: status === "sending" ? "rgba(0,255,153,0.4)" : "#00ff99",
               color: "#030308",
               fontWeight: 800,
               fontSize: "12px",
@@ -189,22 +214,23 @@ export default function ContactPage() {
               textTransform: "uppercase",
               border: "none",
               borderRadius: "6px",
-              cursor: "pointer",
+              cursor: status === "sending" ? "not-allowed" : "pointer",
               transition: "background 0.2s, transform 0.15s",
               alignSelf: "flex-start",
             }}
             onMouseEnter={(e) => {
+              if (status === "sending") return;
               const el = e.currentTarget as HTMLButtonElement;
               el.style.background = "#ffffff";
               el.style.transform = "translateY(-1px)";
             }}
             onMouseLeave={(e) => {
               const el = e.currentTarget as HTMLButtonElement;
-              el.style.background = "#00ff99";
+              el.style.background = status === "sending" ? "rgba(0,255,153,0.4)" : "#00ff99";
               el.style.transform = "translateY(0)";
             }}
           >
-            Envoyer →
+            {status === "sending" ? "Envoi en cours..." : "Envoyer →"}
           </button>
         </form>
       )}
