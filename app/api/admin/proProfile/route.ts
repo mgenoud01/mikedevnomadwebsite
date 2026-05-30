@@ -27,8 +27,6 @@ export async function PUT(req: NextRequest) {
       email: data.email || "",
       github: data.github || "",
       linkedin: data.linkedin || "",
-      tiktok: data.tiktok || "",
-      instagram: data.instagram || "",
       skills: data.skills || [],
     });
     revalidatePath("/pro");
