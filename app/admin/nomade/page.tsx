@@ -68,6 +68,20 @@ export default function NomadeAdminPage() {
         </button>
       </header>
 
+      {/* Nav nomade */}
+      <div style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", padding: "0 40px", display: "flex", gap: "4px" }}>
+        {[
+          { href: "/admin/dashboard", label: "✈️ Voyages" },
+          { href: "/admin/blog", label: "✍️ Blog" },
+          { href: "/admin/galerie", label: "📸 Galerie" },
+          { href: "/admin/nomade", label: "📱 Réseaux", active: true },
+        ].map((s) => (
+          <Link key={s.href} href={s.href} style={{ padding: "10px 16px", fontSize: "12px", fontWeight: (s as any).active ? 700 : 500, textDecoration: "none", color: (s as any).active ? "#f59e0b" : "rgba(255,255,255,0.35)", borderBottom: (s as any).active ? "2px solid #f59e0b" : "2px solid transparent", transition: "color 0.15s" }}>
+            {s.label}
+          </Link>
+        ))}
+      </div>
+
       <main style={{ maxWidth: "600px", margin: "0 auto", padding: "48px 40px" }}>
         <form onSubmit={handleSave} style={{ display: "flex", flexDirection: "column", gap: "0" }}>
 

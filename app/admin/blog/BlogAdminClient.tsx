@@ -101,6 +101,20 @@ export default function BlogAdminClient({ articles: initial }: { articles: Artic
         )}
       </header>
 
+      {/* Nav nomade */}
+      <div style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", padding: "0 40px", display: "flex", gap: "4px" }}>
+        {[
+          { href: "/admin/dashboard", label: "✈️ Voyages" },
+          { href: "/admin/blog", label: "✍️ Blog", active: true },
+          { href: "/admin/galerie", label: "📸 Galerie" },
+          { href: "/admin/nomade", label: "📱 Réseaux" },
+        ].map((s) => (
+          <Link key={s.href} href={s.href} style={{ padding: "10px 16px", fontSize: "12px", fontWeight: s.active ? 700 : 500, textDecoration: "none", color: s.active ? "#00ff99" : "rgba(255,255,255,0.35)", borderBottom: s.active ? "2px solid #00ff99" : "2px solid transparent", transition: "color 0.15s" }}>
+            {s.label}
+          </Link>
+        ))}
+      </div>
+
       <main style={{ maxWidth: "820px", margin: "0 auto", padding: "48px 40px" }}>
         {showForm ? (
           <div>
