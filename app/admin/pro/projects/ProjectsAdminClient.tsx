@@ -174,6 +174,33 @@ export default function ProjectsAdminClient({ projects: initialProjects }: { pro
     setError("");
   }
 
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    setUploading(true);
+    setError("");
+    try {
+      const urls: string[] = [];
+      for (const file of files) {
+        const fd = new FormData();
+        fd.append("file", file);
+        fd.append("folder", "mikedevnomad/pro");
+        const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || `Erreur ${res.status}`);
+        if (json.url) urls.push(json.url);
+      }
+      if (urls.length > 0) {
+        setForm((f) => ({ ...f, images: [...(f.images || []), ...urls] }));
+      }
+    } catch (err: any) {
+      setError(`Upload échoué : ${err.message}`);
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  }
+
 
   async function handleSubmit() {
     if (!form.titre.trim()) { setError("Le titre est requis"); return; }
@@ -391,23 +418,7 @@ export default function ProjectsAdminClient({ projects: initialProjects }: { pro
                     {uploading ? "Upload..." : "📤 Ajouter des photos"}
                   </button>
                   <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: "none" }}
-                    onChange={async (e) => {
-                      const files = Array.from(e.target.files || []);
-                      if (!files.length) return;
-                      setUploading(true);
-                      const urls: string[] = [];
-                      for (const file of files) {
-                        const fd = new FormData();
-                        fd.append("file", file);
-                        fd.append("folder", "mikedevnomad/pro");
-                        const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
-                        const json = await res.json();
-                        if (json.url) urls.push(json.url);
-                      }
-                      setForm((f) => ({ ...f, images: [...(f.images || []), ...urls] }));
-                      setUploading(false);
-                      if (fileRef.current) fileRef.current.value = "";
-                    }} />
+                    onChange={handleImageUpload} />
                   <span style={{ color: "rgba(255,255,255,0.2)", fontSize: "12px" }}>
                     {(form.images || []).length} photo{(form.images || []).length !== 1 ? "s" : ""}
                   </span>
