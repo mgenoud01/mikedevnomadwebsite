@@ -100,10 +100,9 @@ export default function DashboardClient({ voyages: initialVoyages }: { voyages: 
       <main style={{ maxWidth: "1100px", margin: "0 auto", padding: "48px 40px" }}>
 
         {/* ── Sections nav ── */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "12px", marginBottom: "40px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px", marginBottom: "40px" }}>
           {[
             { href: "/admin/dashboard", label: "✈️ Voyages", active: true },
-            { href: "/admin/blog", label: "✍️ Blog" },
             { href: "/admin/galerie", label: "📸 Galerie" },
             { href: "/admin/nomade", label: "📱 Réseaux" },
             { href: "/admin/pro/projects", label: "💻 PRO" },

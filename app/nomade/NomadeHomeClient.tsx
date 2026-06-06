@@ -6,7 +6,6 @@ import { Voyage } from "@/lib/voyages";
 const sections = [
   { href: "/nomade/voyages", label: "Trips", desc: "Stories, tips & itineraries", icon: "✈️", accent: "#f59e0b" },
   { href: "/nomade/galerie", label: "Gallery", desc: "Photos from around the world", icon: "📸", accent: "#0d9488" },
-  { href: "/nomade/blog", label: "Blog", desc: "Thoughts on nomadic life", icon: "✍️", accent: "#f97316" },
 ];
 
 export default function NomadeHomeClient({ voyages, tiktok = "", instagram = "" }: { voyages: Voyage[]; tiktok?: string; instagram?: string }) {

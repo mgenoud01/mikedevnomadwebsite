@@ -72,7 +72,6 @@ export default function NomadeAdminPage() {
       <div style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", padding: "0 40px", display: "flex", gap: "4px" }}>
         {[
           { href: "/admin/dashboard", label: "✈️ Voyages" },
-          { href: "/admin/blog", label: "✍️ Blog" },
           { href: "/admin/galerie", label: "📸 Galerie" },
           { href: "/admin/nomade", label: "📱 Réseaux", active: true },
         ].map((s) => (

@@ -6,7 +6,6 @@ const navLinks = [
   { href: "/nomade", label: "Home" },
   { href: "/nomade/voyages", label: "Trips" },
   { href: "/nomade/galerie", label: "Gallery" },
-  { href: "/nomade/blog", label: "Blog" },
 ];
 
 export default function NomadeLayout({ children }: { children: React.ReactNode }) {
