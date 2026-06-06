@@ -113,6 +113,37 @@ export default function DashboardClient({ voyages: initialVoyages }: { voyages: 
           ))}
         </div>
 
+        {/* ── Analytics banner ── */}
+        <a
+          href="https://vercel.com/dashboard"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            display: "flex", alignItems: "center", justifyContent: "space-between",
+            gap: "12px", flexWrap: "wrap",
+            background: "rgba(99,102,241,0.07)",
+            border: "1px solid rgba(99,102,241,0.18)",
+            borderRadius: "12px", padding: "14px 20px",
+            textDecoration: "none", marginBottom: "32px",
+            transition: "background 0.15s",
+          }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "rgba(99,102,241,0.14)"; }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "rgba(99,102,241,0.07)"; }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <span style={{ fontSize: "18px" }}>📊</span>
+            <div>
+              <span style={{ color: "#a5b4fc", fontWeight: 700, fontSize: "13px" }}>Vercel Analytics</span>
+              <span style={{ color: "rgba(255,255,255,0.3)", fontSize: "12px", marginLeft: "10px" }}>
+                Pages vues · Visiteurs · Pays · Appareils
+              </span>
+            </div>
+          </div>
+          <span style={{ color: "#818cf8", fontSize: "12px", fontWeight: 600, whiteSpace: "nowrap" }}>
+            Voir les stats →
+          </span>
+        </a>
+
         {/* Title row */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "40px" }}>
           <div>
@@ -290,54 +321,6 @@ export default function DashboardClient({ voyages: initialVoyages }: { voyages: 
           </div>
         )}
 
-        {/* ── Analytics card ── */}
-        <div style={{
-          marginTop: "48px",
-          background: "rgba(255,255,255,0.03)",
-          border: "1px solid rgba(255,255,255,0.07)",
-          borderRadius: "14px",
-          padding: "24px 28px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: "20px",
-          flexWrap: "wrap",
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            <div style={{
-              width: "44px", height: "44px", borderRadius: "12px",
-              background: "rgba(99,102,241,0.12)", border: "1px solid rgba(99,102,241,0.2)",
-              display: "flex", alignItems: "center", justifyContent: "center", fontSize: "20px", flexShrink: 0,
-            }}>📊</div>
-            <div>
-              <p style={{ fontWeight: 700, fontSize: "14px", color: "#fff", marginBottom: "4px" }}>Vercel Analytics</p>
-              <p style={{ color: "rgba(255,255,255,0.35)", fontSize: "12px", lineHeight: 1.5 }}>
-                Pages vues · Visiteurs uniques · Pays · Appareils · Sources de trafic
-              </p>
-            </div>
-          </div>
-          <a
-            href="https://vercel.com/dashboard"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              background: "rgba(99,102,241,0.12)",
-              border: "1px solid rgba(99,102,241,0.25)",
-              color: "#818cf8",
-              padding: "10px 20px",
-              borderRadius: "10px",
-              fontSize: "12px",
-              fontWeight: 700,
-              textDecoration: "none",
-              whiteSpace: "nowrap",
-              transition: "background 0.15s",
-            }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "rgba(99,102,241,0.22)"; }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "rgba(99,102,241,0.12)"; }}
-          >
-            Voir les stats →
-          </a>
-        </div>
       </main>
     </div>
   );
