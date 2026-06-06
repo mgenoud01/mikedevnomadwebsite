@@ -7,5 +7,5 @@ export const dynamic = "force-dynamic";
 export default async function CVPage() {
   const experiences = await getAllExperiences();
   const profile = await getProProfile();
-  return <CVClient experiences={[...experiences].reverse()} profile={profile} />;
+  return <CVClient experiences={experiences} profile={profile} />;
 }

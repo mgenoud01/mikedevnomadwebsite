@@ -5,8 +5,10 @@ import { ProProfile } from "@/lib/proProfile";
 
 
 export default function CVClient({ experiences, profile }: { experiences: Experience[]; profile: ProProfile }) {
-  const work = experiences.filter((e) => e.type === "work").sort((a, b) => b.dateDebut.localeCompare(a.dateDebut));
-  const education = experiences.filter((e) => e.type === "education").sort((a, b) => b.dateDebut.localeCompare(a.dateDebut));
+  const byDateDesc = (a: Experience, b: Experience) =>
+    new Date(b.dateDebut || 0).getTime() - new Date(a.dateDebut || 0).getTime();
+  const work = experiences.filter((e) => e.type === "work").sort(byDateDesc);
+  const education = experiences.filter((e) => e.type === "education").sort(byDateDesc);
 
   function formatPeriod(e: Experience) {
     const start = e.dateDebut ? new Date(e.dateDebut).getFullYear() : "";
