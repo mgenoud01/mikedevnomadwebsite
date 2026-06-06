@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Project } from "@/lib/projects";
 
 function stripMd(s: string): string {
@@ -191,7 +192,7 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
                 {/* Description complète — Markdown */}
                 <div style={{ color: "rgba(230,237,243,0.6)", fontSize: "14px", lineHeight: 1.8, marginBottom: "24px" }}
                   className="md-render">
-                  <ReactMarkdown>{selected.description}</ReactMarkdown>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{selected.description}</ReactMarkdown>
                 </div>
 
                 {/* Stack */}

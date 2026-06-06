@@ -3,6 +3,7 @@
 import { useState, useRef, KeyboardEvent } from "react";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Project } from "@/lib/projects";
 import { uploadToCloudinary } from "@/lib/uploadToCloudinary";
 
@@ -361,7 +362,7 @@ export default function ProjectsAdminClient({ projects: initialProjects }: { pro
                   <div style={{ ...INPUT_STYLE, minHeight: "120px", lineHeight: 1.7, fontSize: "13px", color: "rgba(230,237,243,0.75)" }}
                     className="md-preview">
                     {form.description
-                      ? <ReactMarkdown>{form.description}</ReactMarkdown>
+                      ? <ReactMarkdown remarkPlugins={[remarkGfm]}>{form.description}</ReactMarkdown>
                       : <span style={{ color: "rgba(255,255,255,0.2)", fontStyle: "italic" }}>Rien à afficher…</span>}
                   </div>
                 ) : (

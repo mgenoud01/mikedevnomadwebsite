@@ -115,6 +115,10 @@
 .md-render em { color: rgba(230,237,243,0.7); font-style: italic; }
 .md-render blockquote { border-left: 3px solid rgba(0,255,153,0.3); padding-left: 12px; color: rgba(230,237,243,0.45); margin: 0.6em 0; }
 .md-render hr { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 1em 0; }
+.md-render table { width: 100%; border-collapse: collapse; margin-bottom: 1em; font-size: 13px; }
+.md-render th { background: rgba(0,255,153,0.08); color: #00ff99; font-weight: 700; padding: 8px 12px; text-align: left; border: 1px solid rgba(255,255,255,0.1); }
+.md-render td { padding: 7px 12px; border: 1px solid rgba(255,255,255,0.07); color: rgba(230,237,243,0.65); }
+.md-render tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
 
 /* admin preview uses same styles */
 .md-preview { overflow-y: auto; }
