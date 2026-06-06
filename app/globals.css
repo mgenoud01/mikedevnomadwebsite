@@ -99,6 +99,21 @@
   animation: shimmer 2s infinite;
 }
 
+/* ── Landing page mobile (split screen) ────────────────── */
+@media (max-width: 640px) {
+  .landing-main    { flex-direction: column !important; height: 100dvh !important; }
+  .landing-panel   { flex: 0 0 50% !important; width: 100% !important; height: 50% !important; }
+  .landing-divider { width: 100% !important; height: 1px !important; flex-shrink: 0; }
+  .landing-logo    { display: none !important; }
+  .landing-corner  { display: none !important; }
+  .landing-badge   { display: none !important; }
+  .landing-desc    { display: none !important; }
+  .landing-content { padding-left: 28px !important; padding-right: 28px !important; }
+  .landing-h1      { font-size: clamp(2.8rem, 10vw, 4rem) !important; margin-bottom: 16px !important; }
+  .landing-sub     { display: none !important; }
+  .landing-cta     { padding: 12px 24px !important; font-size: 11px !important; }
+}
+
 /* ── Mobile responsive ─────────────────────────────────── */
 .nav-desktop   { display: flex !important; }
 .nav-mobile-btn{ display: none !important; }

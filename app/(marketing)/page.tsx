@@ -9,7 +9,7 @@ export default function LandingPage() {
 
   return (
     <main
-      className="relative"
+      className="relative landing-main"
       style={{
         display: "flex",
         height: "100vh",
@@ -20,7 +20,7 @@ export default function LandingPage() {
     >
       {/* ── PRO SIDE ────────────────────────────────────────── */}
       <div
-        className="relative flex flex-col justify-center items-center overflow-hidden cursor-pointer"
+        className="landing-panel relative flex flex-col justify-center items-center overflow-hidden cursor-pointer"
         style={{
           flex: hovered === "nomade" ? "0 0 28%" : hovered === "pro" ? "0 0 72%" : "0 0 50%",
           transition: "flex 0.75s cubic-bezier(0.76, 0, 0.24, 1)",
@@ -74,7 +74,7 @@ export default function LandingPage() {
 
         {/* Content */}
         <div
-          className="relative z-10 flex flex-col items-start px-16 max-w-lg w-full"
+          className="landing-content relative z-10 flex flex-col items-start px-16 max-w-lg w-full"
           style={{
             opacity: hovered === "nomade" ? 0.35 : 1,
             transition: "opacity 0.5s ease",
@@ -82,7 +82,7 @@ export default function LandingPage() {
         >
           {/* Status badge */}
           <div
-            className="mb-10 inline-flex items-center gap-2.5 px-4 py-2 rounded-full"
+            className="landing-badge mb-10 inline-flex items-center gap-2.5 px-4 py-2 rounded-full"
             style={{
               border: "1px solid rgba(0,255,153,0.18)",
               background: "rgba(0,255,153,0.05)",
@@ -115,6 +115,7 @@ export default function LandingPage() {
 
           {/* Big heading */}
           <h1
+            className="landing-h1"
             style={{
               fontSize: "clamp(4rem, 8vw, 7rem)",
               fontWeight: 900,
@@ -127,13 +128,14 @@ export default function LandingPage() {
             MIKE
             <span className="text-gradient-pro">DEV</span>
             <br />
-            <span style={{ fontSize: "0.45em", letterSpacing: "0.02em", color: "rgba(0,255,153,0.5)", fontFamily: "var(--font-mono)" }}>
+            <span className="landing-sub" style={{ fontSize: "0.45em", letterSpacing: "0.02em", color: "rgba(0,255,153,0.5)", fontFamily: "var(--font-mono)" }}>
               nomad.com /pro
             </span>
           </h1>
 
           {/* Sub line */}
           <p
+            className="landing-sub"
             style={{
               fontFamily: "var(--font-mono)",
               color: "rgba(0,255,153,0.75)",
@@ -147,6 +149,7 @@ export default function LandingPage() {
           </p>
 
           <p
+            className="landing-desc"
             style={{
               color: "rgba(255,255,255,0.75)",
               fontSize: "14px",
@@ -164,7 +167,7 @@ export default function LandingPage() {
           {/* CTA */}
           <Link
             href="/pro"
-            className="inline-flex items-center gap-3 group"
+            className="landing-cta inline-flex items-center gap-3 group"
             style={{
               padding: "14px 32px",
               background: "#00ff99",
@@ -194,7 +197,7 @@ export default function LandingPage() {
 
         {/* Corner index */}
         <div
-          className="absolute bottom-8 left-8"
+          className="landing-corner absolute bottom-8 left-8"
           style={{
             fontFamily: "var(--font-mono)",
             color: "rgba(255,255,255,0.1)",
@@ -209,6 +212,7 @@ export default function LandingPage() {
 
       {/* ── DIVIDER ─────────────────────────────────────────── */}
       <div
+        className="landing-divider"
         style={{
           width: "1px",
           background: "linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.12) 30%, rgba(255,255,255,0.12) 70%, transparent 100%)",
@@ -219,6 +223,7 @@ export default function LandingPage() {
 
       {/* ── LOGO EN HAUT ────────────────────────────────────── */}
       <div
+        className="landing-logo"
         style={{
           position: "absolute",
           top: "36px",
@@ -278,7 +283,7 @@ export default function LandingPage() {
 
       {/* ── NOMADE SIDE ─────────────────────────────────────── */}
       <div
-        className="relative flex flex-col justify-center items-center overflow-hidden cursor-pointer"
+        className="landing-panel relative flex flex-col justify-center items-center overflow-hidden cursor-pointer"
         style={{
           flex: hovered === "pro" ? "0 0 28%" : hovered === "nomade" ? "0 0 72%" : "0 0 50%",
           transition: "flex 0.75s cubic-bezier(0.76, 0, 0.24, 1)",
@@ -348,7 +353,7 @@ export default function LandingPage() {
 
         {/* Content */}
         <div
-          className="relative z-10 flex flex-col items-start px-16 max-w-lg w-full"
+          className="landing-content relative z-10 flex flex-col items-start px-16 max-w-lg w-full"
           style={{
             opacity: hovered === "pro" ? 0.35 : 1,
             transition: "opacity 0.5s ease",
@@ -356,7 +361,7 @@ export default function LandingPage() {
         >
           {/* Badge */}
           <div
-            className="mb-10 inline-flex items-center gap-2.5 px-4 py-2 rounded-full"
+            className="landing-badge mb-10 inline-flex items-center gap-2.5 px-4 py-2 rounded-full"
             style={{
               border: "1px solid rgba(245,158,11,0.25)",
               background: "rgba(245,158,11,0.07)",
@@ -378,6 +383,7 @@ export default function LandingPage() {
 
           {/* Big heading */}
           <h1
+            className="landing-h1"
             style={{
               fontSize: "clamp(4rem, 8vw, 7rem)",
               fontWeight: 900,
@@ -390,13 +396,14 @@ export default function LandingPage() {
             MIKE
             <span className="text-gradient-nomade">NOM</span>
             <br />
-            <span style={{ fontSize: "0.45em", letterSpacing: "0.02em", color: "rgba(180,83,9,0.55)", fontFamily: "var(--font-mono)" }}>
+            <span className="landing-sub" style={{ fontSize: "0.45em", letterSpacing: "0.02em", color: "rgba(180,83,9,0.55)", fontFamily: "var(--font-mono)" }}>
               ad.com /nomade
             </span>
           </h1>
 
           {/* Destinations */}
           <p
+            className="landing-sub"
             style={{
               color: "rgba(28,25,23,0.4)",
               fontSize: "12px",
@@ -409,6 +416,7 @@ export default function LandingPage() {
           </p>
 
           <p
+            className="landing-desc"
             style={{
               color: "rgba(28,25,23,0.45)",
               fontSize: "14px",
@@ -425,7 +433,7 @@ export default function LandingPage() {
           {/* CTA */}
           <Link
             href="/nomade"
-            className="inline-flex items-center gap-3 group"
+            className="landing-cta inline-flex items-center gap-3 group"
             style={{
               padding: "14px 32px",
               background: "#f59e0b",
@@ -455,7 +463,7 @@ export default function LandingPage() {
 
         {/* Corner index */}
         <div
-          className="absolute bottom-8 right-8"
+          className="landing-corner absolute bottom-8 right-8"
           style={{
             fontFamily: "var(--font-mono)",
             color: "rgba(28,25,23,0.12)",
