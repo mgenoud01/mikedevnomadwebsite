@@ -1,7 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
 import { Project } from "@/lib/projects";
+
+function stripMd(s: string): string {
+  return s
+    .replace(/#{1,6}\s/g, "")
+    .replace(/\*\*(.+?)\*\*/g, "$1")
+    .replace(/\*(.+?)\*/g, "$1")
+    .replace(/`(.+?)`/g, "$1")
+    .replace(/\[(.+?)\]\(.+?\)/g, "$1")
+    .replace(/^[-*+]\s/gm, "");
+}
 
 const STATUS_STYLE: Record<string, { color: string; bg: string; label: string }> = {
   "done":        { color: "#00ff99", bg: "rgba(0,255,153,0.08)", label: "Done" },
@@ -177,10 +188,11 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
                   </span>
                 </div>
 
-                {/* Description complète */}
-                <p style={{ color: "rgba(230,237,243,0.6)", fontSize: "14px", lineHeight: 1.8, marginBottom: "24px", whiteSpace: "pre-wrap" }}>
-                  {selected.description}
-                </p>
+                {/* Description complète — Markdown */}
+                <div style={{ color: "rgba(230,237,243,0.6)", fontSize: "14px", lineHeight: 1.8, marginBottom: "24px" }}
+                  className="md-render">
+                  <ReactMarkdown>{selected.description}</ReactMarkdown>
+                </div>
 
                 {/* Stack */}
                 {selected.stack.length > 0 && (
@@ -299,7 +311,7 @@ function ProjectCard({ project, onClick }: { project: Project; onClick: () => vo
         <h2 style={{ color: "#fff", fontWeight: 800, fontSize: "17px", letterSpacing: "-0.02em", marginBottom: "8px" }}>{project.titre}</h2>
         <p style={{ color: "rgba(230,237,243,0.45)", fontSize: "13px", lineHeight: 1.65, marginBottom: "14px",
           display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" } as any}>
-          {project.description}
+          {stripMd(project.description)}
         </p>
         {/* Stack */}
         {project.stack.length > 0 && (

@@ -2,6 +2,7 @@
 
 import { useState, useRef, KeyboardEvent } from "react";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
 import { Project } from "@/lib/projects";
 import { uploadToCloudinary } from "@/lib/uploadToCloudinary";
 
@@ -142,6 +143,7 @@ export default function ProjectsAdminClient({ projects: initialProjects }: { pro
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [descPreview, setDescPreview] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   function openCreate() {
@@ -342,9 +344,31 @@ export default function ProjectsAdminClient({ projects: initialProjects }: { pro
               </div>
 
               <div style={{ gridColumn: "1 / -1" }}>
-                <label style={LABEL_STYLE}>Description</label>
-                <textarea value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-                  style={{ ...INPUT_STYLE, minHeight: "100px", resize: "vertical" }} placeholder="Description du projet..." />
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
+                  <label style={{ ...LABEL_STYLE, marginBottom: 0 }}>Description <span style={{ color: "rgba(0,255,153,0.4)", fontFamily: "var(--font-mono)", textTransform: "none", letterSpacing: 0 }}>— supporte le Markdown</span></label>
+                  <div style={{ display: "flex", gap: "2px" }}>
+                    {["✏️ Éditer", "👁 Aperçu"].map((tab, i) => (
+                      <button key={i} type="button" onClick={() => setDescPreview(i === 1)} style={{
+                        padding: "3px 10px", fontSize: "11px", fontWeight: 600, cursor: "pointer",
+                        border: "1px solid rgba(255,255,255,0.1)", borderRadius: "6px",
+                        background: (i === 1) === descPreview ? "rgba(0,255,153,0.1)" : "transparent",
+                        color: (i === 1) === descPreview ? "#00ff99" : "rgba(255,255,255,0.35)",
+                      }}>{tab}</button>
+                    ))}
+                  </div>
+                </div>
+                {descPreview ? (
+                  <div style={{ ...INPUT_STYLE, minHeight: "120px", lineHeight: 1.7, fontSize: "13px", color: "rgba(230,237,243,0.75)" }}
+                    className="md-preview">
+                    {form.description
+                      ? <ReactMarkdown>{form.description}</ReactMarkdown>
+                      : <span style={{ color: "rgba(255,255,255,0.2)", fontStyle: "italic" }}>Rien à afficher…</span>}
+                  </div>
+                ) : (
+                  <textarea value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+                    style={{ ...INPUT_STYLE, minHeight: "120px", resize: "vertical", lineHeight: 1.6 }}
+                    placeholder={"## Mon projet\n\nDescription en **Markdown**...\n\n- Point 1\n- Point 2"} />
+                )}
               </div>
 
               <div style={{ gridColumn: "1 / -1" }}>
