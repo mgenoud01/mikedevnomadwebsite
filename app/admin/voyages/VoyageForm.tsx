@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Voyage, Resto, Endroit } from "@/lib/voyages";
@@ -54,6 +54,10 @@ export default function VoyageForm({ voyage }: { voyage?: Voyage }) {
   const [uploadingCover, setUploadingCover] = useState(false);
   const [uploadingGalerie, setUploadingGalerie] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const errorRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (errorMsg) errorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [errorMsg]);
 
   const [form, setForm] = useState({
     titre: voyage?.titre || "",
@@ -163,8 +167,12 @@ export default function VoyageForm({ voyage }: { voyage?: Voyage }) {
   }
 
   async function handleSave() {
-    if (!form.titre || !form.pays) return alert("Titre et pays obligatoires");
+    if (!form.titre || !form.pays) {
+      setErrorMsg("Titre et pays sont obligatoires");
+      return;
+    }
     setSaving(true);
+    setErrorMsg(null);
     try {
       const url = isEdit ? `/api/admin/voyages/${voyage!.id}` : "/api/admin/voyages";
       const method = isEdit ? "PUT" : "POST";
@@ -175,14 +183,14 @@ export default function VoyageForm({ voyage }: { voyage?: Voyage }) {
         body: JSON.stringify(form),
       });
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        alert(`Erreur ${res.status} : ${data.error || "Impossible de sauvegarder"}`);
+        const data = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+        setErrorMsg(`Erreur ${res.status} : ${data.error || "Impossible de sauvegarder"}`);
         return;
       }
       router.push("/admin/dashboard");
       router.refresh();
-    } catch {
-      alert("Erreur réseau — impossible de joindre le serveur");
+    } catch (err: any) {
+      setErrorMsg(`Erreur réseau : ${err?.message || "impossible de joindre le serveur"}`);
     } finally {
       setSaving(false);
     }
@@ -241,13 +249,13 @@ export default function VoyageForm({ voyage }: { voyage?: Voyage }) {
 
       {/* ── Bannière d'erreur ── */}
       {errorMsg && (
-        <div style={{
+        <div ref={errorRef} style={{
           background: "rgba(255,60,60,0.12)", border: "1px solid rgba(255,60,60,0.3)",
-          color: "#ff6b6b", padding: "14px 24px", fontSize: "13px",
+          color: "#ff6b6b", padding: "14px 24px", fontSize: "14px", fontWeight: 600,
           display: "flex", alignItems: "center", justifyContent: "space-between",
         }}>
           <span>⚠️ {errorMsg}</span>
-          <button onClick={() => setErrorMsg(null)} style={{ background: "none", border: "none", color: "#ff6b6b", cursor: "pointer", fontSize: "16px" }}>✕</button>
+          <button onClick={() => setErrorMsg(null)} style={{ background: "none", border: "none", color: "#ff6b6b", cursor: "pointer", fontSize: "18px" }}>✕</button>
         </div>
       )}
 
