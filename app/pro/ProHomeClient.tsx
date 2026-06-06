@@ -18,7 +18,7 @@ export default function ProHomeClient({ profile }: { profile: ProProfile }) {
   ];
 
   return (
-    <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "72px 32px 96px" }}>
+    <div className="page-pad" style={{ maxWidth: "1000px", margin: "0 auto", padding: "72px 32px 96px" }}>
 
       {/* Terminal prompt */}
       <div style={{

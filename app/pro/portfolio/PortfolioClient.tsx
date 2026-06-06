@@ -58,7 +58,7 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
   const rest = projects.filter((p) => !p.featured);
 
   return (
-    <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "72px 32px 96px" }}>
+    <div className="page-pad" style={{ maxWidth: "1100px", margin: "0 auto", padding: "72px 32px 96px" }}>
 
       {/* Header */}
       <div style={{ marginBottom: "56px" }}>

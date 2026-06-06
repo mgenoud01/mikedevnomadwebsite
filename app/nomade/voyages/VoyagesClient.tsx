@@ -5,7 +5,7 @@ import { Voyage } from "@/lib/voyages";
 
 export default function VoyagesClient({ voyages }: { voyages: Voyage[] }) {
   return (
-    <div style={{ maxWidth: "900px", margin: "0 auto", padding: "72px 32px 96px" }}>
+    <div className="page-pad" style={{ maxWidth: "900px", margin: "0 auto", padding: "72px 32px 96px" }}>
 
       {/* Header */}
       <div style={{ marginBottom: "56px" }}>
@@ -34,7 +34,7 @@ export default function VoyagesClient({ voyages }: { voyages: Voyage[] }) {
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           {voyages.map((v) => (
             <Link key={v.id} href={`/nomade/voyages/${v.slug}`} style={{ textDecoration: "none" }}>
-              <article style={{
+              <article className={v.photoCouverture ? "trip-card" : ""} style={{
                 background: "#ffffff",
                 border: "1px solid rgba(0,0,0,0.06)",
                 borderRadius: "16px",
@@ -57,9 +57,9 @@ export default function VoyagesClient({ voyages }: { voyages: Voyage[] }) {
               >
                 {/* Cover photo */}
                 {v.photoCouverture && (
-                  <div style={{ position: "relative", overflow: "hidden" }}>
+                  <div className="trip-img" style={{ position: "relative", overflow: "hidden", minHeight: "200px" }}>
                     <img src={v.photoCouverture} alt={v.titre}
-                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", position: "absolute", inset: 0 }} />
                     {v.miseEnAvant && (
                       <span style={{
                         position: "absolute", top: "12px", left: "12px",
@@ -72,7 +72,7 @@ export default function VoyagesClient({ voyages }: { voyages: Voyage[] }) {
                 )}
 
                 {/* Content */}
-                <div style={{ padding: "28px 32px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                <div className="trip-content-pad" style={{ padding: "28px 32px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
                   {/* Accent top bar (no photo) */}
                   {!v.photoCouverture && (
                     <div style={{ height: "3px", background: "#f59e0b", marginBottom: "20px", borderRadius: "2px", width: "40px" }} />

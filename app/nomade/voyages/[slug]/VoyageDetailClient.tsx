@@ -19,7 +19,7 @@ export default function VoyageDetailClient({ voyage, galleryPhotos }: { voyage: 
 
       {/* ── Hero cover ─────────────────────────────────── */}
       {voyage.photoCouverture ? (
-        <div style={{ position: "relative", height: "480px", overflow: "hidden" }}>
+        <div className="hero-img" style={{ position: "relative", height: "480px", overflow: "hidden" }}>
           <img src={voyage.photoCouverture} alt={voyage.titre}
             style={{ width: "100%", height: "100%", objectFit: "cover" }} />
           <div style={{
@@ -48,7 +48,7 @@ export default function VoyageDetailClient({ voyage, galleryPhotos }: { voyage: 
         </div>
       )}
 
-      <div style={{ maxWidth: "900px", margin: "0 auto", padding: "48px 32px 96px" }}>
+      <div className="page-pad inner-pad" style={{ maxWidth: "900px", margin: "0 auto", padding: "48px 32px 96px" }}>
 
         {/* ── Infos rapides ──────────────────────────── */}
         <div style={{

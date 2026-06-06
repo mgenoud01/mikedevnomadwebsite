@@ -99,6 +99,38 @@
   animation: shimmer 2s infinite;
 }
 
+/* ── Mobile responsive ─────────────────────────────────── */
+.nav-desktop   { display: flex !important; }
+.nav-mobile-btn{ display: none !important; }
+
+@media (max-width: 768px) {
+  .nav-desktop    { display: none !important; }
+  .nav-mobile-btn { display: flex !important; align-items: center; justify-content: center;
+                    width: 38px; height: 38px; border: none; cursor: pointer;
+                    border-radius: 8px; font-size: 20px; background: transparent; }
+  .nav-switcher   { display: none !important; }
+}
+
+@media (max-width: 640px) {
+  /* Containers */
+  .page-pad  { padding: 40px 16px 64px !important; }
+  .hero-pad  { padding: 56px 16px 48px !important; }
+  .inner-pad { padding-left: 16px !important; padding-right: 16px !important; }
+
+  /* Grids */
+  .trip-card     { grid-template-columns: 1fr !important; }
+  .stats-3       { grid-template-columns: 1fr 1fr !important; }
+  .sections-grid { grid-template-columns: 1fr !important; }
+
+  /* Elements */
+  .hide-sm  { display: none !important; }
+  .hero-img { height: 260px !important; }
+  .trip-img { height: 200px !important; min-height: 0 !important; }
+
+  /* Text */
+  .trip-content-pad { padding: 20px 16px !important; }
+}
+
 /* ── Markdown render (portfolio modal + admin preview) ──── */
 .md-render h1,.md-render h2,.md-render h3 { color: #fff; font-weight: 700; margin: 1em 0 0.4em; line-height: 1.3; }
 .md-render h1 { font-size: 1.25em; }

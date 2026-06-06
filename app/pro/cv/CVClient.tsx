@@ -17,7 +17,7 @@ export default function CVClient({ experiences, profile }: { experiences: Experi
   }
 
   return (
-    <div style={{ maxWidth: "900px", margin: "0 auto", padding: "72px 32px 96px" }}>
+    <div className="page-pad" style={{ maxWidth: "900px", margin: "0 auto", padding: "72px 32px 96px" }}>
       <div style={{ marginBottom: "48px" }}>
         <p style={{ fontFamily: "var(--font-mono)", color: "rgba(0,255,153,0.5)", fontSize: "12px", letterSpacing: "0.12em", marginBottom: "20px" }}>
           $ cat ./mike.resume.json
@@ -38,7 +38,7 @@ export default function CVClient({ experiences, profile }: { experiences: Experi
       )}
 
       {/* Stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px", marginBottom: "56px" }}>
+      <div className="stats-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px", marginBottom: "56px" }}>
         {[
           { v: `${profile.yearsExp}+`, l: "years exp." },
           { v: `${profile.projectsShipped}+`, l: "projects" },

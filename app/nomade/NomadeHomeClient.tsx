@@ -18,7 +18,7 @@ export default function NomadeHomeClient({ voyages, tiktok = "", instagram = "" 
   return (
     <div>
       {/* ── Hero ──────────────────────────────────────── */}
-      <section style={{ position: "relative", overflow: "hidden", padding: "96px 32px 80px" }}>
+      <section className="hero-pad inner-pad" style={{ position: "relative", overflow: "hidden", padding: "96px 32px 80px" }}>
         <div className="animate-float" style={{
           position: "absolute", top: "-10%", right: "-5%",
           width: "500px", height: "500px",
@@ -127,7 +127,7 @@ export default function NomadeHomeClient({ voyages, tiktok = "", instagram = "" 
 
       {/* ── Derniers voyages ──────────────────────────── */}
       {displayed.length > 0 && (
-        <section style={{ padding: "64px 32px", maxWidth: "900px", margin: "0 auto" }}>
+        <section className="inner-pad" style={{ padding: "64px 32px", maxWidth: "900px", margin: "0 auto" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "32px" }}>
             <h2 style={{ fontSize: "24px", fontWeight: 800, color: "#1c1917", letterSpacing: "-0.03em" }}>
               {featured.length > 0 ? "⭐ Featured" : "✈️ Latest Trips"}
