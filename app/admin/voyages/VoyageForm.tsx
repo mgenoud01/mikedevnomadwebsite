@@ -170,6 +170,7 @@ export default function VoyageForm({ voyage }: { voyage?: Voyage }) {
       const method = isEdit ? "PUT" : "POST";
       const res = await fetch(url, {
         method,
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
