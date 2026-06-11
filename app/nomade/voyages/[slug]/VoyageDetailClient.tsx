@@ -15,7 +15,7 @@ export default function VoyageDetailClient({ voyage, galleryPhotos }: { voyage: 
   const dateFin = voyage.dateFin ? new Date(voyage.dateFin).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }) : null;
 
   return (
-    <div style={{ color: "#1c1917", fontFamily: "var(--font-inter)" }}>
+    <div style={{ color: "#1c1917", fontFamily: "var(--font-inter)", background: "#faf7f0", minHeight: "100vh" }}>
 
       {/* ── Hero cover ─────────────────────────────────── */}
       {voyage.photoCouverture ? (

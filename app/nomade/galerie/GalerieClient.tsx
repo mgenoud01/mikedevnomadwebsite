@@ -19,6 +19,7 @@ export default function GalerieClient({ photos, voyages }: { photos: Photo[]; vo
   const albumsWithPhotos = voyages.filter((v) => photos.some((p) => p.voyageId === v.id));
 
   return (
+    <div style={{ background: "#faf7f0", minHeight: "100vh" }}>
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "72px 32px 96px" }}>
       {/* Header */}
       <div style={{ marginBottom: "48px" }}>
@@ -127,6 +128,7 @@ export default function GalerieClient({ photos, voyages }: { photos: Photo[]; vo
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }

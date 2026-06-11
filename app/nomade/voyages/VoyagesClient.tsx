@@ -5,6 +5,7 @@ import { Voyage } from "@/lib/voyages";
 
 export default function VoyagesClient({ voyages }: { voyages: Voyage[] }) {
   return (
+    <div style={{ background: "#faf7f0", minHeight: "100vh" }}>
     <div className="page-pad" style={{ maxWidth: "900px", margin: "0 auto", padding: "72px 32px 96px" }}>
 
       {/* Header */}
@@ -120,6 +121,7 @@ export default function VoyagesClient({ voyages }: { voyages: Voyage[] }) {
           ))}
         </div>
       )}
+    </div>
     </div>
   );
 }
