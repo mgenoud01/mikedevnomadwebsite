@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MikeDevNomad — Cybersécurité & Infrastructure, déployées partout</title>
+<meta name="description" content="Freelance en cybersécurité, infrastructure et DevOps. Audits, pentest, Kubernetes, monitoring. Basé en Suisse, opérationnel depuis n'importe où.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E1B1E;
+  --panel:#14282C;
+  --panel-2:#0F2226;
+  --line:#234047;
+  --mist:#D8E1DC;
+  --muted:#8FA39C;
+  --amber:#FFB454;
+  --mint:#5FD3BC;
+  --font-display:'Chakra Petch',sans-serif;
+  --font-body:'IBM Plex Sans',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+body{
+  background:var(--ink);
+  color:var(--mist);
+  font-family:var(--font-body);
+  font-size:17px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--mint);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:2px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+/* ---------- HUD bar ---------- */
+.hud{
+  position:sticky;top:0;z-index:50;
+  background:rgba(14,27,30,.92);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.hud-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:16px;padding:12px 24px;max-width:1180px;margin:0 auto;
+  font-family:var(--font-mono);font-size:12.5px;letter-spacing:.04em;
+}
+.hud-brand{font-family:var(--font-display);font-weight:700;font-size:15px;color:var(--mist);letter-spacing:.06em}
+.hud-brand span{color:var(--amber)}
+.hud-status{display:flex;align-items:center;gap:8px;color:var(--mint);white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--mint);box-shadow:0 0 0 0 rgba(95,211,188,.5);animation:ping 2s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(95,211,188,.45)}70%{box-shadow:0 0 0 9px rgba(95,211,188,0)}100%{box-shadow:0 0 0 0 rgba(95,211,188,0)}}
+.hud-utc{color:var(--muted)}
+.hud-nav{display:flex;gap:20px}
+.hud-nav a{color:var(--muted);text-transform:uppercase}
+.hud-nav a:hover{color:var(--amber);text-decoration:none}
+@media(max-width:760px){.hud-utc,.hud-nav{display:none}}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.topo{position:absolute;inset:0;opacity:.5;pointer-events:none}
+.hero-inner{
+  position:relative;display:grid;grid-template-columns:1.05fr .95fr;
+  gap:48px;align-items:center;padding:88px 24px 96px;max-width:1180px;margin:0 auto;
+}
+.eyebrow{
+  font-family:var(--font-mono);font-size:13px;color:var(--amber);
+  letter-spacing:.14em;text-transform:uppercase;margin-bottom:18px;
+}
+h1{
+  font-family:var(--font-display);font-weight:700;
+  font-size:clamp(34px,4.6vw,58px);line-height:1.08;letter-spacing:.005em;
+  color:#fff;
+}
+h1 em{font-style:normal;color:var(--amber)}
+.hero p.lede{margin:22px 0 32px;font-size:18.5px;color:var(--muted);max-width:46ch}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap}
+.btn{
+  display:inline-block;font-family:var(--font-display);font-weight:600;
+  font-size:15px;letter-spacing:.05em;padding:13px 26px;border-radius:4px;
+  border:1px solid var(--amber);transition:transform .15s,background .15s;
+}
+.btn-primary{background:var(--amber);color:var(--ink)}
+.btn-primary:hover{transform:translateY(-2px);text-decoration:none}
+.btn-ghost{color:var(--amber)}
+.btn-ghost:hover{background:rgba(255,180,84,.08);text-decoration:none;transform:translateY(-2px)}
+
+/* ---------- Terminal ---------- */
+.term{
+  background:var(--panel-2);border:1px solid var(--line);border-radius:10px;
+  box-shadow:0 24px 60px rgba(0,0,0,.45);overflow:hidden;
+}
+.term-bar{
+  display:flex;align-items:center;gap:8px;padding:11px 14px;
+  background:var(--panel);border-bottom:1px solid var(--line);
+}
+.term-bar i{width:11px;height:11px;border-radius:50%;display:block}
+.term-bar i:nth-child(1){background:#E2604E}
+.term-bar i:nth-child(2){background:var(--amber)}
+.term-bar i:nth-child(3){background:var(--mint)}
+.term-title{margin-left:auto;font-family:var(--font-mono);font-size:11.5px;color:var(--muted)}
+.term-body{
+  font-family:var(--font-mono);font-size:13.5px;line-height:1.7;
+  padding:18px 18px 14px;height:330px;overflow-y:auto;
+}
+.term-body .ln{white-space:pre-wrap;word-break:break-word}
+.t-prompt{color:var(--mint)}
+.t-amber{color:var(--amber)}
+.t-dim{color:var(--muted)}
+.term-input-row{display:flex;gap:8px;align-items:center;padding:0 18px 16px;font-family:var(--font-mono);font-size:13.5px}
+.term-input-row label{color:var(--mint)}
+#term-in{
+  flex:1;background:transparent;border:none;color:var(--mist);
+  font-family:var(--font-mono);font-size:13.5px;caret-color:var(--amber);
+}
+#term-in:focus{outline:none}
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;padding:64px 24px 72px}
+  .term-body{height:280px}
+}
+
+/* ---------- Sections ---------- */
+section{padding:88px 0;border-bottom:1px solid var(--line)}
+.sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:46px;flex-wrap:wrap}
+.sec-tag{font-family:var(--font-mono);font-size:13px;color:var(--amber);letter-spacing:.12em}
+h2{font-family:var(--font-display);font-weight:700;font-size:clamp(26px,3vw,38px);color:#fff}
+
+/* Services */
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+@media(max-width:1000px){.grid-4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.grid-4{grid-template-columns:1fr}}
+.card{
+  background:var(--panel-2);border:1px solid var(--line);border-radius:8px;
+  padding:26px 22px;transition:border-color .2s,transform .2s;
+}
+.card:hover{border-color:var(--amber);transform:translateY(-4px)}
+.card .mono-tag{font-family:var(--font-mono);font-size:11.5px;color:var(--mint);letter-spacing:.1em;display:block;margin-bottom:14px}
+.card h3{font-family:var(--font-display);font-size:18.5px;color:#fff;margin-bottom:10px}
+.card p{font-size:15px;color:var(--muted)}
+
+/* Stack */
+.stack-groups{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+@media(max-width:860px){.stack-groups{grid-template-columns:1fr}}
+.stack-groups h3{font-family:var(--font-mono);font-size:13px;color:var(--amber);letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px}
+.tags{display:flex;flex-wrap:wrap;gap:9px}
+.tag{
+  font-family:var(--font-mono);font-size:13px;color:var(--mist);
+  border:1px solid var(--line);border-radius:4px;padding:6px 12px;background:var(--panel-2);
+}
+
+/* Process */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;counter-reset:step}
+@media(max-width:1000px){.steps{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.steps{grid-template-columns:1fr}}
+.step{position:relative;padding:26px 22px;background:var(--panel-2);border:1px solid var(--line);border-radius:8px}
+.step::before{
+  counter-increment:step;content:"0" counter(step);
+  font-family:var(--font-mono);font-size:13px;color:var(--amber);display:block;margin-bottom:12px;
+}
+.step h3{font-family:var(--font-display);font-size:17.5px;color:#fff;margin-bottom:8px}
+.step p{font-size:14.5px;color:var(--muted)}
+
+/* Nomad strip */
+.nomad{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+@media(max-width:860px){.nomad{grid-template-columns:1fr}}
+.nomad p{color:var(--muted);margin-bottom:18px}
+.tz{
+  font-family:var(--font-mono);font-size:13.5px;background:var(--panel-2);
+  border:1px solid var(--line);border-radius:8px;padding:22px;
+}
+.tz-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dashed var(--line)}
+.tz-row:last-child{border-bottom:none}
+.tz-row b{color:var(--amber);font-weight:500}
+
+/* Contact */
+.contact{text-align:center;border-bottom:none;padding-bottom:64px}
+.contact h2{margin-bottom:14px}
+.contact p{color:var(--muted);max-width:52ch;margin:0 auto 32px}
+.contact .mono-line{font-family:var(--font-mono);font-size:14px;color:var(--mint);margin-bottom:28px}
+footer{
+  font-family:var(--font-mono);font-size:12.5px;color:var(--muted);
+  text-align:center;padding:26px 24px;border-top:1px solid var(--line);
+}
+</style>
+</head>
+<body>
+
+<header class="hud">
+  <div class="hud-inner">
+    <div class="hud-brand">MIKEDEV<span>//</span>NOMAD</div>
+    <div class="hud-status"><span class="dot" aria-hidden="true"></span>DISPONIBLE — MISSIONS FREELANCE</div>
+    <div class="hud-utc" id="utc">UTC --:--:--</div>
+    <nav class="hud-nav">
+      <a href="#services">Services</a>
+      <a href="#stack">Stack</a>
+      <a href="#process">Méthode</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <svg class="topo" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g fill="none" stroke="#1E363B" stroke-width="1.2">
+      <path d="M-50,120 C200,60 380,180 620,130 S1000,40 1260,110"/>
+      <path d="M-50,190 C220,130 400,250 640,200 S1010,110 1260,180"/>
+      <path d="M-50,270 C240,210 420,330 660,280 S1020,190 1260,260"/>
+      <path d="M-50,360 C260,300 440,420 680,370 S1030,280 1260,350"/>
+      <path d="M-50,460 C280,400 460,520 700,470 S1040,380 1260,450"/>
+      <path d="M-50,560 C300,500 480,620 720,570 S1050,480 1260,550"/>
+      <path d="M-50,660 C320,600 500,720 740,670 S1060,580 1260,650"/>
+    </g>
+    <g fill="#234047">
+      <circle cx="950" cy="160" r="3"/><circle cx="240" cy="430" r="3"/><circle cx="640" cy="560" r="3"/>
+    </g>
+  </svg>
+
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">// Freelance · Cybersécurité · Infrastructure</div>
+      <h1>Sécuriser vos systèmes,<br>déployé depuis <em>n'importe où</em>.</h1>
+      <p class="lede">Spécialiste cybersécurité &amp; DevOps basé en Suisse 🇨🇭. Audits, durcissement, Kubernetes, monitoring — avec la rigueur du terrain et la flexibilité du remote.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#contact">Démarrer une mission</a>
+        <a class="btn btn-ghost" href="#services">Voir les services</a>
+      </div>
+    </div>
+
+    <div class="term" aria-label="Terminal interactif">
+      <div class="term-bar"><i></i><i></i><i></i><span class="term-title">mike@field-ops:~</span></div>
+      <div class="term-body" id="term-out"></div>
+      <div class="term-input-row">
+        <label for="term-in">$</label>
+        <input id="term-in" type="text" autocomplete="off" spellcheck="false" aria-label="Tapez une commande, par exemple help">
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="services">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-tag">[ CAPABILITIES ]</span><h2>Services</h2></div>
+    <div class="grid-4">
+      <div class="card">
+        <span class="mono-tag">SEC-01</span>
+        <h3>Audit &amp; Pentest</h3>
+        <p>Évaluation de surface d'attaque, tests d'intrusion web et réseau, rapport actionnable avec priorisation des correctifs.</p>
+      </div>
+      <div class="card">
+        <span class="mono-tag">OPS-02</span>
+        <h3>Infrastructure &amp; DevOps</h3>
+        <p>Kubernetes (K3s), conteneurisation, CI/CD, stockage distribué, secrets management — du homelab à la prod.</p>
+      </div>
+      <div class="card">
+        <span class="mono-tag">MON-03</span>
+        <h3>Monitoring &amp; Détection</h3>
+        <p>Déploiement Wazuh, Zabbix, Prometheus &amp; Grafana : visibilité complète, alerting et réponse automatisée.</p>
+      </div>
+      <div class="card">
+        <span class="mono-tag">DEV-04</span>
+        <h3>Développement sécurisé</h3>
+        <p>Applications full-stack pensées sécurité dès la conception : authentification robuste, durcissement, bonnes pratiques.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="stack">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-tag">[ ARSENAL ]</span><h2>Stack technique</h2></div>
+    <div class="stack-groups">
+      <div>
+        <h3>Sécurité</h3>
+        <div class="tags">
+          <span class="tag">Kali Linux</span><span class="tag">Burp Suite</span><span class="tag">Wireshark</span>
+          <span class="tag">Nessus</span><span class="tag">Volatility</span><span class="tag">Wazuh</span>
+        </div>
+      </div>
+      <div>
+        <h3>Infrastructure</h3>
+        <div class="tags">
+          <span class="tag">Kubernetes / K3s</span><span class="tag">Docker</span><span class="tag">Longhorn</span>
+          <span class="tag">Vault</span><span class="tag">UFW / Réseau</span><span class="tag">VLAN / Cisco</span>
+        </div>
+      </div>
+      <div>
+        <h3>Monitoring &amp; Dev</h3>
+        <div class="tags">
+          <span class="tag">Zabbix</span><span class="tag">Prometheus</span><span class="tag">Grafana</span>
+          <span class="tag">Python</span><span class="tag">Bash</span><span class="tag">Git</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-tag">[ MODUS OPERANDI ]</span><h2>Méthode de mission</h2></div>
+    <div class="steps">
+      <div class="step"><h3>Recon</h3><p>Cadrage précis : périmètre, objectifs, contraintes. Pas de mission floue.</p></div>
+      <div class="step"><h3>Plan</h3><p>Proposition chiffrée, jalons clairs, livrables définis avant la première ligne de commande.</p></div>
+      <div class="step"><h3>Execute</h3><p>Exécution rigoureuse avec points de suivi réguliers, quel que soit le fuseau horaire.</p></div>
+      <div class="step"><h3>Report</h3><p>Rapport clair et actionnable, transfert de connaissances, recommandations priorisées.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="nomad">
+  <div class="wrap nomad">
+    <div>
+      <div class="sec-head" style="margin-bottom:24px"><span class="sec-tag">[ REMOTE-FIRST ]</span><h2>Opérationnel partout</h2></div>
+      <p>Je travaille en remote depuis la Suisse et l'Asie du Sud-Est. Connexion sécurisée, VPN, discipline militaire des horaires : la distance n'est jamais un problème, c'est un mode opératoire.</p>
+      <p>🇨🇭 · 🇹🇭 · 🇦🇺 · 🇯🇵 · 🇲🇦 · 🇵🇹 · 🇲🇽</p>
+    </div>
+    <div class="tz" aria-label="Fuseaux horaires couverts">
+      <div class="tz-row"><span>Berne / Zurich</span><b id="tz-ch">--:--</b></div>
+      <div class="tz-row"><span>Bangkok</span><b id="tz-th">--:--</b></div>
+      <div class="tz-row"><span>UTC</span><b id="tz-utc">--:--</b></div>
+      <div class="tz-row"><span class="t-dim">Réactivité</span><b>&lt; 24h ouvrées</b></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="wrap">
+    <div class="sec-tag" style="margin-bottom:14px">[ ESTABLISH CONNECTION ]</div>
+    <h2>Un projet ? Une faille à combler ?</h2>
+    <p>Décrivez votre besoin en quelques lignes — audit ponctuel, mission longue ou simple second avis. Réponse rapide, devis sans engagement.</p>
+    <div class="mono-line">$ ssh client@mikedevnomad.com</div>
+    <a class="btn btn-primary" href="mailto:contact@mikedevnomad.com">contact@mikedevnomad.com</a>
+  </div>
+</section>
+
+<footer>
+  MIKEDEV//NOMAD — © 2026 · Conçu et durci à la main · CH ↔ TH
+</footer>
+
+<script>
+// ----- Live clocks -----
+function pad(n){return String(n).padStart(2,'0')}
+function clocks(){
+  const now=new Date();
+  const utc=`${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}:${pad(now.getUTCSeconds())}`;
+  const el=document.getElementById('utc'); if(el) el.textContent='UTC '+utc;
+  const fmt=(tz)=>new Intl.DateTimeFormat('fr-CH',{hour:'2-digit',minute:'2-digit',timeZone:tz}).format(now);
+  const ch=document.getElementById('tz-ch'); if(ch) ch.textContent=fmt('Europe/Zurich');
+  const th=document.getElementById('tz-th'); if(th) th.textContent=fmt('Asia/Bangkok');
+  const u2=document.getElementById('tz-utc'); if(u2) u2.textContent=utc.slice(0,5);
+}
+clocks(); setInterval(clocks,1000);
+
+// ----- Interactive terminal -----
+const out=document.getElementById('term-out');
+const input=document.getElementById('term-in');
+const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function line(html,cls){
+  const d=document.createElement('div');
+  d.className='ln'+(cls?' '+cls:'');
+  d.innerHTML=html;
+  out.appendChild(d);
+  out.scrollTop=out.scrollHeight;
+}
+function promptLine(cmd){
+  line('<span class="t-prompt">mike@field-ops:~$</span> '+cmd);
+}
+
+const COMMANDS={
+  help:()=>{
+    line('<span class="t-amber">Commandes disponibles :</span>');
+    line('  whoami     — qui suis-je');
+    line('  services   — ce que je propose');
+    line('  stack      — outils & technologies');
+    line('  travel     — d\'où je travaille');
+    line('  contact    — me joindre');
+    line('  clear      — nettoyer l\'écran');
+  },
+  whoami:()=>{
+    line('<span class="t-amber">Mickael</span> — spécialiste cybersécurité & infrastructure 🇨🇭');
+    line('<span class="t-dim">Background : sécurité défensive, réseaux, Kubernetes en production.</span>');
+    line('<span class="t-dim">Mode : freelance · remote-first · rigueur suisse.</span>');
+  },
+  services:()=>{
+    line('<span class="t-amber">[SEC-01]</span> Audit & Pentest');
+    line('<span class="t-amber">[OPS-02]</span> Infrastructure & DevOps (K8s)');
+    line('<span class="t-amber">[MON-03]</span> Monitoring & Détection (Wazuh, Zabbix, Grafana)');
+    line('<span class="t-amber">[DEV-04]</span> Développement sécurisé');
+  },
+  stack:()=>{
+    line('Kali · Burp Suite · Wireshark · Nessus · Wazuh');
+    line('Kubernetes/K3s · Docker · Vault · Longhorn');
+    line('Zabbix · Prometheus · Grafana · Python · Bash');
+  },
+  travel:()=>{
+    line('Base : Suisse 🇨🇭 — souvent déployé : Thaïlande 🇹🇭');
+    line('<span class="t-dim">Déjà opéré depuis : AU · JP · MA · PT · MX</span>');
+  },
+  contact:()=>{
+    line('<span class="t-prompt">→</span> <a href="mailto:contact@mikedevnomad.com">contact@mikedevnomad.com</a>');
+    line('<span class="t-dim">Réponse &lt; 24h ouvrées, quel que soit le fuseau.</span>');
+  },
+  clear:()=>{out.innerHTML='';}
+};
+
+function run(cmd){
+  const c=cmd.trim().toLowerCase();
+  if(!c) return;
+  promptLine(cmd);
+  if(COMMANDS[c]) COMMANDS[c]();
+  else line('<span class="t-dim">commande inconnue : '+c.replace(/[<>&]/g,'')+' — tapez</span> <span class="t-amber">help</span>');
+}
+
+input.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){run(input.value);input.value='';}
+});
+document.querySelector('.term').addEventListener('click',()=>input.focus());
+
+// Intro sequence
+const intro=[
+  ['<span class="t-prompt">mike@field-ops:~$</span> ./init --mission freelance',0],
+  ['<span class="t-dim">[ok]</span> identité chargée : <span class="t-amber">MIKEDEV//NOMAD</span>',400],
+  ['<span class="t-dim">[ok]</span> statut : <span style="color:var(--mint)">DISPONIBLE</span>',750],
+  ['<span class="t-dim">[ok]</span> périmètre : sécurité · infra · monitoring',1100],
+  ['Tapez <span class="t-amber">help</span> pour explorer.',1500]
+];
+if(reduced){intro.forEach(([h])=>line(h));}
+else{intro.forEach(([h,t])=>setTimeout(()=>line(h),t));}
+</script>
+</body>
+</html>
