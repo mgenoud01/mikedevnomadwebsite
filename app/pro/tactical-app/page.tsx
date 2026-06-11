@@ -31,14 +31,14 @@ const stack = [
 
 export default function TacticalAppPage() {
   return (
-    <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "72px 32px 96px" }}>
+    <div className="mx-auto max-w-[1000px] px-6 py-16 md:py-24">
 
       {/* Header */}
       <div style={{ marginBottom: "56px" }}>
         <p
           style={{
             fontFamily: "var(--font-mono)",
-            color: "rgba(0,255,153,0.4)",
+            color: "rgba(95,211,188,0.6)",
             fontSize: "12px",
             letterSpacing: "0.12em",
             marginBottom: "20px",
@@ -55,8 +55,8 @@ export default function TacticalAppPage() {
             gap: "8px",
             padding: "6px 14px",
             borderRadius: "4px",
-            border: "1px solid rgba(245,158,11,0.25)",
-            background: "rgba(245,158,11,0.06)",
+            border: "1px solid rgba(255,180,84,0.25)",
+            background: "rgba(255,180,84,0.06)",
             marginBottom: "20px",
           }}
         >
@@ -65,8 +65,8 @@ export default function TacticalAppPage() {
               width: "6px",
               height: "6px",
               borderRadius: "50%",
-              background: "#f59e0b",
-              boxShadow: "0 0 8px #f59e0b",
+              background: "var(--amber)",
+              boxShadow: "0 0 8px var(--amber)",
               animation: "blink 2s ease-in-out infinite",
               display: "inline-block",
             }}
@@ -75,7 +75,7 @@ export default function TacticalAppPage() {
             style={{
               fontFamily: "var(--font-mono)",
               fontSize: "11px",
-              color: "#f59e0b",
+              color: "var(--amber)",
               letterSpacing: "0.1em",
               textTransform: "uppercase",
             }}
@@ -85,9 +85,10 @@ export default function TacticalAppPage() {
         </div>
 
         <h1
+          className="font-display"
           style={{
             fontSize: "clamp(2.5rem, 5vw, 4rem)",
-            fontWeight: 900,
+            fontWeight: 700,
             letterSpacing: "-0.04em",
             color: "#ffffff",
             lineHeight: 0.95,
@@ -98,7 +99,7 @@ export default function TacticalAppPage() {
         </h1>
         <p
           style={{
-            color: "rgba(255,255,255,0.35)",
+            color: "var(--muted)",
             fontSize: "16px",
             lineHeight: 1.8,
             maxWidth: "520px",
@@ -114,7 +115,7 @@ export default function TacticalAppPage() {
         <p
           style={{
             fontFamily: "var(--font-mono)",
-            color: "rgba(0,255,153,0.5)",
+            color: "var(--mint)",
             fontSize: "11px",
             letterSpacing: "0.18em",
             textTransform: "uppercase",
@@ -135,8 +136,8 @@ export default function TacticalAppPage() {
               key={f.num}
               style={{
                 padding: "28px 24px",
-                background: "rgba(255,255,255,0.02)",
-                border: "1px solid rgba(255,255,255,0.05)",
+                background: "var(--panel-2)",
+                border: "1px solid var(--line)",
                 borderRadius: "6px",
               }}
             >
@@ -144,8 +145,8 @@ export default function TacticalAppPage() {
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontSize: "28px",
-                  fontWeight: 900,
-                  color: "rgba(0,255,153,0.2)",
+                  fontWeight: 700,
+                  color: "rgba(95,211,188,0.25)",
                   letterSpacing: "-0.04em",
                   display: "block",
                   marginBottom: "16px",
@@ -154,9 +155,10 @@ export default function TacticalAppPage() {
                 {f.num}
               </span>
               <h3
+                className="font-display"
                 style={{
                   color: "#ffffff",
-                  fontWeight: 700,
+                  fontWeight: 600,
                   fontSize: "16px",
                   letterSpacing: "-0.01em",
                   marginBottom: "8px",
@@ -164,7 +166,7 @@ export default function TacticalAppPage() {
               >
                 {f.title}
               </h3>
-              <p style={{ color: "rgba(255,255,255,0.32)", fontSize: "14px", lineHeight: 1.7 }}>
+              <p style={{ color: "var(--muted)", fontSize: "14px", lineHeight: 1.7 }}>
                 {f.desc}
               </p>
             </div>
@@ -177,7 +179,7 @@ export default function TacticalAppPage() {
         <p
           style={{
             fontFamily: "var(--font-mono)",
-            color: "rgba(0,255,153,0.5)",
+            color: "var(--mint)",
             fontSize: "11px",
             letterSpacing: "0.18em",
             textTransform: "uppercase",
@@ -188,7 +190,7 @@ export default function TacticalAppPage() {
         </p>
         <div
           style={{
-            border: "1px solid rgba(255,255,255,0.05)",
+            border: "1px solid var(--line)",
             borderRadius: "8px",
             overflow: "hidden",
           }}
@@ -201,15 +203,15 @@ export default function TacticalAppPage() {
                 alignItems: "center",
                 gap: "32px",
                 padding: "16px 24px",
-                borderBottom: i < stack.length - 1 ? "1px solid rgba(255,255,255,0.04)" : "none",
-                background: i % 2 === 0 ? "rgba(255,255,255,0.02)" : "transparent",
+                borderBottom: i < stack.length - 1 ? "1px solid var(--line)" : "none",
+                background: i % 2 === 0 ? "var(--panel-2)" : "transparent",
               }}
             >
               <span
                 style={{
                   fontFamily: "var(--font-mono)",
                   fontSize: "11px",
-                  color: "rgba(0,255,153,0.5)",
+                  color: "var(--mint)",
                   letterSpacing: "0.08em",
                   width: "90px",
                   flexShrink: 0,
@@ -226,8 +228,8 @@ export default function TacticalAppPage() {
                       fontFamily: "var(--font-mono)",
                       fontSize: "12px",
                       padding: "3px 10px",
-                      border: "1px solid rgba(255,255,255,0.07)",
-                      color: "rgba(255,255,255,0.55)",
+                      border: "1px solid var(--line)",
+                      color: "var(--muted)",
                       borderRadius: "3px",
                       letterSpacing: "0.04em",
                     }}
