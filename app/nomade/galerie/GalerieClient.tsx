@@ -19,12 +19,12 @@ export default function GalerieClient({ photos, voyages }: { photos: Photo[]; vo
   const albumsWithPhotos = voyages.filter((v) => photos.some((p) => p.voyageId === v.id));
 
   return (
-    <div style={{ background: "#faf7f0", minHeight: "100vh" }}>
+    <div style={{ background: "var(--ink)", minHeight: "100vh" }}>
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "72px 32px 96px" }}>
       {/* Header */}
       <div style={{ marginBottom: "48px" }}>
-        <h1 style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", fontWeight: 900, letterSpacing: "-0.04em", color: "#1c1917", marginBottom: "12px" }}>Gallery</h1>
-        <p style={{ color: "rgba(28,25,23,0.45)", fontSize: "15px" }}>Photos from around the world.</p>
+        <h1 className="font-display" style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", fontWeight: 700, letterSpacing: "-0.04em", color: "#ffffff", marginBottom: "12px" }}>Gallery</h1>
+        <p style={{ color: "var(--muted)", fontSize: "15px" }}>Photos from around the world.</p>
       </div>
 
       <div style={{ display: "flex", gap: "40px", alignItems: "flex-start" }}>
@@ -32,12 +32,12 @@ export default function GalerieClient({ photos, voyages }: { photos: Photo[]; vo
         {/* ── Sidebar albums (si plusieurs) */}
         {albumsWithPhotos.length > 0 && (
           <div style={{ width: "200px", flexShrink: 0, position: "sticky", top: "96px" }}>
-            <p style={{ color: "rgba(28,25,23,0.3)", fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "10px" }}>Albums</p>
+            <p style={{ fontFamily: "var(--font-mono)", color: "var(--muted)", fontSize: "10px", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "10px" }}>Albums</p>
             <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-              <button onClick={() => setActiveAlbum("all")} style={{
+              <button onClick={() => setActiveAlbum("all")} className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber focus-visible:outline-offset-[3px]" style={{
                 textAlign: "left", padding: "9px 12px", borderRadius: "8px", border: "none", cursor: "pointer",
-                background: activeAlbum === "all" ? "rgba(13,148,136,0.08)" : "transparent",
-                color: activeAlbum === "all" ? "#0d9488" : "rgba(28,25,23,0.5)",
+                background: activeAlbum === "all" ? "rgba(95,211,188,0.08)" : "transparent",
+                color: activeAlbum === "all" ? "var(--mint)" : "var(--muted)",
                 fontSize: "13px", fontWeight: activeAlbum === "all" ? 700 : 400,
               }}>
                 🌍 All photos
@@ -47,10 +47,10 @@ export default function GalerieClient({ photos, voyages }: { photos: Photo[]; vo
                 const count = photos.filter((p) => p.voyageId === v.id).length;
                 const isActive = activeAlbum === v.id;
                 return (
-                  <button key={v.id} onClick={() => setActiveAlbum(v.id)} style={{
+                  <button key={v.id} onClick={() => setActiveAlbum(v.id)} className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber focus-visible:outline-offset-[3px]" style={{
                     textAlign: "left", padding: "9px 12px", borderRadius: "8px", border: "none", cursor: "pointer",
-                    background: isActive ? "rgba(13,148,136,0.08)" : "transparent",
-                    color: isActive ? "#0d9488" : "rgba(28,25,23,0.5)",
+                    background: isActive ? "rgba(95,211,188,0.08)" : "transparent",
+                    color: isActive ? "var(--mint)" : "var(--muted)",
                     fontSize: "13px", fontWeight: isActive ? 700 : 400,
                   }}>
                     {v.emoji} {v.titre}
@@ -59,10 +59,10 @@ export default function GalerieClient({ photos, voyages }: { photos: Photo[]; vo
                 );
               })}
               {photos.some((p) => !p.voyageId) && (
-                <button onClick={() => setActiveAlbum("general")} style={{
+                <button onClick={() => setActiveAlbum("general")} className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber focus-visible:outline-offset-[3px]" style={{
                   textAlign: "left", padding: "9px 12px", borderRadius: "8px", border: "none", cursor: "pointer",
-                  background: activeAlbum === "general" ? "rgba(13,148,136,0.08)" : "transparent",
-                  color: activeAlbum === "general" ? "#0d9488" : "rgba(28,25,23,0.5)",
+                  background: activeAlbum === "general" ? "rgba(95,211,188,0.08)" : "transparent",
+                  color: activeAlbum === "general" ? "var(--mint)" : "var(--muted)",
                   fontSize: "13px", fontWeight: activeAlbum === "general" ? 700 : 400,
                 }}>
                   🌐 Other
@@ -77,17 +77,17 @@ export default function GalerieClient({ photos, voyages }: { photos: Photo[]; vo
         <div style={{ flex: 1 }}>
           {activeVoyage && (
             <div style={{ marginBottom: "24px" }}>
-              <h2 style={{ fontSize: "20px", fontWeight: 800, color: "#1c1917", letterSpacing: "-0.02em" }}>
+              <h2 className="font-display" style={{ fontSize: "20px", fontWeight: 700, color: "#ffffff", letterSpacing: "-0.02em" }}>
                 {activeVoyage.emoji} {activeVoyage.titre}
               </h2>
-              <p style={{ color: "rgba(28,25,23,0.4)", fontSize: "13px", marginTop: "4px" }}>{filtered.length} photo{filtered.length > 1 ? "s" : ""}</p>
+              <p style={{ color: "var(--muted)", fontSize: "13px", marginTop: "4px" }}>{filtered.length} photo{filtered.length > 1 ? "s" : ""}</p>
             </div>
           )}
 
           {filtered.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "80px", border: "2px dashed rgba(245,158,11,0.2)", borderRadius: "16px" }}>
+            <div style={{ textAlign: "center", padding: "80px", border: "2px dashed var(--line)", borderRadius: "16px" }}>
               <div style={{ fontSize: "48px", marginBottom: "16px" }}>📸</div>
-              <p style={{ color: "rgba(28,25,23,0.4)", fontSize: "16px" }}>No photos yet.</p>
+              <p style={{ color: "var(--muted)", fontSize: "16px" }}>No photos yet.</p>
             </div>
           ) : (
             <div style={{ columns: "3 240px", columnGap: "12px" }}>
