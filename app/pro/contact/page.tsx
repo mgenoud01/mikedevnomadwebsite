@@ -39,25 +39,25 @@ export default function ContactPage() {
   const inputStyle: React.CSSProperties = {
     width: "100%",
     padding: "12px 16px",
-    background: "rgba(255,255,255,0.03)",
-    border: "1px solid rgba(255,255,255,0.08)",
+    background: "var(--panel-2)",
+    border: "1px solid var(--line)",
     borderRadius: "6px",
-    color: "#f0f0f5",
+    color: "var(--mist)",
     fontSize: "14px",
-    fontFamily: "var(--font-inter)",
+    fontFamily: "var(--font-body)",
     outline: "none",
     transition: "border-color 0.2s ease",
   };
 
   return (
-    <div style={{ maxWidth: "640px", margin: "0 auto", padding: "72px 32px 96px" }}>
+    <div className="mx-auto max-w-[640px] px-6 py-16 md:py-24">
 
       {/* Header */}
       <div style={{ marginBottom: "48px" }}>
         <p
           style={{
             fontFamily: "var(--font-mono)",
-            color: "rgba(0,255,153,0.4)",
+            color: "rgba(95,211,188,0.6)",
             fontSize: "12px",
             letterSpacing: "0.12em",
             marginBottom: "20px",
@@ -66,9 +66,10 @@ export default function ContactPage() {
           $ ./send-message.sh
         </p>
         <h1
+          className="font-display"
           style={{
             fontSize: "clamp(2.5rem, 5vw, 4rem)",
-            fontWeight: 900,
+            fontWeight: 700,
             letterSpacing: "-0.04em",
             color: "#ffffff",
             lineHeight: 0.95,
@@ -77,7 +78,7 @@ export default function ContactPage() {
         >
           Contact
         </h1>
-        <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "15px", lineHeight: 1.7 }}>
+        <p style={{ color: "var(--muted)", fontSize: "15px", lineHeight: 1.7 }}>
           Projet, mission freelance, collaboration — je réponds sous 48h.
         </p>
       </div>
@@ -87,8 +88,8 @@ export default function ContactPage() {
           style={{
             padding: "48px 40px",
             borderRadius: "8px",
-            border: "1px solid rgba(0,255,153,0.2)",
-            background: "rgba(0,255,153,0.04)",
+            border: "1px solid rgba(95,211,188,0.25)",
+            background: "rgba(95,211,188,0.06)",
             textAlign: "center",
           }}
         >
@@ -97,21 +98,21 @@ export default function ContactPage() {
               width: "48px",
               height: "48px",
               borderRadius: "50%",
-              border: "1px solid rgba(0,255,153,0.3)",
+              border: "1px solid rgba(95,211,188,0.35)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               margin: "0 auto 20px",
               fontSize: "20px",
-              color: "#00ff99",
+              color: "var(--mint)",
             }}
           >
             ✓
           </div>
-          <p style={{ color: "#00ff99", fontWeight: 700, fontSize: "18px", marginBottom: "8px" }}>
+          <p style={{ color: "var(--mint)", fontWeight: 700, fontSize: "18px", marginBottom: "8px" }}>
             Message envoyé
           </p>
-          <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "14px" }}>
+          <p style={{ color: "var(--muted)", fontSize: "14px" }}>
             Je reviendrai vers vous rapidement.
           </p>
         </div>
@@ -124,7 +125,7 @@ export default function ContactPage() {
                 display: "block",
                 fontFamily: "var(--font-mono)",
                 fontSize: "11px",
-                color: "rgba(255,255,255,0.3)",
+                color: "var(--muted)",
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
                 marginBottom: "8px",
@@ -140,8 +141,8 @@ export default function ContactPage() {
               onChange={(e) => setForm({ ...form, name: e.target.value })}
               required
               style={inputStyle}
-              onFocus={(e) => (e.target.style.borderColor = "rgba(0,255,153,0.35)")}
-              onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
+              onFocus={(e) => (e.target.style.borderColor = "var(--amber)")}
+              onBlur={(e) => (e.target.style.borderColor = "var(--line)")}
             />
           </div>
 
@@ -152,7 +153,7 @@ export default function ContactPage() {
                 display: "block",
                 fontFamily: "var(--font-mono)",
                 fontSize: "11px",
-                color: "rgba(255,255,255,0.3)",
+                color: "var(--muted)",
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
                 marginBottom: "8px",
@@ -168,8 +169,8 @@ export default function ContactPage() {
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               required
               style={inputStyle}
-              onFocus={(e) => (e.target.style.borderColor = "rgba(0,255,153,0.35)")}
-              onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
+              onFocus={(e) => (e.target.style.borderColor = "var(--amber)")}
+              onBlur={(e) => (e.target.style.borderColor = "var(--line)")}
             />
           </div>
 
@@ -180,7 +181,7 @@ export default function ContactPage() {
                 display: "block",
                 fontFamily: "var(--font-mono)",
                 fontSize: "11px",
-                color: "rgba(255,255,255,0.3)",
+                color: "var(--muted)",
                 letterSpacing: "0.1em",
                 textTransform: "uppercase",
                 marginBottom: "8px",
@@ -196,8 +197,8 @@ export default function ContactPage() {
               onChange={(e) => setForm({ ...form, message: e.target.value })}
               required
               style={{ ...inputStyle, resize: "none" }}
-              onFocus={(e) => (e.target.style.borderColor = "rgba(0,255,153,0.35)")}
-              onBlur={(e) => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
+              onFocus={(e) => (e.target.style.borderColor = "var(--amber)")}
+              onBlur={(e) => (e.target.style.borderColor = "var(--line)")}
             />
           </div>
 
@@ -210,29 +211,28 @@ export default function ContactPage() {
           <button
             type="submit"
             disabled={status === "sending"}
+            className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber focus-visible:outline-offset-[3px]"
             style={{
               padding: "14px 32px",
-              background: status === "sending" ? "rgba(0,255,153,0.4)" : "#00ff99",
-              color: "#030308",
-              fontWeight: 800,
+              background: status === "sending" ? "rgba(255,180,84,0.4)" : "var(--amber)",
+              color: "var(--ink)",
+              fontWeight: 700,
               fontSize: "12px",
               letterSpacing: "0.1em",
               textTransform: "uppercase",
               border: "none",
-              borderRadius: "6px",
+              borderRadius: "4px",
               cursor: status === "sending" ? "not-allowed" : "pointer",
-              transition: "background 0.2s, transform 0.15s",
+              transition: "transform 0.15s",
               alignSelf: "flex-start",
             }}
             onMouseEnter={(e) => {
               if (status === "sending") return;
               const el = e.currentTarget as HTMLButtonElement;
-              el.style.background = "#ffffff";
               el.style.transform = "translateY(-1px)";
             }}
             onMouseLeave={(e) => {
               const el = e.currentTarget as HTMLButtonElement;
-              el.style.background = status === "sending" ? "rgba(0,255,153,0.4)" : "#00ff99";
               el.style.transform = "translateY(0)";
             }}
           >
@@ -246,7 +246,7 @@ export default function ContactPage() {
         style={{
           marginTop: "56px",
           paddingTop: "32px",
-          borderTop: "1px solid rgba(255,255,255,0.05)",
+          borderTop: "1px solid var(--line)",
           display: "flex",
           gap: "24px",
         }}
@@ -259,16 +259,17 @@ export default function ContactPage() {
           <a
             key={s.label}
             href={s.href}
+            className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber focus-visible:outline-offset-[3px]"
             style={{
               fontFamily: "var(--font-mono)",
               fontSize: "12px",
-              color: "rgba(255,255,255,0.25)",
+              color: "var(--muted)",
               textDecoration: "none",
               letterSpacing: "0.06em",
               transition: "color 0.2s",
             }}
-            onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "#00ff99")}
-            onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "rgba(255,255,255,0.25)")}
+            onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "var(--mint)")}
+            onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "var(--muted)")}
           >
             {s.label} →
           </a>
