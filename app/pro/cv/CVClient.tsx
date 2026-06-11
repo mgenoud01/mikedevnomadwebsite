@@ -3,7 +3,6 @@
 import { Experience } from "@/lib/experience";
 import { ProProfile } from "@/lib/proProfile";
 
-
 export default function CVClient({ experiences, profile }: { experiences: Experience[]; profile: ProProfile }) {
   const byDateDesc = (a: Experience, b: Experience) =>
     new Date(b.dateDebut || 0).getTime() - new Date(a.dateDebut || 0).getTime();
@@ -12,68 +11,69 @@ export default function CVClient({ experiences, profile }: { experiences: Experi
 
   function formatPeriod(e: Experience) {
     const start = e.dateDebut ? new Date(e.dateDebut).getFullYear() : "";
-    const end = e.actuel ? "present" : e.dateFin ? new Date(e.dateFin).getFullYear() : "";
+    const end = e.actuel ? "présent" : e.dateFin ? new Date(e.dateFin).getFullYear() : "";
     return `${start} — ${end}`;
   }
 
   return (
-    <div className="page-pad" style={{ maxWidth: "900px", margin: "0 auto", padding: "72px 32px 96px" }}>
-      <div style={{ marginBottom: "48px" }}>
-        <p style={{ fontFamily: "var(--font-mono)", color: "rgba(0,255,153,0.5)", fontSize: "12px", letterSpacing: "0.12em", marginBottom: "20px" }}>
-          $ cat ./mike.resume.json
+    <div className="mx-auto max-w-[900px] px-6 py-16 md:py-24">
+      {/* Header */}
+      <div className="mb-12">
+        <p className="mb-5 font-mono text-[12px] uppercase tracking-[.12em] text-mint">
+          // cat ./mike.resume.json
         </p>
-        <h1 style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", fontWeight: 900, letterSpacing: "-0.04em", color: "#ffffff", lineHeight: 0.95, marginBottom: "12px" }}>
-          Resume
+        <h1 className="font-display text-[clamp(2.5rem,5vw,4rem)] font-bold leading-[0.95] tracking-tight text-white">
+          CV
         </h1>
-        <p style={{ color: "rgba(230,237,243,0.5)", fontSize: "14px", letterSpacing: "0.04em" }}>
-          Developer · Cybersecurity · Digital Nomad
+        <p className="mt-3 font-mono text-[14px] text-muted">
+          Développeur · Cybersécurité · Nomade digital
         </p>
       </div>
 
       {/* Bio */}
       {profile.bio && (
-        <div style={{ background: "rgba(0,255,153,0.04)", border: "1px solid rgba(0,255,153,0.12)", borderRadius: "10px", padding: "20px 24px", marginBottom: "48px" }}>
-          <p style={{ color: "rgba(230,237,243,0.7)", fontSize: "15px", lineHeight: 1.8 }}>{profile.bio}</p>
+        <div className="mb-12 rounded-card border border-line bg-panel-2 p-6">
+          <p className="text-[15px] leading-[1.8] text-mist">{profile.bio}</p>
         </div>
       )}
 
       {/* Stats */}
-      <div className="stats-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "12px", marginBottom: "56px" }}>
+      <div className="mb-14 grid grid-cols-2 gap-3 sm:grid-cols-3">
         {[
-          { v: `${profile.yearsExp}+`, l: "years exp." },
-          { v: `${profile.projectsShipped}+`, l: "projects" },
-          { v: `${profile.ctfPodiums}`, l: "CTF podiums" },
+          { v: `${profile.yearsExp}+`, l: "ans d'exp." },
+          { v: `${profile.projectsShipped}+`, l: "projets" },
+          { v: `${profile.ctfPodiums}`, l: "podiums CTF" },
         ].map((s) => (
-          <div key={s.l} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px", padding: "20px", textAlign: "center" }}>
-            <p style={{ fontSize: "2rem", fontWeight: 900, color: "#fff", letterSpacing: "-0.04em", marginBottom: "4px" }}>{s.v}</p>
-            <p style={{ fontFamily: "var(--font-mono)", fontSize: "10px", color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.1em" }}>{s.l}</p>
+          <div key={s.l} className="rounded-card border border-line bg-panel-2 p-5 text-center">
+            <p className="mb-1 font-display text-[2rem] font-bold tracking-tight text-white">{s.v}</p>
+            <p className="font-mono text-[10px] uppercase tracking-[.1em] text-muted">{s.l}</p>
           </div>
         ))}
       </div>
 
       {/* Work Experience */}
       {work.length > 0 && (
-        <section style={{ marginBottom: "56px" }}>
-          <p style={{ fontFamily: "var(--font-mono)", color: "rgba(0,255,153,0.55)", fontSize: "11px", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: "28px" }}>
-            // Experience
+        <section className="mb-14">
+          <p className="mb-7 font-mono text-[11px] uppercase tracking-[.18em] text-mint">
+            // Expérience
           </p>
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          <div className="flex flex-col">
             {work.map((exp, i) => (
-              <div key={exp.id} style={{ display: "flex", gap: "32px", paddingBottom: i < work.length - 1 ? "32px" : "0", position: "relative" }}>
-                {i < work.length - 1 && <div style={{ position: "absolute", left: "95px", top: "24px", bottom: "0", width: "1px", background: "rgba(255,255,255,0.06)" }} />}
-                <div style={{ width: "90px", flexShrink: 0, paddingTop: "2px" }}>
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "rgba(255,255,255,0.25)", letterSpacing: "0.04em", whiteSpace: "nowrap" }}>{formatPeriod(exp)}</span>
+              <div key={exp.id} className="relative flex gap-8 pb-8 last:pb-0">
+                {i < work.length - 1 && <div className="absolute bottom-0 left-[95px] top-6 w-px bg-line" />}
+                <div className="w-[90px] shrink-0 pt-0.5">
+                  <span className="whitespace-nowrap font-mono text-[11px] text-muted">{formatPeriod(exp)}</span>
                 </div>
-                <div style={{ width: "8px", height: "8px", borderRadius: "50%", border: "1px solid rgba(0,255,153,0.4)", background: "rgba(0,255,153,0.15)", flexShrink: 0, marginTop: "6px" }} />
-                <div style={{ flex: 1, paddingBottom: "28px" }}>
-                  <p style={{ color: "#ffffff", fontWeight: 700, fontSize: "16px", letterSpacing: "-0.01em", marginBottom: "4px" }}>{exp.poste}</p>
-                  <p style={{ fontFamily: "var(--font-mono)", color: "rgba(0,255,153,0.6)", fontSize: "12px", letterSpacing: "0.06em", marginBottom: exp.lieu ? "4px" : "8px" }}>{exp.entreprise}</p>
-                  {exp.lieu && <p style={{ fontFamily: "var(--font-mono)", color: "rgba(255,255,255,0.2)", fontSize: "11px", marginBottom: "8px" }}>📍 {exp.lieu}</p>}
-                  {exp.description && <p style={{ color: "rgba(230,237,243,0.5)", fontSize: "14px", lineHeight: 1.7, marginBottom: "10px" }}>{exp.description}</p>}
+                <div className="mt-1.5 h-2 w-2 shrink-0 rounded-full border border-mint/40 bg-mint/15" />
+                <div className="flex-1 pb-7">
+                  <p className="mb-1 text-[16px] font-semibold tracking-tight text-white">{exp.poste}</p>
+                  <p className={`font-mono text-[12px] tracking-[.06em] text-mint ${exp.lieu ? "mb-1" : "mb-2"}`}>{exp.entreprise}</p>
+                  {exp.lieu && <p className="mb-2 font-mono text-[11px] text-muted">📍 {exp.lieu}</p>}
+                  {exp.description && <p className="mb-2.5 text-[14px] leading-[1.7] text-mist">{exp.description}</p>}
                   {exp.competences.length > 0 && (
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                    <div className="flex flex-wrap gap-1.5">
                       {exp.competences.map((c) => (
-                        <span key={c} style={{ fontFamily: "var(--font-mono)", fontSize: "10px", padding: "2px 8px", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.35)", borderRadius: "3px" }}>{c}</span>
+                        <span key={c} className="rounded border border-line px-2 py-0.5 font-mono text-[10px] text-muted">{c}</span>
                       ))}
                     </div>
                   )}
@@ -86,21 +86,21 @@ export default function CVClient({ experiences, profile }: { experiences: Experi
 
       {/* Education */}
       {education.length > 0 && (
-        <section style={{ marginBottom: "56px" }}>
-          <p style={{ fontFamily: "var(--font-mono)", color: "rgba(0,255,153,0.55)", fontSize: "11px", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: "28px" }}>
-            // Education
+        <section className="mb-14">
+          <p className="mb-7 font-mono text-[11px] uppercase tracking-[.18em] text-mint">
+            // Formation
           </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div className="flex flex-col gap-4">
             {education.map((exp) => (
-              <div key={exp.id} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "10px", padding: "20px 24px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+              <div key={exp.id} className="rounded-card border border-line bg-panel-2 p-5">
+                <div className="flex items-start justify-between">
                   <div>
-                    <p style={{ color: "#fff", fontWeight: 700, fontSize: "15px", marginBottom: "4px" }}>{exp.poste}</p>
-                    <p style={{ fontFamily: "var(--font-mono)", color: "rgba(0,255,153,0.55)", fontSize: "12px" }}>{exp.entreprise}</p>
+                    <p className="mb-1 text-[15px] font-semibold text-white">{exp.poste}</p>
+                    <p className="font-mono text-[12px] text-mint">{exp.entreprise}</p>
                   </div>
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", color: "rgba(255,255,255,0.25)" }}>{formatPeriod(exp)}</span>
+                  <span className="font-mono text-[11px] text-muted">{formatPeriod(exp)}</span>
                 </div>
-                {exp.description && <p style={{ color: "rgba(230,237,243,0.45)", fontSize: "13px", lineHeight: 1.7, marginTop: "10px" }}>{exp.description}</p>}
+                {exp.description && <p className="mt-2.5 text-[13px] leading-[1.7] text-muted">{exp.description}</p>}
               </div>
             ))}
           </div>
@@ -110,12 +110,12 @@ export default function CVClient({ experiences, profile }: { experiences: Experi
       {/* Skills */}
       {profile.skills.length > 0 && (
         <section>
-          <p style={{ fontFamily: "var(--font-mono)", color: "rgba(0,255,153,0.55)", fontSize: "11px", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: "20px" }}>
-            // Skills
+          <p className="mb-5 font-mono text-[11px] uppercase tracking-[.18em] text-mint">
+            // Stack
           </p>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+          <div className="flex flex-wrap gap-2">
             {profile.skills.map((s) => (
-              <span key={s} style={{ fontFamily: "var(--font-mono)", fontSize: "12px", padding: "5px 12px", border: "1px solid rgba(0,255,153,0.18)", color: "rgba(0,255,153,0.7)", borderRadius: "4px", background: "rgba(0,255,153,0.05)", letterSpacing: "0.04em" }}>
+              <span key={s} className="rounded border border-mint/20 bg-mint/[0.05] px-3 py-1.5 font-mono text-[12px] tracking-[.04em] text-mint">
                 {s}
               </span>
             ))}
@@ -123,12 +123,24 @@ export default function CVClient({ experiences, profile }: { experiences: Experi
         </section>
       )}
 
-      {/* Social links */}
+      {/* Liens */}
       {(profile.email || profile.github || profile.linkedin) && (
-        <div style={{ marginTop: "48px", paddingTop: "32px", borderTop: "1px solid rgba(255,255,255,0.07)", display: "flex", gap: "16px", flexWrap: "wrap" }}>
-          {profile.email && <a href={`mailto:${profile.email}`} style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "rgba(0,255,153,0.55)", textDecoration: "none" }}>✉ {profile.email}</a>}
-          {profile.github && <a href={profile.github} target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "rgba(255,255,255,0.4)", textDecoration: "none" }}>GitHub →</a>}
-          {profile.linkedin && <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "rgba(255,255,255,0.4)", textDecoration: "none" }}>LinkedIn →</a>}
+        <div className="mt-12 flex flex-wrap gap-5 border-t border-line pt-8">
+          {profile.email && (
+            <a href={`mailto:${profile.email}`} className="font-mono text-[12px] text-mint hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber focus-visible:outline-offset-[3px]">
+              ✉ {profile.email}
+            </a>
+          )}
+          {profile.github && (
+            <a href={profile.github} target="_blank" rel="noopener noreferrer" className="font-mono text-[12px] text-muted hover:text-mist focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber focus-visible:outline-offset-[3px]">
+              GitHub →
+            </a>
+          )}
+          {profile.linkedin && (
+            <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="font-mono text-[12px] text-muted hover:text-mist focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber focus-visible:outline-offset-[3px]">
+              LinkedIn →
+            </a>
+          )}
         </div>
       )}
     </div>
