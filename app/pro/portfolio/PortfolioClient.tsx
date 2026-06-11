@@ -16,9 +16,9 @@ function stripMd(s: string): string {
 }
 
 const STATUS_STYLE: Record<string, { color: string; bg: string; label: string }> = {
-  "done":        { color: "#00ff99", bg: "rgba(0,255,153,0.08)", label: "Done" },
-  "in-progress": { color: "#f59e0b", bg: "rgba(245,158,11,0.08)", label: "In progress" },
-  "archived":    { color: "#64748b", bg: "rgba(100,116,139,0.08)", label: "Archived" },
+  "done":        { color: "#5FD3BC", bg: "rgba(95,211,188,0.08)", label: "Terminé" },
+  "in-progress": { color: "#FFB454", bg: "rgba(255,180,84,0.08)", label: "En cours" },
+  "archived":    { color: "#8FA39C", bg: "rgba(143,163,156,0.08)", label: "Archivé" },
 };
 
 function getEmbedUrl(url: string): string | null {
@@ -58,32 +58,32 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
   const rest = projects.filter((p) => !p.featured);
 
   return (
-    <div className="page-pad" style={{ maxWidth: "1100px", margin: "0 auto", padding: "72px 32px 96px" }}>
+    <div className="mx-auto max-w-[1100px] px-6 py-16 md:py-24">
 
       {/* Header */}
       <div style={{ marginBottom: "56px" }}>
-        <p style={{ fontFamily: "var(--font-mono)", color: "rgba(0,255,153,0.5)", fontSize: "12px", letterSpacing: "0.12em", marginBottom: "16px" }}>
+        <p style={{ fontFamily: "var(--font-mono)", color: "rgba(95,211,188,0.6)", fontSize: "12px", letterSpacing: "0.12em", marginBottom: "16px" }}>
           $ ls -la ./projects
         </p>
-        <h1 style={{ fontSize: "clamp(2.5rem,5vw,4rem)", fontWeight: 900, letterSpacing: "-0.04em", color: "#fff", lineHeight: 0.95, marginBottom: "14px" }}>
+        <h1 className="font-display" style={{ fontSize: "clamp(2.5rem,5vw,4rem)", fontWeight: 700, letterSpacing: "-0.04em", color: "#fff", lineHeight: 0.95, marginBottom: "14px" }}>
           Portfolio
         </h1>
         <p style={{ color: "rgba(230,237,243,0.45)", fontSize: "15px", lineHeight: 1.7 }}>
-          Personal projects, open-source work and ongoing builds.
+          Projets personnels, open-source et builds en cours.
         </p>
       </div>
 
       {projects.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "80px", border: "1px dashed rgba(255,255,255,0.08)", borderRadius: "12px" }}>
+        <div style={{ textAlign: "center", padding: "80px", border: "1px dashed var(--line)", borderRadius: "12px" }}>
           <div style={{ fontSize: "40px", marginBottom: "12px" }}>🚀</div>
-          <p style={{ color: "rgba(255,255,255,0.3)" }}>No projects yet — add them from the admin.</p>
+          <p style={{ color: "rgba(255,255,255,0.3)" }}>Aucun projet pour le moment — ajoute-les depuis l&apos;admin.</p>
         </div>
       ) : (
         <>
           {/* Featured — grande grille */}
           {featured.length > 0 && (
             <div style={{ marginBottom: "48px" }}>
-              <p style={{ color: "rgba(0,255,153,0.4)", fontSize: "10px", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "20px", fontFamily: "var(--font-mono)" }}>
+              <p style={{ color: "var(--amber)", fontSize: "10px", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "20px", fontFamily: "var(--font-mono)" }}>
                 ★ Featured
               </p>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: "20px" }}>
@@ -96,8 +96,8 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
           {rest.length > 0 && (
             <div>
               {featured.length > 0 && (
-                <p style={{ color: "rgba(255,255,255,0.2)", fontSize: "10px", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "20px", fontFamily: "var(--font-mono)" }}>
-                  All projects
+                <p style={{ color: "var(--muted)", fontSize: "10px", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "20px", fontFamily: "var(--font-mono)" }}>
+                  Tous les projets
                 </p>
               )}
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "16px" }}>
@@ -124,7 +124,7 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
           >
             <div
               onClick={(e) => e.stopPropagation()}
-              style={{ background: "#0e1c2f", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "20px", width: "100%", maxWidth: "780px", maxHeight: "90vh", overflow: "auto", position: "relative" }}
+              style={{ background: "var(--panel-2)", border: "1px solid var(--line)", borderRadius: "20px", width: "100%", maxWidth: "780px", maxHeight: "90vh", overflow: "auto", position: "relative" }}
             >
               {/* Close */}
               <button onClick={closeModal} style={{ position: "absolute", top: "16px", right: "16px", zIndex: 10, background: "rgba(255,255,255,0.08)", border: "none", color: "rgba(255,255,255,0.6)", width: "36px", height: "36px", borderRadius: "50%", cursor: "pointer", fontSize: "16px" }}>✕</button>
@@ -145,7 +145,7 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
               {!embedUrl && allImages.length > 0 && (
                 <div
                   onClick={() => setLightboxImg(allImages[imgIndex])}
-                  style={{ borderRadius: "20px 20px 0 0", background: "#0a0f1a", cursor: "zoom-in", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", minHeight: "200px", maxHeight: "440px", overflow: "hidden" }}
+                  style={{ borderRadius: "20px 20px 0 0", background: "var(--ink)", cursor: "zoom-in", position: "relative", display: "flex", alignItems: "center", justifyContent: "center", minHeight: "200px", maxHeight: "440px", overflow: "hidden" }}
                 >
                   <img
                     src={allImages[imgIndex]}
@@ -163,7 +163,7 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
                 <div style={{ display: "flex", gap: "6px", padding: "10px 12px", background: "rgba(0,0,0,0.3)", overflowX: "auto" }}>
                   {allImages.map((url, i) => (
                     <button key={i} onClick={() => setImgIndex(i)} style={{
-                      flexShrink: 0, padding: 0, border: `2px solid ${i === imgIndex ? "#00ff99" : "transparent"}`,
+                      flexShrink: 0, padding: 0, border: `2px solid ${i === imgIndex ? "#5FD3BC" : "transparent"}`,
                       borderRadius: "7px", overflow: "hidden", cursor: "pointer", background: "none", transition: "border-color 0.15s",
                     }}>
                       <img src={url} alt="" style={{ width: "72px", height: "52px", objectFit: "cover", display: "block", opacity: i === imgIndex ? 1 : 0.55, transition: "opacity 0.15s" }}
@@ -183,7 +183,7 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
               {/* Contenu */}
               <div style={{ padding: "28px 32px 32px" }}>
                 <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "14px", gap: "12px" }}>
-                  <h2 style={{ color: "#fff", fontWeight: 800, fontSize: "24px", letterSpacing: "-0.02em" }}>{selected.titre}</h2>
+                  <h2 className="font-display" style={{ color: "#fff", fontWeight: 700, fontSize: "24px", letterSpacing: "-0.02em" }}>{selected.titre}</h2>
                   <span style={{ flexShrink: 0, fontFamily: "var(--font-mono)", fontSize: "11px", padding: "4px 10px", borderRadius: "6px", border: `1px solid ${ss.color}40`, color: ss.color, background: ss.bg }}>
                     {ss.label}
                   </span>
@@ -208,13 +208,15 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
                 <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
                   {selected.lien && (
                     <a href={selected.lien} target="_blank" rel="noopener noreferrer"
-                      style={{ background: "#00ff99", color: "#0e1c2f", fontWeight: 700, fontSize: "13px", padding: "10px 20px", borderRadius: "8px", textDecoration: "none" }}>
-                      🌐 Live demo →
+                      className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber focus-visible:outline-offset-[3px]"
+                      style={{ background: "var(--amber)", color: "var(--ink)", fontWeight: 700, fontSize: "13px", padding: "10px 20px", borderRadius: "6px", textDecoration: "none" }}>
+                      🌐 Voir le site →
                     </a>
                   )}
                   {selected.github && (
                     <a href={selected.github} target="_blank" rel="noopener noreferrer"
-                      style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", fontWeight: 600, fontSize: "13px", padding: "10px 20px", borderRadius: "8px", textDecoration: "none", border: "1px solid rgba(255,255,255,0.1)" }}>
+                      className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber focus-visible:outline-offset-[3px]"
+                      style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.7)", fontWeight: 600, fontSize: "13px", padding: "10px 20px", borderRadius: "6px", textDecoration: "none", border: "1px solid var(--line)" }}>
                       GitHub →
                     </a>
                   )}
@@ -275,12 +277,12 @@ function ProjectCard({ project, onClick }: { project: Project; onClick: () => vo
   return (
     <div
       onClick={onClick}
-      style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "14px", overflow: "hidden", cursor: "pointer", transition: "transform 0.2s, border-color 0.2s, box-shadow 0.2s" }}
-      onMouseEnter={(e) => { const el = e.currentTarget as HTMLDivElement; el.style.transform = "translateY(-3px)"; el.style.borderColor = "rgba(0,255,153,0.2)"; el.style.boxShadow = "0 8px 32px rgba(0,0,0,0.4)"; }}
-      onMouseLeave={(e) => { const el = e.currentTarget as HTMLDivElement; el.style.transform = "translateY(0)"; el.style.borderColor = "rgba(255,255,255,0.08)"; el.style.boxShadow = "none"; }}
+      style={{ background: "var(--panel-2)", border: "1px solid var(--line)", borderRadius: "14px", overflow: "hidden", cursor: "pointer", transition: "transform 0.2s, border-color 0.2s, box-shadow 0.2s" }}
+      onMouseEnter={(e) => { const el = e.currentTarget as HTMLDivElement; el.style.transform = "translateY(-3px)"; el.style.borderColor = "var(--amber)"; el.style.boxShadow = "0 8px 32px rgba(0,0,0,0.4)"; }}
+      onMouseLeave={(e) => { const el = e.currentTarget as HTMLDivElement; el.style.transform = "translateY(0)"; el.style.borderColor = "var(--line)"; el.style.boxShadow = "none"; }}
     >
       {/* Image / placeholder */}
-      <div style={{ height: "200px", background: "rgba(255,255,255,0.03)", position: "relative", overflow: "hidden" }}>
+      <div style={{ height: "200px", background: "var(--ink)", position: "relative", overflow: "hidden" }}>
         {cover ? (
           <img src={cover} alt={project.titre} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.4s" }}
             onMouseEnter={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1.04)"; }}
@@ -292,7 +294,7 @@ function ProjectCard({ project, onClick }: { project: Project; onClick: () => vo
         {/* Badges overlay */}
         <div style={{ position: "absolute", top: "12px", left: "12px", display: "flex", gap: "6px" }}>
           {project.featured && (
-            <span style={{ background: "rgba(245,158,11,0.9)", color: "#000", fontSize: "9px", fontWeight: 700, padding: "3px 8px", borderRadius: "20px" }}>★ FEATURED</span>
+            <span style={{ background: "var(--amber)", color: "var(--ink)", fontSize: "9px", fontWeight: 700, padding: "3px 8px", borderRadius: "20px" }}>★ FEATURED</span>
           )}
         </div>
         <div style={{ position: "absolute", top: "12px", right: "12px", display: "flex", gap: "6px" }}>
@@ -309,8 +311,8 @@ function ProjectCard({ project, onClick }: { project: Project; onClick: () => vo
 
       {/* Contenu */}
       <div style={{ padding: "18px 20px 20px" }}>
-        <h2 style={{ color: "#fff", fontWeight: 800, fontSize: "17px", letterSpacing: "-0.02em", marginBottom: "8px" }}>{project.titre}</h2>
-        <p style={{ color: "rgba(230,237,243,0.45)", fontSize: "13px", lineHeight: 1.65, marginBottom: "14px",
+        <h2 className="font-display" style={{ color: "#fff", fontWeight: 600, fontSize: "17px", letterSpacing: "-0.02em", marginBottom: "8px" }}>{project.titre}</h2>
+        <p style={{ color: "var(--muted)", fontSize: "13px", lineHeight: 1.65, marginBottom: "14px",
           display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" } as any}>
           {stripMd(project.description)}
         </p>
@@ -318,19 +320,19 @@ function ProjectCard({ project, onClick }: { project: Project; onClick: () => vo
         {project.stack.length > 0 && (
           <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginBottom: "14px" }}>
             {project.stack.slice(0, 4).map((s) => (
-              <span key={s} style={{ fontFamily: "var(--font-mono)", fontSize: "10px", padding: "2px 8px", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.35)", borderRadius: "4px" }}>{s}</span>
+              <span key={s} style={{ fontFamily: "var(--font-mono)", fontSize: "10px", padding: "2px 8px", border: "1px solid var(--line)", color: "var(--muted)", borderRadius: "4px" }}>{s}</span>
             ))}
-            {project.stack.length > 4 && <span style={{ color: "rgba(255,255,255,0.2)", fontSize: "10px", padding: "2px 6px" }}>+{project.stack.length - 4}</span>}
+            {project.stack.length > 4 && <span style={{ color: "var(--muted)", fontSize: "10px", padding: "2px 6px" }}>+{project.stack.length - 4}</span>}
           </div>
         )}
         {/* CTA */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <span style={{ color: "rgba(0,255,153,0.5)", fontSize: "12px", fontFamily: "var(--font-mono)" }}>
-            {hasVideo || photoCount > 0 ? "See project →" : "Read more →"}
+          <span style={{ color: "var(--mint)", fontSize: "12px", fontFamily: "var(--font-mono)" }}>
+            {hasVideo || photoCount > 0 ? "Voir le projet →" : "Lire la suite →"}
           </span>
           <div style={{ display: "flex", gap: "10px" }}>
-            {project.github && <span style={{ color: "rgba(255,255,255,0.2)", fontSize: "11px" }}>GitHub</span>}
-            {project.lien && <span style={{ color: "rgba(0,255,153,0.4)", fontSize: "11px" }}>Live</span>}
+            {project.github && <span style={{ color: "var(--muted)", fontSize: "11px" }}>GitHub</span>}
+            {project.lien && <span style={{ color: "var(--mint)", fontSize: "11px" }}>Live</span>}
           </div>
         </div>
       </div>
