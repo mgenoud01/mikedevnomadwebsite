@@ -1,129 +1,26 @@
-"use client";
+import HudBar from "@/components/HudBar";
 
-import { useState } from "react";
-import Link from "next/link";
-
-const navLinks = [
-  { href: "/pro", label: "home" },
-  { href: "/pro/portfolio", label: "portfolio" },
-  { href: "/pro/cv", label: "cv" },
-  { href: "/pro/cybersecurite", label: "security" },
-  { href: "/pro/contact", label: "contact" },
+const proNav = [
+  { href: "/pro/portfolio", label: "Portfolio" },
+  { href: "/pro/cv", label: "CV" },
+  { href: "/pro/cybersecurite", label: "Sécurité" },
+  { href: "/pro/contact", label: "Contact" },
+  { href: "/nomade", label: "Nomade" },
 ];
 
 export default function ProLayout({ children }: { children: React.ReactNode }) {
-  const [menuOpen, setMenuOpen] = useState(false);
-
   return (
     <div
-      className="min-h-screen flex flex-col pro-scrollbar"
-      style={{ background: "#0e1c2f", color: "#e6edf3", fontFamily: "var(--font-inter)" }}
+      className="flex min-h-screen flex-col pro-scrollbar"
+      style={{ background: "var(--ink)", color: "var(--mist)", fontFamily: "var(--font-body)" }}
     >
-      {/* ── Header ─────────────────────────────────────────── */}
-      <header className="sticky top-0 z-50" style={{
-        background: "rgba(14,28,47,0.92)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
-        borderBottom: "1px solid rgba(255,255,255,0.1)",
-      }}>
-        <div style={{
-          maxWidth: "1100px", margin: "0 auto",
-          padding: "0 20px", height: "58px",
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-        }}>
-          {/* Logo */}
-          <Link href="/pro" style={{
-            fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: "13px",
-            color: "#00ff99", textDecoration: "none", letterSpacing: "0.04em",
-            display: "flex", alignItems: "center", gap: "6px",
-          }}>
-            mike
-            <span style={{ color: "rgba(255,255,255,0.3)" }}>@devnomad</span>
-            <span style={{ color: "rgba(0,255,153,0.5)" }}>:~$</span>
-            <span style={{ width: "6px", height: "13px", background: "#00ff99", display: "inline-block", animation: "blink 1s step-end infinite", marginLeft: "2px" }} />
-          </Link>
+      <HudBar nav={proNav} />
 
-          {/* Desktop nav */}
-          <nav className="nav-desktop" style={{ alignItems: "center", gap: "2px" }}>
-            {navLinks.map((link) => (
-              <Link key={link.href} href={link.href} style={{
-                fontFamily: "var(--font-mono)", fontSize: "12px",
-                color: "rgba(255,255,255,0.5)", padding: "5px 12px",
-                borderRadius: "4px", textDecoration: "none",
-                letterSpacing: "0.06em", transition: "color 0.15s ease, background 0.15s ease",
-              }}
-                onMouseEnter={(e) => { const el = e.currentTarget as HTMLAnchorElement; el.style.color = "#00ff99"; el.style.background = "rgba(0,255,153,0.08)"; }}
-                onMouseLeave={(e) => { const el = e.currentTarget as HTMLAnchorElement; el.style.color = "rgba(255,255,255,0.5)"; el.style.background = "transparent"; }}
-              >
-                ~/{link.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Right side */}
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <Link href="/nomade" className="nav-switcher" style={{
-              fontSize: "11px", color: "rgba(255,255,255,0.4)",
-              textDecoration: "none", letterSpacing: "0.08em",
-              transition: "color 0.15s ease, border-color 0.15s ease",
-              padding: "6px 14px",
-              border: "1px solid rgba(255,255,255,0.15)",
-              borderRadius: "4px", fontWeight: 500,
-              textTransform: "uppercase",
-            }}
-              onMouseEnter={(e) => { const el = e.currentTarget as HTMLAnchorElement; el.style.color = "#f59e0b"; el.style.borderColor = "rgba(245,158,11,0.4)"; }}
-              onMouseLeave={(e) => { const el = e.currentTarget as HTMLAnchorElement; el.style.color = "rgba(255,255,255,0.4)"; el.style.borderColor = "rgba(255,255,255,0.15)"; }}
-            >
-              🌍 Nomad →
-            </Link>
-
-            {/* Hamburger */}
-            <button
-              className="nav-mobile-btn"
-              onClick={() => setMenuOpen(!menuOpen)}
-              style={{ color: "#e6edf3" }}
-              aria-label="Menu"
-            >
-              {menuOpen ? "✕" : "☰"}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile menu */}
-        {menuOpen && (
-          <div style={{
-            background: "rgba(14,28,47,0.98)", borderTop: "1px solid rgba(255,255,255,0.08)",
-            padding: "16px 20px 24px",
-          }}>
-            {navLinks.map((link) => (
-              <Link key={link.href} href={link.href} onClick={() => setMenuOpen(false)} style={{
-                display: "block", fontFamily: "var(--font-mono)", fontSize: "15px",
-                color: "rgba(255,255,255,0.7)", padding: "12px 8px",
-                borderBottom: "1px solid rgba(255,255,255,0.05)", textDecoration: "none",
-                letterSpacing: "0.06em",
-              }}>
-                ~/{link.label}
-              </Link>
-            ))}
-            <Link href="/nomade" onClick={() => setMenuOpen(false)} style={{
-              display: "block", fontSize: "14px", color: "#f59e0b",
-              padding: "14px 8px", textDecoration: "none", fontWeight: 600, marginTop: "4px",
-            }}>
-              🌍 Nomad →
-            </Link>
-          </div>
-        )}
-      </header>
-
-      {/* ── Content ────────────────────────────────────────── */}
       <main className="flex-1">{children}</main>
 
-      {/* ── Footer ─────────────────────────────────────────── */}
-      <footer style={{ borderTop: "1px solid rgba(255,255,255,0.1)", padding: "28px 20px", textAlign: "center" }}>
-        <p style={{ fontFamily: "var(--font-mono)", color: "rgba(255,255,255,0.3)", fontSize: "12px", letterSpacing: "0.08em" }}>
-          mike@devnomad:~${" "}
-          <span style={{ color: "rgba(0,255,153,0.6)", animation: "blink 1s step-end infinite" }}>▊</span>
-        </p>
+      <footer className="border-t border-line px-5 py-7 text-center font-mono text-[12.5px] text-muted">
+        MIKEDEV<span className="text-amber">//</span>NOMAD{" "}
+        <span className="animate-cursor-blink text-mint">▊</span>
       </footer>
     </div>
   );

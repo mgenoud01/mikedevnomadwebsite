@@ -60,8 +60,8 @@
   }
 
   .pro-scrollbar::-webkit-scrollbar { width: 3px; }
-  .pro-scrollbar::-webkit-scrollbar-track { background: #0e1c2f; }
-  .pro-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 255, 153, 0.25); border-radius: 2px; }
+  .pro-scrollbar::-webkit-scrollbar-track { background: var(--ink); }
+  .pro-scrollbar::-webkit-scrollbar-thumb { background: rgba(95, 211, 188, 0.25); border-radius: 2px; }
 }
 
 /* ── Custom keyframes ───────────────────────────────────── */
