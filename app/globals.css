@@ -4,6 +4,18 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
+:root {
+  /* Field Ops design tokens */
+  --ink: #0E1B1E;
+  --panel: #14282C;
+  --panel-2: #0F2226;
+  --line: #234047;
+  --mist: #D8E1DC;
+  --muted: #8FA39C;
+  --amber: #FFB454;
+  --mint: #5FD3BC;
+}
+
 @layer base {
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -101,7 +113,7 @@
 
 /* ── Landing page mobile (split screen) ────────────────── */
 @media (max-width: 640px) {
-  .landing-main    { flex-direction: column !important; height: 100dvh !important; }
+  .landing-main    { flex-direction: column !important; }
   .landing-panel   { flex: 0 0 50% !important; width: 100% !important; height: 50% !important; }
   .landing-divider { width: 100% !important; height: 1px !important; flex-shrink: 0; }
   .landing-logo    { display: none !important; }
