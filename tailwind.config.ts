@@ -9,6 +9,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // Field Ops design tokens
+        ink: "#0E1B1E",
+        panel: "#14282C",
+        "panel-2": "#0F2226",
+        line: "#234047",
+        mist: "#D8E1DC",
+        muted: "#8FA39C",
+        amber: "#FFB454",
+        mint: "#5FD3BC",
         pro: {
           bg: "#0d1117",
           surface: "#161b22",
@@ -36,8 +45,18 @@ const config: Config = {
         },
       },
       fontFamily: {
-        mono: ["var(--font-mono)", "JetBrains Mono", "Fira Code", "monospace"],
+        display: ["var(--font-display)", "Chakra Petch", "sans-serif"],
+        body: ["var(--font-body)", "IBM Plex Sans", "sans-serif"],
+        mono: ["var(--font-mono)", "IBM Plex Mono", "monospace"],
         sans: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
+      },
+      borderRadius: {
+        btn: "4px",
+        card: "8px",
+        term: "10px",
+      },
+      boxShadow: {
+        term: "0 24px 60px rgba(0,0,0,.45)",
       },
       animation: {
         "fade-in": "fadeIn 0.6s ease-out",
