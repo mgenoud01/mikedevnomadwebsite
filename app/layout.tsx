@@ -21,10 +21,10 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Mike Dev Nomad — Pro & Aventurier",
+  title: "Mike Dev Nomad — Pro & Adventurer",
   description:
-    "Portfolio et univers nomade de Mike : développeur, passionné de cybersécurité et grand voyageur.",
-  keywords: ["développeur", "nomade", "portfolio", "cybersécurité", "voyages"],
+    "Mike's portfolio and nomad universe: developer, cybersecurity enthusiast and avid traveler.",
+  keywords: ["developer", "nomad", "portfolio", "cybersecurity", "travel"],
 };
 
 export default function RootLayout({
@@ -34,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="fr"
+      lang="en"
       className={`${inter.variable} ${chakraPetch.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable}`}
     >
       <body className="antialiased">

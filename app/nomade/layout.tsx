@@ -2,8 +2,8 @@ import HudBar from "@/components/HudBar";
 
 const nomadeNav = [
   { href: "/nomade", label: "Home" },
-  { href: "/nomade/voyages", label: "Voyages" },
-  { href: "/nomade/galerie", label: "Galerie" },
+  { href: "/nomade/voyages", label: "Trips" },
+  { href: "/nomade/galerie", label: "Gallery" },
   { href: "/pro", label: "Pro" },
 ];
 
@@ -18,7 +18,7 @@ export default function NomadeLayout({ children }: { children: React.ReactNode }
       <main className="flex-1">{children}</main>
 
       <footer className="border-t border-line px-5 py-7 text-center font-mono text-[12.5px] text-muted">
-        MIKEDEV<span className="text-amber">//</span>NOMAD — fait avec ❤️ et beaucoup de wifi d&apos;hôtel
+        MIKEDEV<span className="text-amber">//</span>NOMAD — made with ❤️ and lots of hotel wifi
       </footer>
     </div>
   );

@@ -20,7 +20,7 @@ export default function TimezoneWidget() {
       const now = new Date();
       setTimes(
         ZONES.map(({ tz }) =>
-          new Intl.DateTimeFormat("fr-CH", { hour: "2-digit", minute: "2-digit", timeZone: tz }).format(now)
+          new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: tz }).format(now)
         )
       );
       setUtc(`${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}`);
@@ -33,7 +33,7 @@ export default function TimezoneWidget() {
   return (
     <div
       className="rounded-card border border-line bg-panel-2 p-5 font-mono text-[13.5px]"
-      aria-label="Fuseaux horaires couverts"
+      aria-label="Timezones covered"
     >
       {ZONES.map((zone, i) => (
         <div key={zone.tz} className="flex justify-between border-b border-dashed border-line py-2.5">
@@ -46,8 +46,8 @@ export default function TimezoneWidget() {
         <b className="font-medium text-mint" suppressHydrationWarning>{utc ?? "--:--"}</b>
       </div>
       <div className="flex justify-between py-2.5">
-        <span className="text-muted">Réactivité</span>
-        <b className="font-medium text-mint">&lt; 24h ouvrées</b>
+        <span className="text-muted">Response time</span>
+        <b className="font-medium text-mint">&lt; 24h (business days)</b>
       </div>
     </div>
   );

@@ -14,10 +14,10 @@ export default function SecurityClient({ entries }: { entries: CTFEntry[] }) {
           $ nmap --open -sV target
         </p>
         <h1 className="font-display" style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", fontWeight: 700, letterSpacing: "-0.04em", color: "#ffffff", lineHeight: 0.95, marginBottom: "16px" }}>
-          Cybersécurité
+          Cybersecurity
         </h1>
         <p style={{ color: "rgba(230,237,243,0.5)", fontSize: "15px", maxWidth: "440px", lineHeight: 1.7 }}>
-          Ethical hacking, write-ups CTF et recherche en sécurité. Je casse les systèmes pour mieux comprendre comment les construire.
+          Ethical hacking, CTF write-ups and security research. I break systems to better understand how to build them.
         </p>
       </div>
 
@@ -30,7 +30,7 @@ export default function SecurityClient({ entries }: { entries: CTFEntry[] }) {
         {entries.length === 0 ? (
           <div style={{ textAlign: "center", padding: "60px", border: "1px dashed var(--line)", borderRadius: "12px" }}>
             <div style={{ fontSize: "36px", marginBottom: "12px" }}>🔐</div>
-            <p style={{ color: "rgba(255,255,255,0.3)" }}>Aucun write-up pour le moment — ajoute-les depuis l&apos;admin.</p>
+            <p style={{ color: "rgba(255,255,255,0.3)" }}>No write-ups yet — add them from the admin panel.</p>
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>

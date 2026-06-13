@@ -17,7 +17,7 @@ export default function ContactPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY,
-          subject: `[Contact] Message de ${form.name}`,
+          subject: `[Contact] Message from ${form.name}`,
           from_name: form.name,
           email: form.email,
           message: form.message,
@@ -25,13 +25,13 @@ export default function ContactPage() {
       });
       const data = await res.json();
       if (!data.success) {
-        setErrorMsg(data.message || "Erreur lors de l'envoi");
+        setErrorMsg(data.message || "Error sending message");
         setStatus("error");
         return;
       }
       setStatus("sent");
     } catch {
-      setErrorMsg("Erreur réseau — réessaie dans quelques instants");
+      setErrorMsg("Network error — try again in a moment");
       setStatus("error");
     }
   }
@@ -79,7 +79,7 @@ export default function ContactPage() {
           Contact
         </h1>
         <p style={{ color: "var(--muted)", fontSize: "15px", lineHeight: 1.7 }}>
-          Projet, mission freelance, collaboration — je réponds sous 48h.
+          Project, freelance work, collaboration — I reply within 48h.
         </p>
       </div>
 
@@ -110,10 +110,10 @@ export default function ContactPage() {
             ✓
           </div>
           <p style={{ color: "var(--mint)", fontWeight: 700, fontSize: "18px", marginBottom: "8px" }}>
-            Message envoyé
+            Message sent
           </p>
           <p style={{ color: "var(--muted)", fontSize: "14px" }}>
-            Je reviendrai vers vous rapidement.
+            I&apos;ll get back to you shortly.
           </p>
         </div>
       ) : (
@@ -131,7 +131,7 @@ export default function ContactPage() {
                 marginBottom: "8px",
               }}
             >
-              Nom
+              Name
             </label>
             <input
               id="name"
@@ -192,7 +192,7 @@ export default function ContactPage() {
             <textarea
               id="message"
               rows={6}
-              placeholder="Décrivez votre projet ou votre besoin..."
+              placeholder="Describe your project or what you need..."
               value={form.message}
               onChange={(e) => setForm({ ...form, message: e.target.value })}
               required
@@ -236,7 +236,7 @@ export default function ContactPage() {
               el.style.transform = "translateY(0)";
             }}
           >
-            {status === "sending" ? "Envoi en cours..." : "Envoyer →"}
+            {status === "sending" ? "Sending..." : "Send →"}
           </button>
         </form>
       )}

@@ -66,7 +66,7 @@ export default function VoyagesClient({ voyages }: { voyages: Voyage[] }) {
                         background: "var(--mint)", color: "var(--ink)",
                         fontSize: "10px", fontWeight: 700, padding: "4px 10px",
                         borderRadius: "20px", letterSpacing: "0.05em",
-                      }}>⭐ À LA UNE</span>
+                      }}>⭐ FEATURED</span>
                     )}
                   </div>
                 )}
@@ -86,7 +86,7 @@ export default function VoyagesClient({ voyages }: { voyages: Voyage[] }) {
                       </h2>
                       <p style={{ fontFamily: "var(--font-mono)", color: "var(--muted)", fontSize: "11px", letterSpacing: "0.06em" }}>
                         {v.pays}{v.dateDebut ? ` · ${new Date(v.dateDebut).getFullYear()}` : ""}
-                        {v.budgetJour ? ` · ~${v.budgetJour}€/jour` : ""}
+                        {v.budgetJour ? ` · ~${v.budgetJour}€/day` : ""}
                       </p>
                     </div>
                   </div>

@@ -3,9 +3,9 @@ import HudBar from "@/components/HudBar";
 const proNav = [
   { href: "/pro/portfolio", label: "Portfolio" },
   { href: "/pro/cv", label: "CV" },
-  { href: "/pro/cybersecurite", label: "Sécurité" },
+  { href: "/pro/cybersecurite", label: "Security" },
   { href: "/pro/contact", label: "Contact" },
-  { href: "/nomade", label: "Nomade" },
+  { href: "/nomade", label: "Nomad" },
 ];
 
 export default function ProLayout({ children }: { children: React.ReactNode }) {

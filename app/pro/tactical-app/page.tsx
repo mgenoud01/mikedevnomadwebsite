@@ -1,32 +1,32 @@
 const features = [
   {
     num: "01",
-    title: "Gestion d'équipes",
-    desc: "Assignation de rôles, suivi des disponibilités et coordination en temps réel.",
+    title: "Team management",
+    desc: "Role assignment, availability tracking and real-time coordination.",
   },
   {
     num: "02",
-    title: "Opérations tactiques",
-    desc: "Planification de missions avec timeline, checklist et rapport d'après-action.",
+    title: "Tactical operations",
+    desc: "Mission planning with timeline, checklists and after-action reports.",
   },
   {
     num: "03",
-    title: "Communication chiffrée",
-    desc: "Messagerie interne end-to-end encrypted. Aucune donnée stockée en clair.",
+    title: "Encrypted communication",
+    desc: "Internal end-to-end encrypted messaging. No data stored in plaintext.",
   },
   {
     num: "04",
-    title: "Dashboard analytique",
-    desc: "KPIs, heatmaps et tableaux de bord exportables PDF/CSV.",
+    title: "Analytics dashboard",
+    desc: "KPIs, heatmaps and dashboards exportable to PDF/CSV.",
   },
 ];
 
 const stack = [
   { layer: "Frontend", items: ["Next.js 14", "TypeScript", "Tailwind CSS"] },
   { layer: "Backend", items: ["Node.js", "Fastify", "PostgreSQL", "Redis"] },
-  { layer: "Temps réel", items: ["WebSocket", "Socket.io"] },
+  { layer: "Real-time", items: ["WebSocket", "Socket.io"] },
   { layer: "Infra", items: ["Docker", "AWS ECS", "GitHub Actions"] },
-  { layer: "Sécurité", items: ["JWT", "RBAC", "Rate limiting", "OWASP"] },
+  { layer: "Security", items: ["JWT", "RBAC", "Rate limiting", "OWASP"] },
 ];
 
 export default function TacticalAppPage() {
@@ -80,7 +80,7 @@ export default function TacticalAppPage() {
               textTransform: "uppercase",
             }}
           >
-            En développement actif
+            Actively in development
           </span>
         </div>
 
@@ -105,8 +105,8 @@ export default function TacticalAppPage() {
             maxWidth: "520px",
           }}
         >
-          Une application SaaS de gestion tactique pour organisations, équipes et événements complexes.
-          Sécurité by design, architecture temps réel.
+          A SaaS application for tactical management of organizations, teams and complex events.
+          Security by design, real-time architecture.
         </p>
       </div>
 
@@ -122,7 +122,7 @@ export default function TacticalAppPage() {
             marginBottom: "24px",
           }}
         >
-          // Fonctionnalités clés
+          // Key features
         </p>
         <div
           style={{
@@ -186,7 +186,7 @@ export default function TacticalAppPage() {
             marginBottom: "24px",
           }}
         >
-          // Stack technique
+          // Tech stack
         </p>
         <div
           style={{

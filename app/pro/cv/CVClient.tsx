@@ -11,7 +11,7 @@ export default function CVClient({ experiences, profile }: { experiences: Experi
 
   function formatPeriod(e: Experience) {
     const start = e.dateDebut ? new Date(e.dateDebut).getFullYear() : "";
-    const end = e.actuel ? "présent" : e.dateFin ? new Date(e.dateFin).getFullYear() : "";
+    const end = e.actuel ? "present" : e.dateFin ? new Date(e.dateFin).getFullYear() : "";
     return `${start} — ${end}`;
   }
 
@@ -26,7 +26,7 @@ export default function CVClient({ experiences, profile }: { experiences: Experi
           CV
         </h1>
         <p className="mt-3 font-mono text-[14px] text-muted">
-          Développeur · Cybersécurité · Nomade digital
+          Developer · Cybersecurity · Digital nomad
         </p>
       </div>
 
@@ -40,9 +40,9 @@ export default function CVClient({ experiences, profile }: { experiences: Experi
       {/* Stats */}
       <div className="mb-14 grid grid-cols-2 gap-3 sm:grid-cols-3">
         {[
-          { v: `${profile.yearsExp}+`, l: "ans d'exp." },
-          { v: `${profile.projectsShipped}+`, l: "projets" },
-          { v: `${profile.ctfPodiums}`, l: "podiums CTF" },
+          { v: `${profile.yearsExp}+`, l: "years exp." },
+          { v: `${profile.projectsShipped}+`, l: "projects" },
+          { v: `${profile.ctfPodiums}`, l: "CTF podiums" },
         ].map((s) => (
           <div key={s.l} className="rounded-card border border-line bg-panel-2 p-5 text-center">
             <p className="mb-1 font-display text-[2rem] font-bold tracking-tight text-white">{s.v}</p>
@@ -55,7 +55,7 @@ export default function CVClient({ experiences, profile }: { experiences: Experi
       {work.length > 0 && (
         <section className="mb-14">
           <p className="mb-7 font-mono text-[11px] uppercase tracking-[.18em] text-mint">
-            // Expérience
+            // Experience
           </p>
           <div className="flex flex-col">
             {work.map((exp, i) => (
@@ -88,7 +88,7 @@ export default function CVClient({ experiences, profile }: { experiences: Experi
       {education.length > 0 && (
         <section className="mb-14">
           <p className="mb-7 font-mono text-[11px] uppercase tracking-[.18em] text-mint">
-            // Formation
+            // Education
           </p>
           <div className="flex flex-col gap-4">
             {education.map((exp) => (

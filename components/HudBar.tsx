@@ -7,7 +7,7 @@ type HudNavLink = { href: string; label: string };
 
 const DEFAULT_NAV: HudNavLink[] = [
   { href: "/pro", label: "Pro" },
-  { href: "/nomade", label: "Nomade" },
+  { href: "/nomade", label: "Nomad" },
 ];
 
 function pad(n: number) {
@@ -42,7 +42,7 @@ export default function HudBar({ nav = DEFAULT_NAV }: { nav?: HudNavLink[] }) {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mint opacity-75 motion-reduce:hidden" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-mint" />
           </span>
-          DISPONIBLE — MISSIONS FREELANCE
+          AVAILABLE — FREELANCE WORK
         </div>
 
         <div className="hidden text-muted md:block" suppressHydrationWarning>

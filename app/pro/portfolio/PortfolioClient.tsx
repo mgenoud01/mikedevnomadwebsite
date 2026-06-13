@@ -16,9 +16,9 @@ function stripMd(s: string): string {
 }
 
 const STATUS_STYLE: Record<string, { color: string; bg: string; label: string }> = {
-  "done":        { color: "#5FD3BC", bg: "rgba(95,211,188,0.08)", label: "Terminé" },
-  "in-progress": { color: "#FFB454", bg: "rgba(255,180,84,0.08)", label: "En cours" },
-  "archived":    { color: "#8FA39C", bg: "rgba(143,163,156,0.08)", label: "Archivé" },
+  "done":        { color: "#5FD3BC", bg: "rgba(95,211,188,0.08)", label: "Done" },
+  "in-progress": { color: "#FFB454", bg: "rgba(255,180,84,0.08)", label: "In progress" },
+  "archived":    { color: "#8FA39C", bg: "rgba(143,163,156,0.08)", label: "Archived" },
 };
 
 function getEmbedUrl(url: string): string | null {
@@ -69,14 +69,14 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
           Portfolio
         </h1>
         <p style={{ color: "rgba(230,237,243,0.45)", fontSize: "15px", lineHeight: 1.7 }}>
-          Projets personnels, open-source et builds en cours.
+          Personal projects, open-source and work in progress.
         </p>
       </div>
 
       {projects.length === 0 ? (
         <div style={{ textAlign: "center", padding: "80px", border: "1px dashed var(--line)", borderRadius: "12px" }}>
           <div style={{ fontSize: "40px", marginBottom: "12px" }}>🚀</div>
-          <p style={{ color: "rgba(255,255,255,0.3)" }}>Aucun projet pour le moment — ajoute-les depuis l&apos;admin.</p>
+          <p style={{ color: "rgba(255,255,255,0.3)" }}>No projects yet — add them from the admin panel.</p>
         </div>
       ) : (
         <>
@@ -97,7 +97,7 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
             <div>
               {featured.length > 0 && (
                 <p style={{ color: "var(--muted)", fontSize: "10px", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "20px", fontFamily: "var(--font-mono)" }}>
-                  Tous les projets
+                  All projects
                 </p>
               )}
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "16px" }}>
@@ -153,7 +153,7 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
                     style={{ maxWidth: "100%", maxHeight: "440px", width: "auto", height: "auto", display: "block", objectFit: "contain", transition: "opacity 0.2s" }}
                   />
                   <div style={{ position: "absolute", bottom: "10px", right: "12px", background: "rgba(0,0,0,0.6)", color: "rgba(255,255,255,0.6)", fontSize: "11px", padding: "4px 10px", borderRadius: "6px", pointerEvents: "none" }}>
-                    🔍 Agrandir
+                    🔍 Zoom
                   </div>
                 </div>
               )}
@@ -210,7 +210,7 @@ export default function PortfolioClient({ projects }: { projects: Project[] }) {
                     <a href={selected.lien} target="_blank" rel="noopener noreferrer"
                       className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber focus-visible:outline-offset-[3px]"
                       style={{ background: "var(--amber)", color: "var(--ink)", fontWeight: 700, fontSize: "13px", padding: "10px 20px", borderRadius: "6px", textDecoration: "none" }}>
-                      🌐 Voir le site →
+                      🌐 Visit site →
                     </a>
                   )}
                   {selected.github && (
@@ -328,7 +328,7 @@ function ProjectCard({ project, onClick }: { project: Project; onClick: () => vo
         {/* CTA */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <span style={{ color: "var(--mint)", fontSize: "12px", fontFamily: "var(--font-mono)" }}>
-            {hasVideo || photoCount > 0 ? "Voir le projet →" : "Lire la suite →"}
+            {hasVideo || photoCount > 0 ? "View project →" : "Read more →"}
           </span>
           <div style={{ display: "flex", gap: "10px" }}>
             {project.github && <span style={{ color: "var(--muted)", fontSize: "11px" }}>GitHub</span>}

@@ -11,8 +11,8 @@ const GALLERY_PAGE_SIZE = 12;
 export default function VoyageDetailClient({ voyage, galleryPhotos }: { voyage: Voyage; galleryPhotos: Photo[] }) {
   const [lightbox, setLightbox] = useState<{ url: string; titre?: string; lieu?: string } | null>(null);
   const [galleryLimit, setGalleryLimit] = useState(GALLERY_PAGE_SIZE);
-  const dateDebut = voyage.dateDebut ? new Date(voyage.dateDebut).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }) : null;
-  const dateFin = voyage.dateFin ? new Date(voyage.dateFin).toLocaleDateString("fr-FR", { month: "long", year: "numeric" }) : null;
+  const dateDebut = voyage.dateDebut ? new Date(voyage.dateDebut).toLocaleDateString("en-GB", { month: "long", year: "numeric" }) : null;
+  const dateFin = voyage.dateFin ? new Date(voyage.dateFin).toLocaleDateString("en-GB", { month: "long", year: "numeric" }) : null;
 
   return (
     <div style={{ color: "var(--mist)", fontFamily: "var(--font-body)", background: "var(--ink)", minHeight: "100vh" }}>
@@ -28,7 +28,7 @@ export default function VoyageDetailClient({ voyage, galleryPhotos }: { voyage: 
           }} />
           <div style={{ position: "absolute", bottom: "40px", left: "0", right: "0", maxWidth: "900px", margin: "0 auto", padding: "0 32px" }}>
             <Link href="/nomade/voyages" className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber focus-visible:outline-offset-[3px]" style={{ color: "var(--mint)", fontSize: "13px", textDecoration: "none", marginBottom: "12px", display: "inline-block", fontFamily: "var(--font-mono)" }}>
-              ← Tous les voyages
+              ← All trips
             </Link>
             <h1 className="font-display" style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", fontWeight: 700, color: "#fff", letterSpacing: "-0.04em", lineHeight: 0.95 }}>
               {voyage.emoji} {voyage.titre}
@@ -39,7 +39,7 @@ export default function VoyageDetailClient({ voyage, galleryPhotos }: { voyage: 
         <div style={{ background: "var(--panel-2)", padding: "64px 32px 48px", borderBottom: "1px solid var(--line)" }}>
           <div style={{ maxWidth: "900px", margin: "0 auto" }}>
             <Link href="/nomade/voyages" className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber focus-visible:outline-offset-[3px]" style={{ color: "var(--mint)", fontSize: "13px", textDecoration: "none", marginBottom: "16px", display: "inline-block", fontFamily: "var(--font-mono)" }}>
-              ← Tous les voyages
+              ← All trips
             </Link>
             <h1 className="font-display" style={{ fontSize: "clamp(2.5rem, 6vw, 4.5rem)", fontWeight: 700, color: "#fff", letterSpacing: "-0.04em", lineHeight: 0.95 }}>
               {voyage.emoji} {voyage.titre}
@@ -58,9 +58,9 @@ export default function VoyageDetailClient({ voyage, galleryPhotos }: { voyage: 
         }}>
           {voyage.pays && <Info icon="📍" label={voyage.pays} />}
           {dateDebut && <Info icon="📅" label={dateFin ? `${dateDebut} → ${dateFin}` : dateDebut} />}
-          {voyage.budgetJour ? <Info icon="💶" label={`~${voyage.budgetJour}€ / jour`} /> : null}
+          {voyage.budgetJour ? <Info icon="💶" label={`~${voyage.budgetJour}€ / day`} /> : null}
           {voyage.restos.length > 0 && <Info icon="🍜" label={`${voyage.restos.length} restaurant${voyage.restos.length > 1 ? "s" : ""}`} />}
-          {voyage.endroits.length > 0 && <Info icon="📍" label={`${voyage.endroits.length} lieu${voyage.endroits.length > 1 ? "x" : ""}`} />}
+          {voyage.endroits.length > 0 && <Info icon="📍" label={`${voyage.endroits.length} place${voyage.endroits.length > 1 ? "s" : ""}`} />}
         </div>
 
         {/* ── Résumé ─────────────────────────────────── */}
@@ -85,7 +85,7 @@ export default function VoyageDetailClient({ voyage, galleryPhotos }: { voyage: 
 
         {/* ── Article ─────────────────────────────────── */}
         {voyage.contenu && (
-          <Section title="✍️ Le récit">
+          <Section title="✍️ The Story">
             <div style={{ fontSize: "16px", lineHeight: 1.9, color: "var(--mist)" }}>
               <ReactMarkdown components={{
                 h1: ({ children }) => <h1 className="font-display" style={{ fontSize: "26px", fontWeight: 700, color: "#fff", letterSpacing: "-0.03em", margin: "40px 0 16px" }}>{children}</h1>,
@@ -109,7 +109,7 @@ export default function VoyageDetailClient({ voyage, galleryPhotos }: { voyage: 
 
         {/* ── Restos ──────────────────────────────────── */}
         {voyage.restos.length > 0 && (
-          <Section title="🍜 Restos & street food">
+          <Section title="🍜 Food & street food">
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "16px" }}>
               {voyage.restos.map((r) => (
                 <div key={r.id} style={{
@@ -135,7 +135,7 @@ export default function VoyageDetailClient({ voyage, galleryPhotos }: { voyage: 
 
         {/* ── Endroits ────────────────────────────────── */}
         {voyage.endroits.length > 0 && (
-          <Section title="📍 Lieux à voir">
+          <Section title="📍 Places to see">
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               {voyage.endroits.map((e) => (
                 <div key={e.id} style={{
@@ -185,7 +185,7 @@ export default function VoyageDetailClient({ voyage, galleryPhotos }: { voyage: 
           const hasMore = galleryLimit < total;
 
           return (
-            <Section title={`🖼️ Galerie (${total})`}>
+            <Section title={`🖼️ Gallery (${total})`}>
               {/* Grille masonry 3 colonnes */}
               <div style={{ columns: "3 180px", columnGap: "10px" }}>
                 {visible.map((p) => (
@@ -222,12 +222,12 @@ export default function VoyageDetailClient({ voyage, galleryPhotos }: { voyage: 
                     onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--mint)"; }}
                     onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--line)"; }}
                   >
-                    Voir plus · {total - galleryLimit} photo{total - galleryLimit > 1 ? "s" : ""} restante{total - galleryLimit > 1 ? "s" : ""}
+                    Show more · {total - galleryLimit} photo{total - galleryLimit > 1 ? "s" : ""} remaining
                   </button>
                 </div>
               ) : total > GALLERY_PAGE_SIZE ? (
                 <p style={{ textAlign: "center", color: "var(--muted)", fontSize: "12px", marginTop: "16px" }}>
-                  Toutes les {total} photos affichées
+                  All {total} photos shown
                 </p>
               ) : null}
             </Section>
@@ -236,7 +236,7 @@ export default function VoyageDetailClient({ voyage, galleryPhotos }: { voyage: 
 
         {/* ── Conseils ────────────────────────────────── */}
         {voyage.conseils.length > 0 && (
-          <Section title="💡 Conseils pratiques">
+          <Section title="💡 Practical tips">
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               {voyage.conseils.map((c, i) => (
                 <div key={i} style={{
@@ -258,7 +258,7 @@ export default function VoyageDetailClient({ voyage, galleryPhotos }: { voyage: 
             display: "inline-flex", alignItems: "center", gap: "8px",
             color: "var(--mint)", fontWeight: 700, fontSize: "14px", textDecoration: "none",
           }}>
-            ← Retour aux voyages
+            ← Back to trips
           </Link>
         </div>
       </div>

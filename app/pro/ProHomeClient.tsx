@@ -4,31 +4,31 @@ import Terminal from "@/components/Terminal";
 import TopoBackground from "@/components/TopoBackground";
 
 const sections = [
-  { href: "/pro/portfolio", num: "01", title: "Portfolio", desc: "Projets, stack & réalisations.", tag: "work" },
-  { href: "/pro/cv", num: "02", title: "CV", desc: "Expérience, compétences & parcours.", tag: "background" },
-  { href: "/pro/cybersecurite", num: "03", title: "Sécurité", desc: "CTF, write-ups, recherche & outils.", tag: "Security+" },
-  { href: "/pro/contact", num: "04", title: "Contact", desc: "Disponible pour des missions freelance.", tag: "Open" },
+  { href: "/pro/portfolio", num: "01", title: "Portfolio", desc: "Projects, stack & achievements.", tag: "work" },
+  { href: "/pro/cv", num: "02", title: "CV", desc: "Experience, skills & background.", tag: "background" },
+  { href: "/pro/cybersecurite", num: "03", title: "Security", desc: "CTF, write-ups, research & tools.", tag: "Security+" },
+  { href: "/pro/contact", num: "04", title: "Contact", desc: "Available for freelance work.", tag: "Open" },
 ];
 
 const services = [
-  { tag: "SEC-01", title: "Audit & Pentest", desc: "Évaluation de surface d'attaque, tests d'intrusion web et réseau, rapport actionnable avec priorisation des correctifs." },
-  { tag: "OPS-02", title: "Infrastructure & DevOps", desc: "Kubernetes (K3s), conteneurisation, CI/CD, stockage distribué, secrets management — du homelab à la prod." },
-  { tag: "MON-03", title: "Monitoring & Détection", desc: "Déploiement Wazuh, Zabbix, Prometheus & Grafana : visibilité complète, alerting et réponse automatisée." },
-  { tag: "DEV-04", title: "Développement sécurisé", desc: "Applications full-stack pensées sécurité dès la conception : authentification robuste, durcissement, bonnes pratiques." },
+  { tag: "SEC-01", title: "Audit & Pentest", desc: "Attack surface assessment, web and network penetration testing, actionable report with prioritized fixes." },
+  { tag: "OPS-02", title: "Infrastructure & DevOps", desc: "Kubernetes (K3s), containerization, CI/CD, distributed storage, secrets management — from homelab to production." },
+  { tag: "MON-03", title: "Monitoring & Detection", desc: "Wazuh, Zabbix, Prometheus & Grafana deployment: full visibility, alerting and automated response." },
+  { tag: "DEV-04", title: "Secure development", desc: "Full-stack applications designed with security in mind from day one: robust authentication, hardening, best practices." },
 ];
 
 const steps = [
-  { title: "Recon", desc: "Cadrage précis : périmètre, objectifs, contraintes. Pas de mission floue." },
-  { title: "Plan", desc: "Proposition chiffrée, jalons clairs, livrables définis avant la première ligne de commande." },
-  { title: "Execute", desc: "Exécution rigoureuse avec points de suivi réguliers, quel que soit le fuseau horaire." },
-  { title: "Report", desc: "Rapport clair et actionnable, transfert de connaissances, recommandations priorisées." },
+  { title: "Recon", desc: "Precise scoping: boundaries, goals, constraints. No fuzzy engagements." },
+  { title: "Plan", desc: "Quoted proposal, clear milestones, defined deliverables before the first line of code." },
+  { title: "Execute", desc: "Rigorous execution with regular check-ins, whatever the timezone." },
+  { title: "Report", desc: "Clear, actionable report, knowledge transfer, prioritized recommendations." },
 ];
 
 export default function ProHomeClient({ profile }: { profile: ProProfile }) {
   const stats = [
-    { value: `${profile.yearsExp}+`, label: "années d'exp." },
-    { value: `${profile.projectsShipped}+`, label: "projets livrés" },
-    { value: `${profile.ctfPodiums}`, label: "podiums CTF" },
+    { value: `${profile.yearsExp}+`, label: "years exp." },
+    { value: `${profile.projectsShipped}+`, label: "projects shipped" },
+    { value: `${profile.ctfPodiums}`, label: "CTF podiums" },
   ];
 
   return (
@@ -39,7 +39,7 @@ export default function ProHomeClient({ profile }: { profile: ProProfile }) {
         <div className="relative mx-auto grid max-w-[1180px] gap-12 px-6 py-16 md:grid-cols-[1.05fr_.95fr] md:items-center md:py-24">
           <div>
             <div className="mb-4 font-mono text-[13px] uppercase tracking-[.14em] text-amber">
-              // Freelance · Cybersécurité · Infrastructure
+              // Freelance · Cybersecurity · Infrastructure
             </div>
 
             {profile.disponible && (
@@ -49,14 +49,14 @@ export default function ProHomeClient({ profile }: { profile: ProProfile }) {
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-mint" />
                 </span>
                 <span className="font-mono text-[11px] uppercase tracking-[.18em] text-mint">
-                  Disponible — missions freelance
+                  Available — freelance work
                 </span>
               </div>
             )}
 
             <h1 className="font-display text-[clamp(34px,4.6vw,58px)] font-bold leading-[1.08] text-white">
-              Sécuriser vos systèmes,<br />
-              déployé depuis <span className="text-amber">n&apos;importe où</span>.
+              Securing your systems,<br />
+              deployed from <span className="text-amber">anywhere</span>.
             </h1>
 
             <p className="mt-5 max-w-[46ch] font-body text-[18.5px] text-muted">
@@ -68,13 +68,13 @@ export default function ProHomeClient({ profile }: { profile: ProProfile }) {
                 href="/pro/contact"
                 className="rounded-btn border border-amber bg-amber px-6 py-3 font-display text-[15px] font-semibold tracking-[.05em] text-ink transition-transform hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber focus-visible:outline-offset-[3px]"
               >
-                Démarrer une mission
+                Start a project
               </Link>
               <a
                 href="#services"
                 className="rounded-btn border border-amber px-6 py-3 font-display text-[15px] font-semibold tracking-[.05em] text-amber transition-all hover:-translate-y-0.5 hover:bg-amber/[0.08] focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber focus-visible:outline-offset-[3px]"
               >
-                Voir les services
+                View services
               </a>
             </div>
           </div>
@@ -121,7 +121,7 @@ export default function ProHomeClient({ profile }: { profile: ProProfile }) {
         <div className="mx-auto max-w-[1180px] px-6 py-16 md:py-24">
           <div className="mb-10 flex flex-wrap items-baseline gap-4">
             <span className="font-mono text-[13px] tracking-[.12em] text-amber">[ ARSENAL ]</span>
-            <h2 className="font-display text-[clamp(26px,3vw,38px)] font-bold text-white">Stack technique</h2>
+            <h2 className="font-display text-[clamp(26px,3vw,38px)] font-bold text-white">Tech stack</h2>
           </div>
           <div className="flex flex-wrap gap-2.5">
             {profile.skills.map((s) => (
@@ -138,7 +138,7 @@ export default function ProHomeClient({ profile }: { profile: ProProfile }) {
         <div className="mx-auto max-w-[1180px] px-6 py-16 md:py-24">
           <div className="mb-10 flex flex-wrap items-baseline gap-4">
             <span className="font-mono text-[13px] tracking-[.12em] text-amber">[ MODUS OPERANDI ]</span>
-            <h2 className="font-display text-[clamp(26px,3vw,38px)] font-bold text-white">Méthode de mission</h2>
+            <h2 className="font-display text-[clamp(26px,3vw,38px)] font-bold text-white">Mission method</h2>
           </div>
           <div className="grid grid-cols-1 gap-[18px] sm:grid-cols-2 lg:grid-cols-4">
             {steps.map((step, i) => (

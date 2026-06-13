@@ -4,8 +4,8 @@ import TimezoneWidget from "@/components/TimezoneWidget";
 import TopoBackground from "@/components/TopoBackground";
 
 const sections = [
-  { href: "/nomade/voyages", num: "01", title: "Voyages", desc: "Récits, conseils & itinéraires.", tag: "trips" },
-  { href: "/nomade/galerie", num: "02", title: "Galerie", desc: "Photos prises aux quatre coins du monde.", tag: "photos" },
+  { href: "/nomade/voyages", num: "01", title: "Trips", desc: "Stories, tips & itineraries.", tag: "trips" },
+  { href: "/nomade/galerie", num: "02", title: "Gallery", desc: "Photos from all corners of the world.", tag: "photos" },
 ];
 
 export default function NomadeHomeClient({ voyages, tiktok = "", instagram = "" }: { voyages: Voyage[]; tiktok?: string; instagram?: string }) {
@@ -29,17 +29,17 @@ export default function NomadeHomeClient({ voyages, tiktok = "", instagram = "" 
             <div className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-mint/25 bg-mint/[0.07] px-4 py-2">
               <span className="text-[12px]" aria-hidden="true">🌍</span>
               <span className="font-mono text-[11px] uppercase tracking-[.18em] text-mint">
-                En déplacement, quelque part dans le monde
+                Currently traveling, somewhere in the world
               </span>
             </div>
 
             <h1 className="font-display text-[clamp(34px,4.6vw,58px)] font-bold leading-[1.08] text-white">
-              Développeur &<br />
-              <span className="text-mint">nomade digital.</span>
+              Developer &<br />
+              <span className="text-mint">digital nomad.</span>
             </h1>
 
             <p className="mt-5 max-w-[46ch] font-body text-[18.5px] text-muted">
-              Je code depuis des cafés à Tokyo, des hostels à Lisbonne et des plages en Thaïlande — bienvenue dans ma vie de nomade.
+              I code from cafés in Tokyo, hostels in Lisbon and beaches in Thailand — welcome to my nomad life.
             </p>
 
             {/* Réseaux sociaux */}
@@ -104,14 +104,14 @@ export default function NomadeHomeClient({ voyages, tiktok = "", instagram = "" 
                   [ {featured.length > 0 ? "FEATURED" : "LATEST"} ]
                 </span>
                 <h2 className="font-display text-[clamp(26px,3vw,38px)] font-bold text-white">
-                  {featured.length > 0 ? "Voyages à la une" : "Derniers voyages"}
+                  {featured.length > 0 ? "Featured trips" : "Latest trips"}
                 </h2>
               </div>
               <Link
                 href="/nomade/voyages"
                 className="font-mono text-[13px] font-semibold text-mint hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber focus-visible:outline-offset-[3px]"
               >
-                Voir tout →
+                View all →
               </Link>
             </div>
 
@@ -158,7 +158,7 @@ export default function NomadeHomeClient({ voyages, tiktok = "", instagram = "" 
                 <span className="mb-3.5 block font-mono text-[11.5px] tracking-[.1em] text-mint">{s.num}</span>
                 <h3 className="mb-2 font-display text-[18.5px] text-white">{s.title}</h3>
                 <p className="mb-4 text-[14px] text-muted">{s.desc}</p>
-                <span className="font-mono text-[13px] font-semibold text-mint">Explorer →</span>
+                <span className="font-mono text-[13px] font-semibold text-mint">Explore →</span>
               </Link>
             ))}
           </div>

@@ -29,10 +29,10 @@ export default function Terminal({ bio, skills, email }: TerminalProps) {
   useEffect(() => {
     const intro: [ReactNode, number][] = [
       [<>{PROMPT} ./init --mission freelance</>, 0],
-      [<><span className="text-muted">[ok]</span> identité chargée : <span className="text-amber">MIKEDEV//NOMAD</span></>, 400],
-      [<><span className="text-muted">[ok]</span> statut : <span className="text-mint">DISPONIBLE</span></>, 750],
-      [<><span className="text-muted">[ok]</span> périmètre : sécurité · infra · monitoring</>, 1100],
-      [<>Tapez <span className="text-amber">help</span> pour explorer.</>, 1500],
+      [<><span className="text-muted">[ok]</span> identity loaded: <span className="text-amber">MIKEDEV//NOMAD</span></>, 400],
+      [<><span className="text-muted">[ok]</span> status: <span className="text-mint">AVAILABLE</span></>, 750],
+      [<><span className="text-muted">[ok]</span> scope: security · infra · monitoring</>, 1100],
+      [<>Type <span className="text-amber">help</span> to explore.</>, 1500],
     ];
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -56,35 +56,35 @@ export default function Terminal({ bio, skills, email }: TerminalProps) {
 
   const commands: Record<string, () => Line[]> = {
     help: () => [
-      makeLine(<span className="text-amber">Commandes disponibles :</span>),
-      makeLine("  whoami     — qui suis-je"),
-      makeLine("  services   — ce que je propose"),
-      makeLine("  stack      — outils & technologies"),
-      makeLine("  travel     — d'où je travaille"),
-      makeLine("  contact    — me joindre"),
-      makeLine("  clear      — nettoyer l'écran"),
+      makeLine(<span className="text-amber">Available commands:</span>),
+      makeLine("  whoami     — who I am"),
+      makeLine("  services   — what I offer"),
+      makeLine("  stack      — tools & technologies"),
+      makeLine("  travel     — where I work from"),
+      makeLine("  contact    — get in touch"),
+      makeLine("  clear      — clear the screen"),
     ],
     whoami: () => [
-      makeLine(<><span className="text-amber">Mike Genoud</span> — développeur full-stack & cybersécurité 🇨🇭</>),
+      makeLine(<><span className="text-amber">Mike Genoud</span> — full-stack developer & cybersecurity 🇨🇭</>),
       makeLine(<span className="text-muted">{bio}</span>),
-      makeLine(<span className="text-muted">Mode : freelance · remote-first · rigueur suisse.</span>),
+      makeLine(<span className="text-muted">Mode: freelance · remote-first · Swiss precision.</span>),
     ],
     services: () => [
       makeLine(<><span className="text-amber">[SEC-01]</span> Audit & Pentest</>),
       makeLine(<><span className="text-amber">[OPS-02]</span> Infrastructure & DevOps (K8s)</>),
-      makeLine(<><span className="text-amber">[MON-03]</span> Monitoring & Détection (Wazuh, Zabbix, Grafana)</>),
-      makeLine(<><span className="text-amber">[DEV-04]</span> Développement sécurisé</>),
+      makeLine(<><span className="text-amber">[MON-03]</span> Monitoring & Detection (Wazuh, Zabbix, Grafana)</>),
+      makeLine(<><span className="text-amber">[DEV-04]</span> Secure development</>),
     ],
     stack: () => [
       makeLine(skills.join(" · ")),
     ],
     travel: () => [
-      makeLine("Basé en Suisse 🇨🇭 — opérationnel depuis n'importe où."),
-      makeLine(<span className="text-muted">Connexion sécurisée, VPN, discipline des horaires.</span>),
+      makeLine("Based in Switzerland 🇨🇭 — operating from anywhere."),
+      makeLine(<span className="text-muted">Secure connection, VPN, disciplined scheduling.</span>),
     ],
     contact: () => [
       makeLine(<><span className="text-mint">→</span> <a href={`mailto:${contactEmail}`} className="underline hover:no-underline">{contactEmail}</a></>),
-      makeLine(<span className="text-muted">Réponse &lt; 24h ouvrées, quel que soit le fuseau.</span>),
+      makeLine(<span className="text-muted">Response &lt; 24h (business days), regardless of timezone.</span>),
     ],
   };
 
@@ -106,7 +106,7 @@ export default function Terminal({ bio, skills, email }: TerminalProps) {
       setLines((prev) => [
         ...prev,
         promptLine,
-        makeLine(<><span className="text-muted">commande inconnue : {cmd} — tapez </span><span className="text-amber">help</span></>),
+        makeLine(<><span className="text-muted">unknown command: {cmd} — type </span><span className="text-amber">help</span></>),
       ]);
     }
   }
@@ -114,7 +114,7 @@ export default function Terminal({ bio, skills, email }: TerminalProps) {
   return (
     <div
       className="overflow-hidden rounded-term border border-line bg-panel-2 shadow-term"
-      aria-label="Terminal interactif"
+      aria-label="Interactive terminal"
       onClick={() => inputRef.current?.focus()}
     >
       <div className="flex items-center gap-2 border-b border-line bg-panel px-3.5 py-[11px]">
@@ -151,7 +151,7 @@ export default function Terminal({ bio, skills, email }: TerminalProps) {
           }}
           autoComplete="off"
           spellCheck={false}
-          aria-label="Tapez une commande, par exemple help"
+          aria-label="Type a command, e.g. help"
           className="flex-1 bg-transparent text-mist caret-amber outline-none"
         />
       </div>
