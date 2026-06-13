@@ -97,12 +97,11 @@ export default function GalerieClient({ photos, voyages }: { photos: Photo[]; vo
                     onMouseEnter={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1.03)"; }}
                     onMouseLeave={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1)"; }}
                   />
-                  {(p.titre || p.lieu) && (
+                  {p.lieu && (
                     <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "linear-gradient(transparent, rgba(0,0,0,0.6))", padding: "20px 12px 10px", opacity: 0, transition: "opacity 0.2s" }}
                       onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.opacity = "1"; }}
                       onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.opacity = "0"; }}>
-                      <p style={{ color: "#fff", fontSize: "12px", fontWeight: 600 }}>{p.titre}</p>
-                      {p.lieu && <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "11px" }}>📍 {p.lieu}</p>}
+                      <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "11px" }}>📍 {p.lieu}</p>
                     </div>
                   )}
                 </div>
@@ -118,9 +117,8 @@ export default function GalerieClient({ photos, voyages }: { photos: Photo[]; vo
           <button onClick={() => setSelected(null)} style={{ position: "absolute", top: "20px", right: "20px", background: "rgba(255,255,255,0.1)", border: "none", color: "#fff", width: "40px", height: "40px", borderRadius: "50%", cursor: "pointer", fontSize: "18px" }}>✕</button>
           <div onClick={(e) => e.stopPropagation()} style={{ maxWidth: "90vw", maxHeight: "90vh" }}>
             <img src={selected.url} alt={selected.titre} style={{ maxWidth: "100%", maxHeight: "80vh", objectFit: "contain", borderRadius: "8px" }} />
-            {(selected.titre || selected.lieu || selected.description) && (
+            {(selected.lieu || selected.description) && (
               <div style={{ textAlign: "center", marginTop: "16px" }}>
-                {selected.titre && <p style={{ color: "#fff", fontWeight: 700, fontSize: "16px", marginBottom: "4px" }}>{selected.titre}</p>}
                 {selected.lieu && <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "13px" }}>📍 {[selected.lieu, selected.pays].filter(Boolean).join(", ")}</p>}
                 {selected.description && <p style={{ color: "rgba(255,255,255,0.4)", fontSize: "13px", marginTop: "8px" }}>{selected.description}</p>}
               </div>

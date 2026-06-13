@@ -51,7 +51,7 @@ export default function GalerieAdminClient({ photos: initial, voyages }: { photo
         body: JSON.stringify({
           newPhotos: uploadResults.map(({ file, url }) => ({
             url,
-            titre: file.name.replace(/\.[^/.]+$/, ""),
+            titre: "",
             lieu: "",
             pays: currentVoyage?.pays || "",
             description: "",

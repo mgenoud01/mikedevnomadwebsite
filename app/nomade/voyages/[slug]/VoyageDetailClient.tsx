@@ -195,12 +195,11 @@ export default function VoyageDetailClient({ voyage, galleryPhotos }: { voyage: 
                       onMouseEnter={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1.04)"; }}
                       onMouseLeave={(e) => { (e.currentTarget as HTMLImageElement).style.transform = "scale(1)"; }}
                     />
-                    {(p.titre || p.lieu) && (
+                    {p.lieu && (
                       <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "linear-gradient(transparent, rgba(0,0,0,0.55))", padding: "16px 10px 8px", opacity: 0, transition: "opacity 0.2s" }}
                         onMouseEnter={(e) => { (e.currentTarget as HTMLDivElement).style.opacity = "1"; }}
                         onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.opacity = "0"; }}>
-                        {p.titre && <p style={{ color: "#fff", fontSize: "11px", fontWeight: 600 }}>{p.titre}</p>}
-                        {p.lieu && <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "10px" }}>📍 {p.lieu}</p>}
+                        <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "10px" }}>📍 {p.lieu}</p>
                       </div>
                     )}
                   </div>
@@ -269,10 +268,9 @@ export default function VoyageDetailClient({ voyage, galleryPhotos }: { voyage: 
           <button onClick={() => setLightbox(null)} style={{ position: "absolute", top: "20px", right: "20px", background: "rgba(255,255,255,0.1)", border: "none", color: "#fff", width: "40px", height: "40px", borderRadius: "50%", cursor: "pointer", fontSize: "18px" }}>✕</button>
           <div onClick={(e) => e.stopPropagation()} style={{ maxWidth: "90vw", maxHeight: "90vh", textAlign: "center" }}>
             <img src={lightbox.url} alt={lightbox.titre} style={{ maxWidth: "100%", maxHeight: "80vh", objectFit: "contain", borderRadius: "8px" }} />
-            {(lightbox.titre || lightbox.lieu) && (
+            {lightbox.lieu && (
               <div style={{ marginTop: "14px" }}>
-                {lightbox.titre && <p style={{ color: "#fff", fontWeight: 700, fontSize: "15px" }}>{lightbox.titre}</p>}
-                {lightbox.lieu && <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "13px" }}>📍 {lightbox.lieu}</p>}
+                <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "13px" }}>📍 {lightbox.lieu}</p>
               </div>
             )}
           </div>
